@@ -1,5 +1,5 @@
 import * as React from "react";
-import NextLink from 'next/link';
+import NextLink from "next/link";
 import Grid from "@mui/material/Grid";
 import BasicLineChart from "@/components/Charts/LineCharts/BasicLineChart";
 import GradientLineChart from "@/components/Charts/LineCharts/GradientLineChart";
@@ -12,14 +12,13 @@ export default function Page() {
       {/* Breadcrumb */}
       <div className="breadcrumb-card">
         <h5>Line Charts</h5>
-
         <ul className="breadcrumb">
           <li>
             <NextLink href="/dashboard/ecommerce/">
               <i className="material-symbols-outlined">home</i>
               Dashboard
             </NextLink>
-          </li> 
+          </li>
           <li>Charts</li>
           <li>Line Charts</li>
         </ul>
@@ -29,7 +28,7 @@ export default function Page() {
         <Grid item xs={12} md={12} lg={12} xl={6}>
           <BasicLineChart />
 
-          <GradientLineChart /> 
+          <GradientLineChart />
         </Grid>
 
         <Grid item xs={12} md={12} lg={12} xl={6}>
