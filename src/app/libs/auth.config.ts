@@ -20,7 +20,8 @@ export const auth: NextAuthOptions = {
       email: { },
       password: { }
     },
-      async authorize(credentials) {
+    async authorize(credentials) {
+        console.log(credentials)
 
         const response = await fetch("https://la.sitesdahora.com.br/api/login", {
             method: "POST",

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   Grid,
   Button,
@@ -9,11 +8,26 @@ import {
   FormControl,
   TextField,
 } from "@mui/material";
-// import Link from "next/link";
 import Image from "next/image";
-import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 const SignInForm: React.FC = () => {
+  async function login(e: React.FormEvent<HTMLFormElement>) {
+    const formData = new FormData(e.currentTarget);
+    e.preventDefault();
+
+    const data = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
+
+    signIn("credentials", {
+      data,
+      callbackUrl: "/dashboard/ecommerce",
+    });
+    console.log(data)
+  }
+
   return (
     <>
       <Box
@@ -59,27 +73,6 @@ const SignInForm: React.FC = () => {
                   paddingLeft: { xs: "0", lg: "10px" },
                 }}
               >
-                {/* <Box
-                  className="logo"
-                  sx={{
-                    mb: "23px",
-                  }}
-                >
-                  <Image
-                    src="/images/logo-big.svg"
-                    alt="logo"
-                    width={142}
-                    height={38}
-                  />
-                  <Image
-                    src="/images/white-logo.svg"
-                    className="d-none"
-                    alt="logo"
-                    width={142}
-                    height={38}
-                  />
-                </Box> */}
-
                 <Box
                   className="title"
                   sx={{
@@ -103,69 +96,7 @@ const SignInForm: React.FC = () => {
                   </Typography>
                 </Box>
 
-                {/* <Box
-                  className="with-socials"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-around",
-                    gap: "5px",
-                    mb: "20px",
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    className="border bg-white"
-                    sx={{
-                      width: "100%",
-                      borderRadius: "8px",
-                      padding: "10.5px 20px",
-                    }}
-                  >
-                    <Image
-                      src="/images/icons/google.svg"
-                      alt="google"
-                      width={25}
-                      height={25}
-                    />
-                  </Button>
-
-                  <Button
-                    variant="outlined"
-                    className="border bg-white"
-                    sx={{
-                      width: "100%",
-                      borderRadius: "8px",
-                      padding: "10.5px 20px",
-                    }}
-                  >
-                    <Image
-                      src="/images/icons/facebook2.svg"
-                      alt="facebook"
-                      width={25}
-                      height={25}
-                    />
-                  </Button>
-
-                  <Button
-                    variant="outlined"
-                    className="border bg-white"
-                    sx={{
-                      width: "100%",
-                      borderRadius: "8px",
-                      padding: "10.5px 20px",
-                    }}
-                  >
-                    <Image
-                      src="/images/icons/apple.svg"
-                      alt="apple"
-                      width={25}
-                      height={25}
-                    />
-                  </Button>
-                </Box> */}
-
-                <Box component="form">
+                <form onSubmit={login}>
                   <Box mb="15px">
                     <FormControl fullWidth>
                       <Typography
@@ -178,7 +109,7 @@ const SignInForm: React.FC = () => {
                         }}
                         className="text-black"
                       >
-                        Email Address
+                        Login
                       </Typography>
 
                       <TextField
@@ -215,7 +146,7 @@ const SignInForm: React.FC = () => {
                         }}
                         className="text-black"
                       >
-                        Password
+                        Senha
                       </Typography>
 
                       <TextField
@@ -241,53 +172,26 @@ const SignInForm: React.FC = () => {
                     </FormControl>
                   </Box>
 
-                  {/* <Box mb="20px">
-                    <Link
-                      href="/authentication/forgot-password/"
-                      className="text-primary"
-                      style={{
-                        fontWeight: "500",
-                      }}
-                    >
-                      Forgot Password?
-                    </Link>
-                  </Box> */}
-
                   <Box mb="20px">
-                    <Link href={"/dashboard/ecommerce"}>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{
-                          textTransform: "capitalize",
-                          borderRadius: "6px",
-                          fontWeight: "500",
-                          fontSize: { xs: "13px", sm: "16px" },
-                          padding: { xs: "10px 20px", sm: "10px 24px" },
-                          color: "#fff !important",
-                          boxShadow: "none",
-                          width: "100%",
-                        }}
-                      >
-                        <i className="material-symbols-outlined mr-5">login</i>
-                        Login
-                      </Button>
-                    </Link>
-                  </Box>
-
-                  {/* <Typography>
-                    Don’t have an account.{" "}
-                    <Link
-                      href="/authentication/sign-up/"
-                      className="text-primary"
-                      style={{
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{
+                        textTransform: "capitalize",
+                        borderRadius: "6px",
                         fontWeight: "500",
+                        fontSize: { xs: "13px", sm: "16px" },
+                        padding: { xs: "10px 20px", sm: "10px 24px" },
+                        color: "#fff !important",
+                        boxShadow: "none",
+                        width: "100%",
                       }}
                     >
-                      Sign Up
-                    </Link>
-                  </Typography> */}
-                </Box>
+                      <i className="material-symbols-outlined mr-5">login</i>
+                      Login
+                    </Button>
+                  </Box>
+                </form>
               </Box>
             </Grid>
           </Grid>
