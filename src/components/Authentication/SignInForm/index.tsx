@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 // import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 const SignInForm: React.FC = () => {
   return (
@@ -253,23 +254,25 @@ const SignInForm: React.FC = () => {
                   </Box> */}
 
                   <Box mb="20px">
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        textTransform: "capitalize",
-                        borderRadius: "6px",
-                        fontWeight: "500",
-                        fontSize: { xs: "13px", sm: "16px" },
-                        padding: { xs: "10px 20px", sm: "10px 24px" },
-                        color: "#fff !important",
-                        boxShadow: "none",
-                        width: "100%",
-                      }}
-                    >
-                      <i className="material-symbols-outlined mr-5">login</i>
-                      Login
-                    </Button>
+                    <Link href={"/dashboard/ecommerce"}>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{
+                          textTransform: "capitalize",
+                          borderRadius: "6px",
+                          fontWeight: "500",
+                          fontSize: { xs: "13px", sm: "16px" },
+                          padding: { xs: "10px 20px", sm: "10px 24px" },
+                          color: "#fff !important",
+                          boxShadow: "none",
+                          width: "100%",
+                        }}
+                      >
+                        <i className="material-symbols-outlined mr-5">login</i>
+                        Login
+                      </Button>
+                    </Link>
                   </Box>
 
                   {/* <Typography>

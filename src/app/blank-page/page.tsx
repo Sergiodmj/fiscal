@@ -30,7 +30,7 @@ export default function Page() {
         className="rmui-card"
       >
         <Typography
-          variant="h3"
+          variant="h1"
           sx={{
             fontSize: { xs: "16px", md: "18px" },
             fontWeight: 700,
