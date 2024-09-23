@@ -67,7 +67,7 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
       <div className="leftSidebarDark">
         <div className="left-sidebar-menu">
           <div className="logo">
-            <Link href="/dashboard/ecommerce/">
+            <Link href="/page/home">
               <Image
                 src="/images/logo-icon.svg"
                 alt="logo-icon"
@@ -116,9 +116,9 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                   <ul className="sidebar-sub-menu">
                     <li className="sidemenu-item">
                       <Link
-                        href="/dashboard/ecommerce/"
+                        href="/page/cadastro/empresa"
                         className={`sidemenu-link ${
-                          pathname === "/dashboard/ecommerce/" ? "active" : ""
+                          pathname === "/page/cadastro/empresa" ? "active" : ""
                         }`}
                       >
                         Empresa
@@ -127,9 +127,9 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
 
                     <li className="sidemenu-item">
                       <Link
-                        href="/dashboard/crm/"
+                        href="/page/cadastro/produto"
                         className={`sidemenu-link ${
-                          pathname === "/dashboard/crm/" ? "active" : ""
+                          pathname === "/page/cadastro/produto" ? "active" : ""
                         }`}
                       >
                         Produto
@@ -139,9 +139,9 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
 
                     <li className="sidemenu-item">
                       <Link
-                        href="/dashboard/project-management/"
+                        href="/page/cadastro/usuario"
                         className={`sidemenu-link ${
-                          pathname === "/dashboard/project-management/"
+                          pathname === "/page/cadastro/usuario"
                             ? "active"
                             : ""
                         }`}

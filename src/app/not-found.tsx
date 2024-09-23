@@ -37,7 +37,7 @@ export default function NotFound() {
           </Typography>
 
           <Link 
-            href="/dashboard/ecommerce/"
+            href="/page/home"
             sx={{
               bgcolor: 'primary.main',
               textTransform: "capitalize",

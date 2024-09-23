@@ -23,7 +23,7 @@ export default function SignInForm()  {
 
     signIn("credentials", {
       ...data,
-      callbackUrl: "/dashboard/ecommerce",
+      callbackUrl: "/page/home",
     });
     // console.log(data)
   }
