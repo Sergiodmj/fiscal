@@ -8,7 +8,7 @@ export const auth: NextAuthOptions = {
     pages: {
     signIn: "/",
     signOut: '/',
-    error: '/not-found',
+    error: '/',
   },
 
   providers: [
@@ -31,7 +31,7 @@ export const auth: NextAuthOptions = {
           
         if (response.status !== 200) return null;
         const authData = await response.json();
-        console.log(authData)
+        // console.log(authData)
 
         const user: User = {
                 id: authData.user.id,
@@ -48,6 +48,9 @@ export const auth: NextAuthOptions = {
         } else {
          return null
         }
+
+        // console.log(credentials)
+        // return null
 
      }
   })

@@ -21,13 +21,21 @@ export default function SignInForm()  {
       password: formData.get("password"),
     };
 
+    // console.log(data)
+
     signIn("credentials", {
       ...data,
       callbackUrl: "/page/home",
     });
-    // console.log(data)
   }
 
+  // return (
+  //   <form onSubmit={login}>
+  //     <input type="text" name="email" id="email"></input>
+  //     <input type="text" name="password" id="password"></input>
+  //     <button type="submit">Login</button>
+  //   </form>
+  // );
 
   return (
     <>
@@ -114,7 +122,7 @@ export default function SignInForm()  {
                       </Typography>
 
                       <TextField
-                        label="example&#64;trezo.com"
+                        // label="example&#64;trezo.com"
                         variant="filled"
                         id="email"
                         name="email"
@@ -151,7 +159,7 @@ export default function SignInForm()  {
                       </Typography>
 
                       <TextField
-                        label="Type Password"
+                        // label="Type Password"
                         variant="filled"
                         type="password"
                         id="password"
