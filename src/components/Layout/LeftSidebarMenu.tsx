@@ -15,6 +15,7 @@ import MuiAccordionSummary, {
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import { Box, Button, Typography } from "@mui/material";
 import LogoutButton from "../Authentication/logOutButton";
+import { useSession } from "next-auth/react";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -62,6 +63,8 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
     };
+
+  const { data: session } = useSession();
 
   return (
     <>
@@ -115,16 +118,23 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
 
                 <AccordionDetails className="mat-details">
                   <ul className="sidebar-sub-menu">
-                    <li className="sidemenu-item">
-                      <Link
-                        href="/page/cadastro/empresa"
-                        className={`sidemenu-link ${
-                          pathname === "/page/cadastro/empresa" ? "active" : ""
-                        }`}
-                      >
-                        Empresa
-                      </Link>
-                    </li>
+                    {session?.user.permission === "ADM" ? (
+                      <li className="sidemenu-item">
+                        <Link
+                          href="/page/cadastro/empresa"
+                          className={`sidemenu-link ${
+                            pathname === "/page/cadastro/empresa"
+                              ? "active"
+                              : ""
+                          }`}
+                        >
+                          Empresa
+                          <span className="trezo-badge">mstr</span>
+                        </Link>
+                      </li>
+                    ) : (
+                      ""
+                    )}
 
                     <li className="sidemenu-item">
                       <Link
@@ -134,7 +144,6 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                         }`}
                       >
                         Produto
-                        {/* <span className="trezo-badge">Hot</span> */}
                       </Link>
                     </li>
 

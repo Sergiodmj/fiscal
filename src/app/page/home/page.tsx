@@ -1,9 +1,13 @@
 import { getServerSession } from "next-auth"
 import { auth as authOptions } from "@/app/libs/auth-config"
+import { redirect } from "next/navigation";
 
 
 export default async function Home() {
-    const seesion = await getServerSession(authOptions)
+  const seesion = await getServerSession(authOptions)
+  if (!seesion) {
+    redirect("/")
+  }
     return (
       <>
         <h1>Home</h1>

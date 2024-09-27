@@ -1,21 +1,33 @@
 import { Button } from "@mui/material";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function LogoutButton() {
-    const { data: session } = useSession();
+  const { data: session } = useSession();
+  const jwt = session?.user.token;
+  const url = "https://la.sitesdahora.com.br/api/logout";
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
 
-    const url = "https://la.sitesdahora.com.br/api/logout";
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // Authorization: `Bearer ${jwt}`,
-      },
-    }; 
-    return (
-      <Button className="sidebar-menu-link">
-        <i className="material-symbols-outlined">logout</i>
-        <span className="title">Logout</span>
-      </Button>
-    );
+  function Logout() {
+    fetch(url, options)
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+        signOut();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  return (
+    <Button onClick={Logout} className="sidebar-menu-link">
+      <i className="material-symbols-outlined">logout</i>
+      <span className="title">Logout</span>
+    </Button>
+  );
 }

@@ -29,10 +29,6 @@ const LayoutProvider: React.FC<LayoutProviderProps> = ({ children }) => {
     "/authentication/logout/",
     "/coming-soon/",
     "/",
-    "/front-pages/features/",
-    "/front-pages/team/",
-    "/front-pages/faq/",
-    "/front-pages/contact/",
   ].includes(pathname);
 
   return (
