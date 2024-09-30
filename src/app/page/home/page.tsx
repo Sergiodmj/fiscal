@@ -8,6 +8,8 @@ export default async function Home() {
   if (!seesion) {
     redirect("/")
   }
+
+  console.log(seesion)
     return (
       <>
         <h1>Home</h1>

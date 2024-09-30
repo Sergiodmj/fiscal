@@ -118,7 +118,7 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
 
                 <AccordionDetails className="mat-details">
                   <ul className="sidebar-sub-menu">
-                    {session?.user.permission === "ADM" ? (
+                    {session?.user.permission === "SUPER_ADMIN" ? (
                       <li className="sidemenu-item">
                         <Link
                           href="/page/cadastro/empresa"

@@ -2,6 +2,7 @@
 /* eslint-disable prettier/prettier */
 import CredentialsProvider from "next-auth/providers/credentials"
 import { NextAuthOptions, User } from "next-auth"
+import { aU } from "@fullcalendar/core/internal-common";
 
 export const auth: NextAuthOptions = {
   
@@ -20,7 +21,7 @@ export const auth: NextAuthOptions = {
     },
       async authorize(credentials, req) {
 
-        const response = await fetch("https://la.sitesdahora.com.br/api/login", {
+        const response = await fetch("https://erp.sitesdahora.com.br/api/login", {
             method: "POST",
             body: JSON.stringify({
               email: credentials?.email,
@@ -31,15 +32,15 @@ export const auth: NextAuthOptions = {
           
         if (response.status !== 200) return null;
         const authData = await response.json();
-        // console.log(authData)
+        console.log(authData)
 
         const user: User = {
                 id: authData.user.id,
                 name: authData.user.name,
                 email: authData.user.email,
-                status: authData.status,
                 token: authData.token,
-                permission: authData.user.permission
+                permission: authData.user.level,
+                enterprise_id: authData.user.enterprise_id
         }
         if (user) {
           // console.log(user)
@@ -62,7 +63,7 @@ export const auth: NextAuthOptions = {
 
       if (user) {
         // console.log(user)
-        token.status = user.status
+        token.enterprise_id = user.enterprise_id
         token.chave = user.token
         token.permission = user.permission
       }
@@ -77,7 +78,7 @@ export const auth: NextAuthOptions = {
       // console.log("Token", token)
 
       if (token) {
-        session.user.status = token.status
+        session.user.enterprise_id = token.enterprise_id
         session.user.token = token.chave
         session.user.permission = token.permission
       }

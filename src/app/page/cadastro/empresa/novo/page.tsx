@@ -1,10 +1,10 @@
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
-import Link from "next/link";
-import { Button } from "@mui/material";
 
-export default async function Empresa() {
+import TextualInputs from "./TextualInputs";
+import { redirect } from "next/navigation";
+
+export default async function NovaEmpresa() {
   const seesion = await getServerSession(authOptions);
   if (!seesion) {
     redirect("/");
@@ -12,12 +12,9 @@ export default async function Empresa() {
   if (seesion?.user.permission != "SUPER_ADMIN") {
     redirect("/page/unauthorized");
   }
-
   return (
     <>
-      <Link href={"/page/cadastro/empresa/novo"}>
-        <Button>Nova Empresa</Button>
-      </Link>
+      <TextualInputs />
     </>
   );
 }
