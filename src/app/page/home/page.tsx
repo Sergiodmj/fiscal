@@ -9,7 +9,6 @@ export default async function Home() {
     redirect("/")
   }
 
-  console.log(seesion)
     return (
       <>
         <h1>Home</h1>

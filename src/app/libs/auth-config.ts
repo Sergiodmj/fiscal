@@ -32,7 +32,7 @@ export const auth: NextAuthOptions = {
           
         if (response.status !== 200) return null;
         const authData = await response.json();
-        console.log(authData)
+        // console.log(authData)
 
         const user: User = {
                 id: authData.user.id,

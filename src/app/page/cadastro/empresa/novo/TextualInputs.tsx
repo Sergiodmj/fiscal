@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import {
   Grid,
   Card,
@@ -12,18 +11,31 @@ import {
   TextField,
   Select,
   SelectChangeEvent,
+  Button,
 } from "@mui/material";
+import Link from "next/link";
 
 const TextualInputs: React.FC = () => {
-   const [townCity, setTownCity] = useState<string>("");
+  async function Salvar(form: FormData) {
+    const data = Object.fromEntries(form);
+    console.log(data);
 
-   const handleTownCityChange = (event: SelectChangeEvent) => {
-     setTownCity(event.target.value as string);
-   };
+    const url = "https://erp.sitesdahora.com.br/api/enterprise-create";
+    const options = {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(url, options);
+    console.log(response);
+  }
 
   return (
     <>
-      <form>
+      <form action={Salvar}>
         <Box>
           <Card
             sx={{
@@ -63,6 +75,7 @@ const TextualInputs: React.FC = () => {
                     variant="filled"
                     id="name_enterprise"
                     name="name_enterprise"
+                    required
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -87,6 +100,7 @@ const TextualInputs: React.FC = () => {
                     variant="filled"
                     id="cpf_cnpj_enterprise"
                     name="cpf_cnpj_enterprise"
+                    required
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -135,6 +149,7 @@ const TextualInputs: React.FC = () => {
                     variant="filled"
                     id="address_enterprise"
                     name="address_enterprise"
+                    required
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -183,6 +198,7 @@ const TextualInputs: React.FC = () => {
                     variant="filled"
                     id="cep_enterprise"
                     name="cep_enterprise"
+                    required
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -207,6 +223,7 @@ const TextualInputs: React.FC = () => {
                     variant="filled"
                     id="city_enterprise"
                     name="city_enterprise"
+                    required
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -231,6 +248,7 @@ const TextualInputs: React.FC = () => {
                     variant="filled"
                     id="state_enterprise"
                     name="state_enterprise"
+                    required
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -256,6 +274,7 @@ const TextualInputs: React.FC = () => {
                     variant="filled"
                     id="validade"
                     name="validade"
+                    required
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -272,26 +291,39 @@ const TextualInputs: React.FC = () => {
                   />
                 </FormControl>
               </Grid>
+            </Grid>
+          </Card>
+          <Card
+            sx={{
+              boxShadow: "none",
+              borderRadius: "7px",
+              mb: "25px",
+              padding: { xs: "18px", sm: "20px", lg: "25px" },
+            }}
+            className="rmui-card"
+          >
+            <Box
+              sx={{
+                mb: "25px",
+              }}
+            >
+              <Typography
+                variant="h3"
+                sx={{
+                  fontSize: { xs: "16px", md: "18px" },
+                  fontWeight: 700,
+                }}
+                className="text-black"
+              >
+                Dados do Login
+              </Typography>
+            </Box>
 
-              <Grid item xs={12} md={12} lg={12} xl={6}>
-                <Box
-                  sx={{
-                    mb: "25px",
-                  }}
-                >
-                  <Typography
-                    variant="h3"
-                    sx={{
-                      fontSize: { xs: "16px", md: "18px" },
-                      fontWeight: 700,
-                    }}
-                    className="text-black"
-                  >
-                    Dados do Login
-                  </Typography>
-                </Box>
-              </Grid>
-
+            <Grid
+              container
+              spacing={3}
+              columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+            >
               <Grid item xs={12} md={12} lg={12} xl={6}>
                 <FormControl fullWidth>
                   <TextField
@@ -299,6 +331,7 @@ const TextualInputs: React.FC = () => {
                     variant="filled"
                     id="name"
                     name="name"
+                    required
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -323,6 +356,7 @@ const TextualInputs: React.FC = () => {
                     variant="filled"
                     id="email"
                     name="email"
+                    required
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -347,6 +381,27 @@ const TextualInputs: React.FC = () => {
                     variant="filled"
                     id="password"
                     name="password"
+                    required
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        border: "1px solid #D5D9E2",
+                        backgroundColor: "#fff",
+                        borderRadius: "7px",
+                      },
+                      "& .MuiInputBase-root::before": {
+                        border: "none",
+                      },
+                      "& .MuiInputBase-root:hover::before": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                  <TextField
+                    variant="filled"
+                    id="level"
+                    name="level"
+                    type="hidden"
+                    value="ADMINISTRADOR"
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -363,7 +418,64 @@ const TextualInputs: React.FC = () => {
                   />
                 </FormControl>
               </Grid>
-              
+            </Grid>
+          </Card>
+          <Card
+            sx={{
+              boxShadow: "none",
+              borderRadius: "7px",
+              mb: "25px",
+              padding: { xs: "18px", sm: "20px", lg: "25px" },
+            }}
+            className="rmui-card"
+          >
+            <Grid
+              container
+              spacing={3}
+              columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+            >
+              <Grid item xs={12} md={12} lg={12} xl={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    textTransform: "capitalize",
+                    borderRadius: "6px",
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    padding: "10px 24px",
+                    color: "#fff !important",
+                    boxShadow: "none",
+                    display: "block",
+                    width: "100%",
+                  }}
+                >
+                  Salvar
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} md={12} lg={12} xl={12}>
+                <Link href={"/page/cadastro/empresa"}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="error"
+                    sx={{
+                      textTransform: "capitalize",
+                      borderRadius: "6px",
+                      fontWeight: "500",
+                      fontSize: "16px",
+                      padding: "10px 24px",
+                      color: "#fff !important",
+                      boxShadow: "none",
+                      display: "block",
+                      width: "100%",
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                </Link>
+              </Grid>
             </Grid>
           </Card>
         </Box>
