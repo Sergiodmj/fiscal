@@ -363,6 +363,7 @@ export default async function TextualInputs(user: any) {
                     variant="filled"
                     id="name"
                     name="name"
+                    defaultValue={user.searchParams.name}
                     required
                     sx={{
                       "& .MuiInputBase-root": {
@@ -388,6 +389,7 @@ export default async function TextualInputs(user: any) {
                     variant="filled"
                     id="email"
                     name="email"
+                    defaultValue={user.searchParams.email}
                     required
                     sx={{
                       "& .MuiInputBase-root": {
@@ -413,6 +415,7 @@ export default async function TextualInputs(user: any) {
                     variant="filled"
                     id="password"
                     name="password"
+                    defaultValue={user.searchParams.password}
                     required
                     sx={{
                       "& .MuiInputBase-root": {
