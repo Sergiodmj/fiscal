@@ -4,7 +4,6 @@ import BasicTable from "@/components/UiKit/Table/BasicTable";
 import DataTable from "@/components/UiKit/Table/DataTable";
 import SortingSelectingTable from "@/components/UiKit/Table/SortingSelectingTable";
 import CustomizedTables from "@/components/UiKit/Table/CustomizedTables";
-import CustomPaginationActions from "@/components/UiKit/Table/CustomPaginationActions";
 import StickyHeadTable from "@/components/UiKit/Table/StickyHeadTable";
 
 export default function Page() {
@@ -33,8 +32,6 @@ export default function Page() {
       <SortingSelectingTable />
 
       <CustomizedTables />
-
-      <CustomPaginationActions />
 
       <StickyHeadTable />
     </>
