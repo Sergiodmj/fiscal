@@ -2,13 +2,12 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
 import Link from "next/link";
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, TableCell, TableHead } from "@mui/material";
 import {
   Card,
   Typography,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   Box,
   TableRow,
@@ -25,6 +24,22 @@ export default async function Empresa() {
   if (seesion?.user.permission != "SUPER_ADMIN") {
     redirect("/page/unauthorized");
   }
+
+  const jwt = seesion?.user.token;
+
+  const res = await fetch("https://erp.sitesdahora.com.br/api/enterprises", {
+    cache: "no-cache",
+    next: {
+      tags: ["tabela-cliente"],
+    },
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+
+  const data = await res.json();
 
   return (
     <>
@@ -64,12 +79,44 @@ export default async function Empresa() {
         </Typography>
         <TableContainer component={Paper}>
           <Table>
-            <TableBody>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Empresa
-                </TableCell>
+            <TableHead>
+              <TableRow
+                sx={{
+                  th: {
+                    fontSize: "15px",
+                    color: "red",
+                  },
+                }}
+              >
+                <TableCell>Nome</TableCell>
+                <TableCell>CPF / CNPM</TableCell>
+                <TableCell>Cidde</TableCell>
+                <TableCell>Estado</TableCell>
+                <TableCell>Vencimento</TableCell>
+                <TableCell></TableCell>
               </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.profile.map((user: any) => {
+                return (
+                  <TableRow key={user.id}>
+                    <TableCell>{user.name_enterprise}</TableCell>
+                    <TableCell>{user.cpf_cnpj_enterprise}</TableCell>
+                    <TableCell>{user.city_enterprise}</TableCell>
+                    <TableCell>{user.state_enterprise}</TableCell>
+                    <TableCell>{user.validade}</TableCell>
+                    <TableCell>
+                      <Link href={{ pathname: "/page/cadastro/empresa/novo", query: user }}>
+                        <Button>
+                          <span className="material-symbols-outlined">
+                            edit
+                          </span>
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
