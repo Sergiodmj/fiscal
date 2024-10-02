@@ -15,6 +15,7 @@ import {
   TableFooter,
   TablePagination,
 } from "@mui/material";
+import FormDialog from "./FormDialog";
 
 export default async function Empresa() {
   const seesion = await getServerSession(authOptions);
@@ -113,6 +114,7 @@ export default async function Empresa() {
                           </span>
                         </Button>
                       </Link>
+                      <FormDialog />
                     </TableCell>
                   </TableRow>
                 );

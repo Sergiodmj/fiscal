@@ -26,9 +26,12 @@ export default async function TextualInputs(user: any) {
     redirect("/page/unauthorized");
   }
 
+  const jwt = seesion?.user.token;
+
   async function Salvar(form: FormData) {
     "use server";
     const data = Object.fromEntries(form);
+    console.log(JSON.stringify(data));
     if (!user.searchParams.id) {
       const url = "https://erp.sitesdahora.com.br/api/enterprise-create";
       const options = {
@@ -40,19 +43,17 @@ export default async function TextualInputs(user: any) {
       };
 
       const response = await fetch(url, options);
-      console.log(response);
     } else {
-      const url = "https://erp.sitesdahora.com.br/api/enterprise-create";
+      const url = `https://erp.sitesdahora.com.br/api/enterprise-edit-super/${user.searchParams.id}`;
       const options = {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
         },
       };
-
       const response = await fetch(url, options);
-      console.log(response);
     }
   }
 
@@ -297,164 +298,173 @@ export default async function TextualInputs(user: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} md={12} lg={12} xl={6}>
-                <FormControl fullWidth>
-                  <TextField
-                    label="Validade"
-                    placeholder="ano/mes/dia"
-                    variant="filled"
-                    id="validade"
-                    name="validade"
-                    defaultValue={user.searchParams.validade}
-                    required
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
-              </Grid>
+              {!user.searchParams.id ? (
+                <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Validade"
+                      placeholder="ano/mes/dia"
+                      variant="filled"
+                      id="validade"
+                      name="validade"
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+              ) : (
+                ""
+              )}
             </Grid>
           </Card>
-          <Card
-            sx={{
-              boxShadow: "none",
-              borderRadius: "7px",
-              mb: "25px",
-              padding: { xs: "18px", sm: "20px", lg: "25px" },
-            }}
-            className="rmui-card"
-          >
-            <Box
+
+          {!user.searchParams.id ? (
+            <Card
               sx={{
+                boxShadow: "none",
+                borderRadius: "7px",
                 mb: "25px",
+                padding: { xs: "18px", sm: "20px", lg: "25px" },
               }}
+              className="rmui-card"
             >
-              <Typography
-                variant="h3"
+              <Box
                 sx={{
-                  fontSize: { xs: "16px", md: "18px" },
-                  fontWeight: 700,
+                  mb: "25px",
                 }}
-                className="text-black"
               >
-                Dados do Login
-              </Typography>
-            </Box>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontSize: { xs: "16px", md: "18px" },
+                    fontWeight: 700,
+                  }}
+                  className="text-black"
+                >
+                  Dados do Login
+                </Typography>
+              </Box>
 
-            <Grid
-              container
-              spacing={3}
-              columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
-            >
-              <Grid item xs={12} md={12} lg={12} xl={6}>
-                <FormControl fullWidth>
-                  <TextField
-                    label="Nome"
-                    variant="filled"
-                    id="name"
-                    name="name"
-                    defaultValue={user.searchParams.name}
-                    required
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
-              </Grid>
+              <Grid
+                container
+                spacing={3}
+                columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+              >
+                <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Nome"
+                      variant="filled"
+                      id="name"
+                      name="name"
+                      defaultValue={user.searchParams.name}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
 
-              <Grid item xs={12} md={12} lg={12} xl={6}>
-                <FormControl fullWidth>
-                  <TextField
-                    label="Email"
-                    variant="filled"
-                    id="email"
-                    name="email"
-                    defaultValue={user.searchParams.email}
-                    required
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
-              </Grid>
+                <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Email"
+                      variant="filled"
+                      id="email"
+                      name="email"
+                      defaultValue={user.searchParams.email}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
 
-              <Grid item xs={12} md={12} lg={12} xl={6}>
-                <FormControl fullWidth>
-                  <TextField
-                    label="Senha"
-                    variant="filled"
-                    id="password"
-                    name="password"
-                    defaultValue={user.searchParams.password}
-                    required
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                  <TextField
-                    variant="filled"
-                    id="level"
-                    name="level"
-                    type="hidden"
-                    value="ADMINISTRADOR"
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
+                <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Senha"
+                      variant="filled"
+                      id="password"
+                      name="password"
+                      defaultValue={user.searchParams.password}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                    <TextField
+                      variant="filled"
+                      id="level"
+                      name="level"
+                      type="hidden"
+                      value="ADMINISTRADOR"
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
               </Grid>
-            </Grid>
-          </Card>
+            </Card>
+          ) : (
+            ""
+          )}
+
           <Card
             sx={{
               boxShadow: "none",
