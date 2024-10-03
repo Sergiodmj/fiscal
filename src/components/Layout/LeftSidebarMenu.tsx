@@ -133,30 +133,38 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                         </Link>
                       </li>
                     ) : (
-                      ""
+                      <>
+                        <li className="sidemenu-item">
+                          <Link
+                            href="/page/cadastro/produto"
+                            className={`sidemenu-link ${
+                              pathname === "/page/cadastro/produto"
+                                ? "active"
+                                : ""
+                            }`}
+                          >
+                            Produto
+                          </Link>
+                        </li>
+
+                        {session?.user.permission != "FUNCIONARIO" ? (
+                          <li className="sidemenu-item">
+                            <Link
+                              href="/page/cadastro/usuario"
+                              className={`sidemenu-link ${
+                                pathname === "/page/cadastro/usuario"
+                                  ? "active"
+                                  : ""
+                              }`}
+                            >
+                              Usuário
+                            </Link>
+                          </li>
+                        ) : (
+                          ""
+                        )}
+                      </>
                     )}
-
-                    <li className="sidemenu-item">
-                      <Link
-                        href="/page/cadastro/produto"
-                        className={`sidemenu-link ${
-                          pathname === "/page/cadastro/produto" ? "active" : ""
-                        }`}
-                      >
-                        Produto
-                      </Link>
-                    </li>
-
-                    <li className="sidemenu-item">
-                      <Link
-                        href="/page/cadastro/usuario"
-                        className={`sidemenu-link ${
-                          pathname === "/page/cadastro/usuario" ? "active" : ""
-                        }`}
-                      >
-                        Usuário
-                      </Link>
-                    </li>
                   </ul>
                 </AccordionDetails>
               </Accordion>

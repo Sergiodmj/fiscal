@@ -31,7 +31,6 @@ export default async function TextualInputs(user: any) {
   async function Salvar(form: FormData) {  
     "use server";
     const data = Object.fromEntries(form);
-    console.log(JSON.stringify(data));
     if (!user.searchParams.id) {
       const url = "https://erp.sitesdahora.com.br/api/enterprise-create";
       const options = {
@@ -41,8 +40,8 @@ export default async function TextualInputs(user: any) {
           "Content-Type": "application/json",
         },
       };
-
       const response = await fetch(url, options);
+      
     } else {
       const url = `https://erp.sitesdahora.com.br/api/enterprise-edit-super/${user.searchParams.id}`;
       const options = {

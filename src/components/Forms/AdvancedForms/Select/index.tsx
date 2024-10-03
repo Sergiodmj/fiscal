@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Grid, Card, Box, Typography } from "@mui/material";
-import DefaultSelect from "./DefaultSelect";
+import DefaultSelect from "../../../../app/page/cadastro/usuario/novo/DefaultSelect";
 import MultipleSelect from "./MultipleSelect";
 import MultipleSelectChip from "./MultipleSelectChip";
 

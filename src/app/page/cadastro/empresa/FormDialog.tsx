@@ -40,7 +40,7 @@ export default function FormDialog(user: any) {
       },
     };
     const response = await fetch(url, options);
-    console.log(response)
+    // console.log(response)
 
   }
 
@@ -70,6 +70,7 @@ export default function FormDialog(user: any) {
             Ensira a nova data de vencimento
           </DialogContentText>
           <TextField
+            required
             autoFocus
             margin="dense"
             id="validade"
