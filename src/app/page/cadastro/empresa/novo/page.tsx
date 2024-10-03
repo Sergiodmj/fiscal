@@ -28,7 +28,7 @@ export default async function TextualInputs(user: any) {
 
   const jwt = seesion?.user.token;
 
-  async function Salvar(form: FormData) {
+  async function Salvar(form: FormData) {  
     "use server";
     const data = Object.fromEntries(form);
     console.log(JSON.stringify(data));

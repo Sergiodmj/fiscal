@@ -12,9 +12,11 @@ import {
   Dialog,
   TextField,
 } from "@mui/material";
+import { useSession } from "next-auth/react";
 
-export default function FormDialog(props: any) {
+export default function FormDialog(user: any) {
   const [open, setOpen] = React.useState(false);
+  const { data: session } = useSession();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -23,6 +25,24 @@ export default function FormDialog(props: any) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  
+  async function Renovar(data: any) {
+    const jwt = session?.user.token;
+    const url = `https://erp.sitesdahora.com.br/api/enterprise-validate/${user.user.id}`;
+    console.log(url);
+    const options = {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+    };
+    const response = await fetch(url, options);
+    console.log(response)
+
+  }
 
   return (
     <>
@@ -37,9 +57,9 @@ export default function FormDialog(props: any) {
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries((formData as any).entries());
-            const email = formJson.email;
-            console.log(email);
+            const data = Object.fromEntries((formData as any).entries());
+            Renovar(data);
+            // console.log(data);
             handleClose();
           },
         }}
@@ -51,21 +71,19 @@ export default function FormDialog(props: any) {
           </DialogContentText>
           <TextField
             autoFocus
-            required
             margin="dense"
-            id="name"
-            name="email"
+            id="validade"
+            name="validade"
             type="text"
             fullWidth
             variant="standard"
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Subscribe</Button>
+          <Button onClick={handleClose}>Cancelar</Button>
+          <Button type="submit">Renovar</Button>
         </DialogActions>
       </Dialog>
     </>
   );
-};
-
+}

@@ -107,14 +107,19 @@ export default async function Empresa() {
                     <TableCell>{user.state_enterprise}</TableCell>
                     <TableCell>{user.validade}</TableCell>
                     <TableCell>
-                      <Link href={{ pathname: "/page/cadastro/empresa/novo", query: user }}>
+                      <Link
+                        href={{
+                          pathname: "/page/cadastro/empresa/novo",
+                          query: user,
+                        }}
+                      >
                         <Button>
                           <span className="material-symbols-outlined">
                             edit
                           </span>
                         </Button>
                       </Link>
-                      <FormDialog />
+                      <FormDialog user={user} />
                     </TableCell>
                   </TableRow>
                 );
