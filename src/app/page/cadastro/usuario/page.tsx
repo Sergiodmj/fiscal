@@ -78,7 +78,7 @@ export default async function Usuario() {
           Usuários
         </Typography>
         <TableContainer component={Paper}>
-          {/* <Table>
+          <Table>
             <TableHead>
               <TableRow
                 sx={{
@@ -89,26 +89,22 @@ export default async function Usuario() {
                 }}
               >
                 <TableCell>Nome</TableCell>
-                <TableCell>CPF / CNPM</TableCell>
-                <TableCell>Cidde</TableCell>
-                <TableCell>Estado</TableCell>
-                <TableCell>Vencimento</TableCell>
-                <TableCell></TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Função</TableCell>
+                <TableCell> </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.profile.map((user: any) => {
+              {data.users.map((user: any) => {
                 return (
                   <TableRow key={user.id}>
-                    <TableCell>{user.name_enterprise}</TableCell>
-                    <TableCell>{user.cpf_cnpj_enterprise}</TableCell>
-                    <TableCell>{user.city_enterprise}</TableCell>
-                    <TableCell>{user.state_enterprise}</TableCell>
-                    <TableCell>{user.validade}</TableCell>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.level}</TableCell>
                     <TableCell>
                       <Link
                         href={{
-                          pathname: "/page/cadastro/empresa/novo",
+                          pathname: "/page/cadastro/usuario/novo",
                           query: user,
                         }}
                       >
@@ -123,7 +119,7 @@ export default async function Usuario() {
                 );
               })}
             </TableBody>
-          </Table> */}
+          </Table>
         </TableContainer>
       </Card>
     </>

@@ -16,7 +16,6 @@ import { auth as authOptions } from "@/app/libs/auth-config";
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import DefaultSelect from "./DefaultSelect";
 
 export default async function TextualInputs(user: any) {
   const seesion = await getServerSession(authOptions);
@@ -29,7 +28,7 @@ export default async function TextualInputs(user: any) {
 
   const jwt = seesion?.user.token;
 
-  async function Salvar(form: FormData) {       
+  async function Salvar(form: FormData) {
     "use server";
     const data = Object.fromEntries(form);
     if (!user.searchParams.id) {
@@ -43,7 +42,9 @@ export default async function TextualInputs(user: any) {
         },
       };
       const response = await fetch(url, options);
-      
+      if (response.status === 200) {
+        redirect("/page/cadastro/usuario");
+      }
     } else {
       const url = `https://erp.sitesdahora.com.br/api/user-edit/${user.searchParams.id}`;
       const options = {
@@ -55,6 +56,9 @@ export default async function TextualInputs(user: any) {
         },
       };
       const response = await fetch(url, options);
+      if (response.status === 200) {
+        redirect("/page/cadastro/usuario");
+      }
     }
   }
 
@@ -145,35 +149,63 @@ export default async function TextualInputs(user: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} md={12} lg={12} xl={6}>
-                <FormControl fullWidth>
-                  <TextField
-                    label="Senha"
-                    variant="filled"
-                    id="password"
-                    name="password"
-                    defaultValue={user.searchParams.password}
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
-              </Grid>
+              {!user.searchParams.id ? (
+                <>
+                  <Grid item xs={12} md={12} lg={12} xl={6}>
+                    <FormControl fullWidth>
+                      <TextField
+                        label="Senha"
+                        variant="filled"
+                        id="password"
+                        name="password"
+                        required
+                        defaultValue={user.searchParams.password}
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            border: "1px solid #D5D9E2",
+                            backgroundColor: "#fff",
+                            borderRadius: "7px",
+                          },
+                          "& .MuiInputBase-root::before": {
+                            border: "none",
+                          },
+                          "& .MuiInputBase-root:hover::before": {
+                            border: "none",
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  </Grid>
 
-              <Grid item xs={12} md={12} lg={12} xl={6}>
-                <DefaultSelect />
-              </Grid>
-
+                  <Grid item xs={12} md={12} lg={12} xl={6}>
+                    <Box>
+                      <FormControl fullWidth>
+                        <InputLabel>Função</InputLabel>
+                        <Select
+                          labelId="level"
+                          id="level"
+                          name="level"
+                          label="Funcao"
+                          required
+                          sx={{
+                            "& fieldset": {
+                              border: "1px solid #D5D9E2",
+                              borderRadius: "7px",
+                            },
+                          }}
+                        >
+                          <MenuItem value="ADMINISTRADOR">
+                            Administrador
+                          </MenuItem>
+                          <MenuItem value="FUNCIONARIO">Funcionário</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                </>
+              ) : (
+                ""
+              )}
             </Grid>
           </Card>
 
