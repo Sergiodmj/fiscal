@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Grid, Card, Box, Typography } from "@mui/material";
-import DefaultSelect from "../../../../app/page/cadastro/usuario/novo/DefaultSelect";
 import MultipleSelect from "./MultipleSelect";
 import MultipleSelectChip from "./MultipleSelectChip";
 
@@ -40,10 +39,6 @@ const Select: React.FC = () => {
           spacing={2}
           columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
         >
-          <Grid item xs={12} md={12} lg={12} xl={4}>
-            <DefaultSelect />
-          </Grid>
-
           <Grid item xs={12} md={12} lg={12} xl={4}>
             <MultipleSelect />
           </Grid>
