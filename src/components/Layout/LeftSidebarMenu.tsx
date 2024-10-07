@@ -113,7 +113,6 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                 >
                   <i className="material-symbols-outlined">dashboard</i>
                   <span className="title">Cadastro</span>
-                  {/* <span className="trezo-badge">5</span> */}
                 </AccordionSummary>
 
                 <AccordionDetails className="mat-details">
@@ -148,18 +147,32 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                         </li>
 
                         {session?.user.permission != "FUNCIONARIO" ? (
-                          <li className="sidemenu-item">
-                            <Link
-                              href="/page/cadastro/usuario"
-                              className={`sidemenu-link ${
-                                pathname === "/page/cadastro/usuario"
-                                  ? "active"
-                                  : ""
-                              }`}
-                            >
-                              Usuário
-                            </Link>
-                          </li>
+                          <>
+                            <li className="sidemenu-item">
+                              <Link
+                                href="/page/cadastro/categoria"
+                                className={`sidemenu-link ${
+                                  pathname === "/page/cadastro/categoria"
+                                    ? "active"
+                                    : ""
+                                }`}
+                              >
+                                Categoria
+                              </Link>
+                            </li>
+                            <li className="sidemenu-item">
+                              <Link
+                                href="/page/cadastro/usuario"
+                                className={`sidemenu-link ${
+                                  pathname === "/page/cadastro/usuario"
+                                    ? "active"
+                                    : ""
+                                }`}
+                              >
+                                Usuário
+                              </Link>
+                            </li>
+                          </>
                         ) : (
                           ""
                         )}

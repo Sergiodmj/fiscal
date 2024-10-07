@@ -30,7 +30,7 @@ export default async function Usuario() {
   const res = await fetch("https://erp.sitesdahora.com.br/api/users", {
     cache: "no-cache",
     next: {
-      tags: ["tabela-cliente"],
+      tags: ["tabela-categoria"],
     },
     method: "GET",
     headers: {
