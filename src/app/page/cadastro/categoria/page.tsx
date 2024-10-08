@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
 import Link from "next/link";
-import { Button, Grid, TableCell, TableHead } from "@mui/material";
+import { Button, Grid, Tab, TableCell, TableHead } from "@mui/material";
 import {
   Card,
   Typography,
@@ -16,6 +16,8 @@ import {
   TablePagination,
 } from "@mui/material";
 import FormDialog from "./FormDialog";
+import { TabContext, TabList } from "@mui/lab";
+import LabTabs from "./LabTabs";
 
 export default async function Categoria() {
   const seesion = await getServerSession(authOptions);
@@ -56,7 +58,6 @@ export default async function Categoria() {
     }
   );
   const data2 = await res2.json();
-  console.log(data2);
 
   return (
     <>
@@ -74,6 +75,9 @@ export default async function Categoria() {
         </Link>
       </Grid>
 
+      <LabTabs />
+      
+      
       <Card
         sx={{
           boxShadow: "none",
@@ -106,6 +110,7 @@ export default async function Categoria() {
                 }}
               >
                 <TableCell>Nome</TableCell>
+                <TableCell>Status</TableCell>
                 <TableCell> </TableCell>
               </TableRow>
             </TableHead>
@@ -114,6 +119,7 @@ export default async function Categoria() {
                 return (
                   <TableRow key={category.id}>
                     <TableCell>{category.name_category}</TableCell>
+                    <TableCell>{category.status_category}</TableCell>
                     <TableCell>
                       <Link
                         href={{
@@ -169,6 +175,7 @@ export default async function Categoria() {
                 }}
               >
                 <TableCell>Nome</TableCell>
+                <TableCell>Status</TableCell>
                 <TableCell> </TableCell>
               </TableRow>
             </TableHead>
@@ -177,6 +184,7 @@ export default async function Categoria() {
                 return (
                   <TableRow key={category.id}>
                     <TableCell>{category.name_category}</TableCell>
+                    <TableCell>{category.status_category}</TableCell>
                     <TableCell>
                       <Link
                         href={{
