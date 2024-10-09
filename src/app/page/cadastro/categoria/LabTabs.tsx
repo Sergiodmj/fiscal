@@ -1,14 +1,17 @@
 "use client";
 
 import React from "react";
-import { Card, Typography, Box, Tab } from "@mui/material";
+import { Card, Typography, Box, Tab, TableContainer, Table, Paper, TableHead, TableRow, TableCell, TableBody, Button } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import Link from "next/link";
+import FormDialog from "./FormDialog";
+
 
 let exibir: any
 
-const LabTabs: React.FC = () => {
+export default function LabTabs(data: any)  {
   const [value, setValue] = React.useState("1");
 
   exibir = value
@@ -52,13 +55,99 @@ const LabTabs: React.FC = () => {
               </TabList>
             </Box>
 
-            <TabPanel value="1">Item One</TabPanel>
-            <TabPanel value="2">Item Two</TabPanel>
+            <TabPanel value="1">
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow
+                      sx={{
+                        th: {
+                          fontSize: "15px",
+                          color: "red",
+                        },
+                      }}
+                    >
+                      <TableCell>Nome</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell> </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data.data.categorys.map((category: any) => {
+                      return (
+                        <TableRow key={category.id}>
+                          <TableCell>{category.name_category}</TableCell>
+                          <TableCell>{category.status_category}</TableCell>
+                          <TableCell>
+                            <Link
+                              href={{
+                                pathname: "/page/cadastro/categoria/novo",
+                                query: category,
+                              }}
+                            >
+                              <Button>
+                                <span className="material-symbols-outlined">
+                                  edit
+                                </span>
+                              </Button>
+                            </Link>
+                            <FormDialog category={category} />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </TabPanel>
+            <TabPanel value="2">
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow
+                      sx={{
+                        th: {
+                          fontSize: "15px",
+                          color: "red",
+                        },
+                      }}
+                    >
+                      <TableCell>Nome</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell> </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data.data2.categorys.map((category: any) => {
+                      return (
+                        <TableRow key={category.id}>
+                          <TableCell>{category.name_category}</TableCell>
+                          <TableCell>{category.status_category}</TableCell>
+                          <TableCell>
+                            <Link
+                              href={{
+                                pathname: "/page/cadastro/categoria/novo",
+                                query: category,
+                              }}
+                            >
+                              <Button>
+                                <span className="material-symbols-outlined">
+                                  edit
+                                </span>
+                              </Button>
+                            </Link>
+                            <FormDialog category={category} />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </TabPanel>
           </TabContext>
         </Box>
       </Card>
     </>
   );
 };
-
-export default LabTabs;

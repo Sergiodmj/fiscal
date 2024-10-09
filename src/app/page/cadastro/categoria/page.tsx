@@ -2,21 +2,17 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
 import Link from "next/link";
-import { Button, Grid, Tab, TableCell, TableHead } from "@mui/material";
+import { Button, Grid, TableCell, TableHead } from "@mui/material";
 import {
   Card,
   Typography,
   Table,
   TableBody,
   TableContainer,
-  Box,
   TableRow,
   Paper,
-  TableFooter,
-  TablePagination,
 } from "@mui/material";
 import FormDialog from "./FormDialog";
-import { TabContext, TabList } from "@mui/lab";
 import LabTabs from "./LabTabs";
 
 export default async function Categoria() {
@@ -75,9 +71,9 @@ export default async function Categoria() {
         </Link>
       </Grid>
 
-      <LabTabs />
+      <LabTabs data={data} data2={data2} />
       
-      
+{/*       
       <Card
         sx={{
           boxShadow: "none",
@@ -141,9 +137,9 @@ export default async function Categoria() {
             </TableBody>
           </Table>
         </TableContainer>
-      </Card>
+      </Card> */}
 
-      <Card
+      {/* <Card
         sx={{
           boxShadow: "none",
           borderRadius: "7px",
@@ -206,7 +202,7 @@ export default async function Categoria() {
             </TableBody>
           </Table>
         </TableContainer>
-      </Card>
+      </Card> */}
     </>
   );
 }
