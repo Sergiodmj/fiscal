@@ -1,24 +1,35 @@
 "use client";
 
 import React from "react";
-import { Card, Typography, Box, Tab, TableContainer, Table, Paper, TableHead, TableRow, TableCell, TableBody, Button } from "@mui/material";
+import {
+  Card,
+  Typography,
+  Box,
+  Tab,
+  TableContainer,
+  Table,
+  Paper,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button,
+} from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Link from "next/link";
-import FormDialog from "./FormDialog";
+import { useSession } from "next-auth/react";
 
-
-let exibir: any
-
-export default function LabTabs(data: any)  {
+export default function LabTabs(data: any) {
+  const { data: session } = useSession();
+  const jwt = session?.user.token;
   const [value, setValue] = React.useState("1");
-
-  exibir = value
-
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+  const inativar = { status_category: "INATIVO" };
+  const ativar = { status_category: "ATIVO" };
 
   return (
     <>
@@ -91,7 +102,27 @@ export default function LabTabs(data: any)  {
                                 </span>
                               </Button>
                             </Link>
-                            <FormDialog category={category} />
+                            <Button
+                              onClick={() => {
+                                fetch(
+                                  `https://erp.sitesdahora.com.br/api/inactive-category/${category.id}`,
+                                  {
+                                    cache: "no-cache",
+                                    method: "PUT",
+                                    body: JSON.stringify(inativar),
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                      Authorization: `Bearer ${jwt}`,
+                                    },
+                                  }
+                                );
+                                window.location.reload();
+                              }}
+                            >
+                              <span className="material-symbols-outlined">
+                                edit
+                              </span>
+                            </Button>
                           </TableCell>
                         </TableRow>
                       );
@@ -100,6 +131,7 @@ export default function LabTabs(data: any)  {
                 </Table>
               </TableContainer>
             </TabPanel>
+
             <TabPanel value="2">
               <TableContainer component={Paper}>
                 <Table>
@@ -136,7 +168,27 @@ export default function LabTabs(data: any)  {
                                 </span>
                               </Button>
                             </Link>
-                            <FormDialog category={category} />
+                            <Button
+                              onClick={() => {
+                                fetch(
+                                  `https://erp.sitesdahora.com.br/api/inactive-category/${category.id}`,
+                                  {
+                                    cache: "no-cache",
+                                    method: "PUT",
+                                    body: JSON.stringify(ativar),
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                      Authorization: `Bearer ${jwt}`,
+                                    },
+                                  }
+                                );
+                                window.location.reload();
+                              }}
+                            >
+                              <span className="material-symbols-outlined">
+                                edit
+                              </span>
+                            </Button>
                           </TableCell>
                         </TableRow>
                       );
@@ -150,4 +202,4 @@ export default function LabTabs(data: any)  {
       </Card>
     </>
   );
-};
+}

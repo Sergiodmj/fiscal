@@ -2,17 +2,9 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
 import Link from "next/link";
-import { Button, Grid, TableCell, TableHead } from "@mui/material";
-import {
-  Card,
-  Typography,
-  Table,
-  TableBody,
-  TableContainer,
-  TableRow,
-  Paper,
-} from "@mui/material";
-import FormDialog from "./FormDialog";
+import { Button, Grid } from "@mui/material";
+import useSWR from "swr";
+
 import LabTabs from "./LabTabs";
 
 export default async function Categoria() {
@@ -26,6 +18,8 @@ export default async function Categoria() {
 
   const jwt = seesion?.user.token;
 
+
+
   const res = await fetch("https://erp.sitesdahora.com.br/api/categories", {
     cache: "no-cache",
     next: {
@@ -38,6 +32,7 @@ export default async function Categoria() {
     },
   });
   const data = await res.json();
+  
 
   const res2 = await fetch(
     "https://erp.sitesdahora.com.br/api/categories-inactive",
@@ -72,8 +67,8 @@ export default async function Categoria() {
       </Grid>
 
       <LabTabs data={data} data2={data2} />
-      
-{/*       
+
+      {/*       
       <Card
         sx={{
           boxShadow: "none",
