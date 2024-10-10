@@ -22,12 +22,15 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportIcon from "@mui/icons-material/Support";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { useSession } from "next-auth/react";
 
 interface ProfileProps {}
 
 const Profile: React.FC<ProfileProps> = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { data: session } = useSession();
+
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -48,7 +51,7 @@ const Profile: React.FC<ProfileProps> = () => {
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
         >
-          <Avatar
+          {/* <Avatar
             src="/images/admin.png"
             alt="Olivia"
             sx={{
@@ -57,7 +60,7 @@ const Profile: React.FC<ProfileProps> = () => {
               border: "2px solid #C2CDFF",
             }}
             className="mr-8"
-          />
+          /> */}
           <Typography
             variant="h3"
             sx={{
@@ -67,7 +70,7 @@ const Profile: React.FC<ProfileProps> = () => {
             }}
             className="text-black"
           >
-            Nome
+            {session && <div>{session.user.name}</div>}
           </Typography>
           <KeyboardArrowDownIcon sx={{ fontSize: "15px" }} />
         </IconButton>

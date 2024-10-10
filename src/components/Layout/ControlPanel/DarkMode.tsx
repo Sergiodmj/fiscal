@@ -48,7 +48,7 @@ const DarkMode: React.FC = () => {
           }}
           className="text-black border-bottom"
         >
-          Dark/Light Mode
+          Modo Dark/Light
         </Typography>
 
         <Button
@@ -61,7 +61,7 @@ const DarkMode: React.FC = () => {
             color: "#fff !important",
           }}
         >
-          Switch to {isDarkMode ? "Light Mode" : "Dark Mode"}
+          Mudar para {isDarkMode ? "Modo Light" : "Modo Dark"}
         </Button>
       </Box>
     </>

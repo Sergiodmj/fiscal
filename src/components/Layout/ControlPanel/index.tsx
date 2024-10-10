@@ -59,7 +59,7 @@ const ControlPanel: React.FC = () => {
                 variant="h6"
                 component="div"
               >
-                Control Panel
+                Painel de controle
               </Typography>
             </Toolbar>
           </AppBar>
@@ -69,9 +69,6 @@ const ControlPanel: React.FC = () => {
 
             <DarkMode />
 
-            <OnlySidebarDarkMode />
-
-            <OnlyHeaderDarkMode />
           </Box>
 
           <div className="control-panel-footer">

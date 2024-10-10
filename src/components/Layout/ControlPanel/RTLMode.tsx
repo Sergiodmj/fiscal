@@ -35,7 +35,7 @@ const RTLMode: React.FC = () => {
           }}
           className="text-black border-bottom"
         >
-          RTL/LTR Mode
+          Inverter Orientação
         </Typography>
 
         <Button
@@ -48,7 +48,7 @@ const RTLMode: React.FC = () => {
           }}
           onClick={handleButtonClick}
         >
-          Switch to RTL/LTR
+          Inverter
         </Button>
       </Box>
     </>
