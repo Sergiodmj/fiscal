@@ -20,6 +20,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { revalidateTag } from "next/cache";
 
 export default function LabTabs(data: any) {
   const { data: session } = useSession();
@@ -120,7 +121,7 @@ export default function LabTabs(data: any) {
                               }}
                             >
                               <span className="material-symbols-outlined">
-                                edit
+                                remove
                               </span>
                             </Button>
                           </TableCell>
@@ -185,9 +186,7 @@ export default function LabTabs(data: any) {
                                 window.location.reload();
                               }}
                             >
-                              <span className="material-symbols-outlined">
-                                edit
-                              </span>
+                              <span className="material-symbols-outlined">add</span>
                             </Button>
                           </TableCell>
                         </TableRow>

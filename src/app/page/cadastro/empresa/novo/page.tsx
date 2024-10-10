@@ -28,7 +28,7 @@ export default async function TextualInputs(user: any) {
 
   const jwt = seesion?.user.token;
 
-  async function Salvar(form: FormData) {  
+  async function Salvar(form: FormData) {
     "use server";
     const data = Object.fromEntries(form);
     if (!user.searchParams.id) {
@@ -41,7 +41,6 @@ export default async function TextualInputs(user: any) {
         },
       };
       const response = await fetch(url, options);
-      
     } else {
       const url = `https://erp.sitesdahora.com.br/api/enterprise-edit-super/${user.searchParams.id}`;
       const options = {
@@ -54,6 +53,7 @@ export default async function TextualInputs(user: any) {
       };
       const response = await fetch(url, options);
     }
+    redirect("/page/cadastro/empresa");
   }
 
   return (

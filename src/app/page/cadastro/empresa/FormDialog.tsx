@@ -26,7 +26,6 @@ export default function FormDialog(user: any) {
     setOpen(false);
   };
 
-  
   async function Renovar(data: any) {
     const jwt = session?.user.token;
     const url = `https://erp.sitesdahora.com.br/api/enterprise-validate/${user.user.id}`;
@@ -39,9 +38,10 @@ export default function FormDialog(user: any) {
         Authorization: `Bearer ${jwt}`,
       },
     };
-    const response = await fetch(url, options);
-    // console.log(response)
+    fetch(url, options);
+    window.location.reload();
 
+    // console.log(response)
   }
 
   return (
