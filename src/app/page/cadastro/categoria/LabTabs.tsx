@@ -20,7 +20,6 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { revalidateTag } from "next/cache";
 
 export default function LabTabs(data: any) {
   const { data: session } = useSession();
