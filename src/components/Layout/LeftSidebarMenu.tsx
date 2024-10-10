@@ -158,6 +158,7 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                                 }`}
                               >
                                 Categoria
+                                <span className="trezo-badge">adm</span>
                               </Link>
                             </li>
                             <li className="sidemenu-item">
@@ -170,6 +171,7 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                                 }`}
                               >
                                 Usuário
+                                <span className="trezo-badge">adm</span>
                               </Link>
                             </li>
                           </>
