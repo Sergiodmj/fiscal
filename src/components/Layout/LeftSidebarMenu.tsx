@@ -160,7 +160,36 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                                 Categoria
                                 <span className="trezo-badge">adm</span>
                               </Link>
-                            </li>
+                              </li>
+
+                            <li className="sidemenu-item">
+                              <Link
+                                href="/page/cadastro/uniMedida"
+                                className={`sidemenu-link ${
+                                  pathname === "/page/cadastro/uniMedida"
+                                    ? "active"
+                                    : ""
+                                }`}
+                              >
+                                Uni medida
+                                <span className="trezo-badge">adm</span>
+                              </Link>
+                              </li>
+
+                            <li className="sidemenu-item">
+                              <Link
+                                href="/page/cadastro/ncm"
+                                className={`sidemenu-link ${
+                                  pathname === "/page/cadastro/ncm"
+                                    ? "active"
+                                    : ""
+                                }`}
+                              >
+                                Ncm
+                                <span className="trezo-badge">adm</span>
+                              </Link>
+                              </li>
+                              
                             <li className="sidemenu-item">
                               <Link
                                 href="/page/cadastro/usuario"
