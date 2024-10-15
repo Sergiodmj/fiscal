@@ -31,6 +31,7 @@ export default async function TextualInputs(ncm: any) {
   async function Salvar(form: FormData) {
     "use server";
     const data = Object.fromEntries(form);
+    console.log(data)
     if (!ncm.searchParams.id) {
       const url = "https://erp.sitesdahora.com.br/api/ncm-create";
       const options = {
@@ -42,6 +43,7 @@ export default async function TextualInputs(ncm: any) {
         },
       };
       const response = await fetch(url, options);
+      console.log(response)
 
       if (response.status === 200) {
         redirect("/page/cadastro/ncm");
@@ -151,29 +153,6 @@ export default async function TextualInputs(ncm: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} md={12} lg={12} xl={6}>
-                <FormControl fullWidth>
-                  <TextField
-                    variant="filled"
-                    id="status_ncm"
-                    name="status_ncm"
-                    value={"ATIVO"}
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
-              </Grid>
             </Grid>
           </Card>
 

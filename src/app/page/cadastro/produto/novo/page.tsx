@@ -1,0 +1,496 @@
+"use client";
+import {
+  Grid,
+  Card,
+  Box,
+  Typography,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  TextField,
+  Select,
+  SelectChangeEvent,
+  Button,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Autocomplete,
+} from "@mui/material";
+import { useSession } from "next-auth/react";
+// import { getServerSession } from "next-auth";
+// import { auth as authOptions } from "@/app/libs/auth-config";
+
+import Link from "next/link";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+export default function TextualInputs(product: any) {
+  const router = useRouter();
+  const { data: session } = useSession();
+  const [gEstoque, setGEestoque] = useState("1");
+  const [ncms, setNcms] = useState([]);
+  const [ncmsId, setNcmsID] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [categoryId, setCategoryID] = useState([]);
+  const [unimed, setUnimed] = useState([]);
+  const [unimedId, setUnimedID] = useState([]);
+
+  if (!session) {
+    redirect("/");
+  }
+  if (session?.user.permission != "ADMINISTRADOR") {
+    redirect("/page/unauthorized");
+  }
+
+  const jwt = session?.user.token;
+
+  function Salvar(form: FormData) {
+    const data = Object.fromEntries(form);
+    if (!product.searchParams.id) {
+      // console.log({
+      //   name_product: data.name_product,
+      //   manage_stock: data.manage_stock,
+      //   barcode: data.barcode,
+      //   ncm_id: ncmsId,
+      //   category_id: categoryId,
+      //   unit_id: unimedId,
+      //   stock_min: data.stock_min,
+      //   price_sale: data.price_sale,
+      //   price_cost: data.price_cost,
+      // });
+      const result = async () => {
+        const response = await fetch(
+          "https://erp.sitesdahora.com.br/api/product-create",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              name_product: data.name_product,
+              manage_stock: data.manage_stock,
+              barcode: data.barcode,
+              ncm_id: ncmsId,
+              category_id: categoryId,
+              unit_id: unimedId,
+              stock_min: data.stock_min,
+              price_sale: data.price_sale,
+              price_cost: data.price_cost,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          // redirect("/page/cadastro/produto");
+          router.push("/page/cadastro/produto");
+          console.log(response)
+        };
+      }
+      result()
+    } else {
+      const url = `https://erp.sitesdahora.com.br/api/product-edit/${product.searchParams.id}`;
+      const options = {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      };
+      // const response = await fetch(url, options);
+      // if (response.status === 200) {
+      //   redirect("/page/cadastro/produto");
+      // }
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://erp.sitesdahora.com.br/api/ncms",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        ); // URL relativa ou absoluta
+        const result = await response.json();
+        setNcms(result.ncms);
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      }
+    };
+    const fetchData2 = async () => {
+      try {
+        const response = await fetch(
+          "https://erp.sitesdahora.com.br/api/categories",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        ); // URL relativa ou absoluta
+        const result = await response.json();
+        setCategory(result.categorys);
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      }
+    };
+    const fetchData3 = async () => {
+      try {
+        const response = await fetch(
+          "https://erp.sitesdahora.com.br/api/units",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        ); // URL relativa ou absoluta
+        const result = await response.json();
+        setUnimed(result.units);
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      }
+    };
+
+    fetchData();
+    fetchData2();
+    fetchData3();
+  }, []);
+
+  const result = ncms.map((item: any) => ({
+    label: item.name_ncm,
+    id: item.id,
+  }));
+
+  const result2 = category.map((item: any) => ({
+    label: item.name_category,
+    id: item.id,
+  }));
+  const result3 = unimed.map((item: any) => ({
+    label: item.name_unit,
+    id: item.id,
+  }));
+
+  return (
+    <>
+      <form action={Salvar}>
+        <Box>
+          <Card
+            sx={{
+              boxShadow: "none",
+              borderRadius: "7px",
+              mb: "25px",
+              padding: { xs: "18px", sm: "20px", lg: "25px" },
+            }}
+            className="rmui-card"
+          >
+            <Box
+              sx={{
+                mb: "25px",
+              }}
+            >
+              <Typography
+                variant="h3"
+                sx={{
+                  fontSize: { xs: "16px", md: "18px" },
+                  fontWeight: 700,
+                }}
+                className="text-black"
+              >
+                Novo Produto
+              </Typography>
+            </Box>
+
+            <Grid
+              container
+              spacing={3}
+              columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+            >
+              <Grid item xs={12} md={12} lg={12} xl={6}>
+                <FormControl fullWidth>
+                  <FormLabel id="demo-row-radio-buttons-group-label">
+                    Gerenciar estoque para esse produto ?
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="type_partner"
+                  >
+                    <FormControlLabel
+                      value="1"
+                      // onChange={() => {setGEestoque("1")}}
+                      onClick={() => {
+                        setGEestoque("1");
+                      }}
+                      control={<Radio className="dark-radio" />}
+                      label="Gerenciar"
+                    />
+                    <FormControlLabel
+                      value="0"
+                      onClick={() => {
+                        setGEestoque("0");
+                      }}
+                      control={<Radio className="dark-radio" />}
+                      label="Não Gerenciar"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={12} lg={12} xl={6}>
+                <FormControl fullWidth>
+                  <TextField
+                    label="Nome"
+                    variant="filled"
+                    id="name_product"
+                    name="name_product"
+                    defaultValue={product.searchParams.nome_product}
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        border: "1px solid #D5D9E2",
+                        backgroundColor: "#fff",
+                        borderRadius: "7px",
+                      },
+                      "& .MuiInputBase-root::before": {
+                        border: "none",
+                      },
+                      "& .MuiInputBase-root:hover::before": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={12} lg={12} xl={6}>
+                <FormControl fullWidth>
+                  <TextField
+                    label="Código de barras"
+                    variant="filled"
+                    id="barcode"
+                    name="barcode"
+                    defaultValue={product.searchParams.barcode}
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        border: "1px solid #D5D9E2",
+                        backgroundColor: "#fff",
+                        borderRadius: "7px",
+                      },
+                      "& .MuiInputBase-root::before": {
+                        border: "none",
+                      },
+                      "& .MuiInputBase-root:hover::before": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={12} lg={12} xl={6}>
+                <FormControl fullWidth>
+                  <Autocomplete
+                    disablePortal
+                    options={result}
+                    onChange={(event: any, newValue: any | null) => {
+                      setNcmsID(newValue.id);
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="NCM" required />
+                    )}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={12} lg={12} xl={6}>
+                <FormControl fullWidth>
+                  <Autocomplete
+                    disablePortal
+                    options={result2}
+                    onChange={(event: any, newValue: any | null) => {
+                      setCategoryID(newValue.id);
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Categoria" required />
+                    )}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={12} lg={12} xl={6}>
+                <FormControl fullWidth>
+                  <Autocomplete
+                    disablePortal
+                    options={result3}
+                    onChange={(event: any, newValue: any | null) => {
+                      setUnimedID(newValue.id);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Unidade de medida"
+                        required
+                      />
+                    )}
+                  />
+                </FormControl>
+              </Grid>
+
+              {gEstoque === "1" ? (
+                <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Estoque Mínimo"
+                      variant="filled"
+                      type="number"
+                      id="stock_min"
+                      name="stock_min"
+                      defaultValue={product.searchParams.stock_min}
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+              ) : (
+                ""
+              )}
+
+              <Grid item xs={12} md={12} lg={12} xl={6}>
+                <FormControl fullWidth>
+                  <TextField
+                    label="Preço de venda"
+                    variant="filled"
+                    type="number"
+                    id="price_sale"
+                    name="price_sale"
+                    defaultValue={product.searchParams.price_sale}
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        border: "1px solid #D5D9E2",
+                        backgroundColor: "#fff",
+                        borderRadius: "7px",
+                      },
+                      "& .MuiInputBase-root::before": {
+                        border: "none",
+                      },
+                      "& .MuiInputBase-root:hover::before": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={12} lg={12} xl={6}>
+                <FormControl fullWidth>
+                  <TextField
+                    label="Preço de custo"
+                    variant="filled"
+                    type="number"
+                    id="price_cost"
+                    name="price_cost"
+                    defaultValue={product.searchParams.price_cost}
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        border: "1px solid #D5D9E2",
+                        backgroundColor: "#fff",
+                        borderRadius: "7px",
+                      },
+                      "& .MuiInputBase-root::before": {
+                        border: "none",
+                      },
+                      "& .MuiInputBase-root:hover::before": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Card>
+
+          <Card
+            sx={{
+              boxShadow: "none",
+              borderRadius: "7px",
+              mb: "25px",
+              padding: { xs: "18px", sm: "20px", lg: "25px" },
+            }}
+            className="rmui-card"
+          >
+            <Grid
+              container
+              spacing={3}
+              columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+            >
+              <Grid item xs={12} md={12} lg={12} xl={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    textTransform: "capitalize",
+                    borderRadius: "6px",
+                    fontWeight: "500",
+                    fontSize: "16px",
+                    padding: "10px 24px",
+                    color: "#fff !important",
+                    boxShadow: "none",
+                    display: "block",
+                    width: "100%",
+                  }}
+                >
+                  Salvar
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} md={12} lg={12} xl={12}>
+                <Link href={"/page/cadastro/produto"}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="error"
+                    sx={{
+                      textTransform: "capitalize",
+                      borderRadius: "6px",
+                      fontWeight: "500",
+                      fontSize: "16px",
+                      padding: "10px 24px",
+                      color: "#fff !important",
+                      boxShadow: "none",
+                      display: "block",
+                      width: "100%",
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                </Link>
+              </Grid>
+            </Grid>
+          </Card>
+        </Box>
+      </form>
+    </>
+  );
+}
+
+// export default TextualInputs;

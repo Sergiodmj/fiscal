@@ -39,7 +39,6 @@ export default async function Cliente() {
     },
   });
   const data2 = await res2.json();
-  console.log(data2);
 
 
   return (
