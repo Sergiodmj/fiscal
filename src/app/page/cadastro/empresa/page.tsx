@@ -16,6 +16,7 @@ import {
   TablePagination,
 } from "@mui/material";
 import FormDialog from "./FormDialog";
+import { format } from "date-fns";
 
 export default async function Empresa() {
   const seesion = await getServerSession(authOptions);
@@ -104,8 +105,12 @@ export default async function Empresa() {
                     <TableCell>{user.name_enterprise}</TableCell>
                     <TableCell>{user.cpf_cnpj_enterprise}</TableCell>
                     <TableCell>{user.city_enterprise}</TableCell>
-                    <TableCell>{user.state_enterprise}</TableCell>
-                    <TableCell>{user.validade}</TableCell>
+                    <TableCell>
+                      {user.state_enterprise}
+                    </TableCell>
+                    <TableCell>
+                      {format(new Date(user.validade), "dd/MM/yyyy")}
+                    </TableCell>
                     <TableCell>
                       <Link
                         href={{

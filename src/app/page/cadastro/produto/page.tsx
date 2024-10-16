@@ -15,11 +15,7 @@ export default async function Produto() {
 
   const jwt = seesion?.user.token;
 
-  const res = await fetch("https://erp.sitesdahora.com.br/api/clients", {
-    // cache: "no-cache",
-    next: {
-      tags: ["tabela-categoria"],
-    },
+  const res = await fetch("https://erp.sitesdahora.com.br/api/products", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -27,19 +23,21 @@ export default async function Produto() {
     },
   });
   const data = await res.json();
+  console.log(data)
 
-  const res2 = await fetch("https://erp.sitesdahora.com.br/api/providers", {
-    // cache: "no-cache",
-    next: {
-      tags: ["tabela-categoria2"],
-    },
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${jwt}`,
-    },
-  });
+  const res2 = await fetch(
+    "https://erp.sitesdahora.com.br/api/products-inactive",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
   const data2 = await res2.json();
+
+  console.log(data.products);
 
   return (
     <>

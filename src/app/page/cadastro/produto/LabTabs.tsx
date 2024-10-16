@@ -19,12 +19,19 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { format } from "date-fns";
 
 export default function LabTabs(data: any) {
+  const { data: session } = useSession();
+  const jwt = session?.user.token;
   const [value, setValue] = React.useState("1");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+
+  const inativar = { status_product: "INATIVO" };
+  const ativar = { status_product: "ATIVO" };
 
   return (
     <>
@@ -74,22 +81,34 @@ export default function LabTabs(data: any) {
                       }}
                     >
                       <TableCell>Nome</TableCell>
-                      <TableCell>TeleFone</TableCell>
+                      <TableCell>Categoria</TableCell>
+                      <TableCell>Uni Medida</TableCell>
+                      <TableCell>Preço de venda</TableCell>
                       <TableCell> </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data.data.clients.map((client: any) => {
+                    {data.data.products.map((product: any) => {
                       return (
-                        <TableRow key={client.id}>
-                          <TableCell>{client.nome_client}</TableCell>
-                          <TableCell>{client.fone_client}</TableCell>
+                        <TableRow key={product.id}>
+                          <TableCell>{product.name_product}</TableCell>
+                          <TableCell>
+                            {product.category.name_category}
+                          </TableCell>
+                          <TableCell>{product.unit.name_unit}</TableCell>
+                          <TableCell>
+                            {new Intl.NumberFormat("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            }).format(product.price_sale)}
+                          </TableCell>
+
                           <TableCell>
                             <Link
                               href={{
                                 pathname:
-                                  "/page/cadastro/cliente-fornecedor/novo",
-                                query: client,
+                                  "/page/cadastro/produto/novo",
+                                query: product,
                               }}
                             >
                               <Button>
@@ -98,6 +117,27 @@ export default function LabTabs(data: any) {
                                 </span>
                               </Button>
                             </Link>
+                            <Button
+                              onClick={() => {
+                                fetch(
+                                  `https://erp.sitesdahora.com.br/api/product-edit-status/${product.id}`,
+                                  {
+                                    cache: "no-cache",
+                                    method: "PUT",
+                                    body: JSON.stringify(inativar),
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                      Authorization: `Bearer ${jwt}`,
+                                    },
+                                  }
+                                );
+                                window.location.reload();
+                              }}
+                            >
+                              <span className="material-symbols-outlined">
+                                remove
+                              </span>
+                            </Button>
                           </TableCell>
                         </TableRow>
                       );
@@ -120,22 +160,34 @@ export default function LabTabs(data: any) {
                       }}
                     >
                       <TableCell>Nome</TableCell>
-                      <TableCell>TeleFone</TableCell>
+                      <TableCell>Categoria</TableCell>
+                      <TableCell>Uni Medida</TableCell>
+                      <TableCell>Preço de venda</TableCell>
                       <TableCell> </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data.data2.providers.map((providers: any) => {
+                    {data.data2.products.map((product: any) => {
                       return (
-                        <TableRow key={providers.id}>
-                          <TableCell>{providers.nome_client}</TableCell>
-                          <TableCell>{providers.fone_client}</TableCell>
+                        <TableRow key={product.id}>
+                          <TableCell>{product.name_product}</TableCell>
+                          <TableCell>
+                            {product.category.name_category}
+                          </TableCell>
+                          <TableCell>{product.unit.name_unit}</TableCell>
+                          <TableCell>
+                            {new Intl.NumberFormat("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            }).format(product.price_sale)}
+                          </TableCell>
+
                           <TableCell>
                             <Link
                               href={{
                                 pathname:
-                                  "/page/cadastro/cliente-fornecedor/novo",
-                                query: providers,
+                                  "/page/cadastro/produto/novo",
+                                query: product,
                               }}
                             >
                               <Button>
@@ -144,6 +196,27 @@ export default function LabTabs(data: any) {
                                 </span>
                               </Button>
                             </Link>
+                            <Button
+                              onClick={() => {
+                                fetch(
+                                  `https://erp.sitesdahora.com.br/api/product-edit-status/${product.id}`,
+                                  {
+                                    cache: "no-cache",
+                                    method: "PUT",
+                                    body: JSON.stringify(ativar),
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                      Authorization: `Bearer ${jwt}`,
+                                    },
+                                  }
+                                );
+                                window.location.reload();
+                              }}
+                            >
+                              <span className="material-symbols-outlined">
+                                add
+                              </span>
+                            </Button>
                           </TableCell>
                         </TableRow>
                       );

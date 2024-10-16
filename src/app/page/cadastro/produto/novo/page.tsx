@@ -5,11 +5,7 @@ import {
   Box,
   Typography,
   FormControl,
-  InputLabel,
-  MenuItem,
   TextField,
-  Select,
-  SelectChangeEvent,
   Button,
   FormLabel,
   RadioGroup,
@@ -35,6 +31,10 @@ export default function TextualInputs(product: any) {
   const [categoryId, setCategoryID] = useState([]);
   const [unimed, setUnimed] = useState([]);
   const [unimedId, setUnimedID] = useState([]);
+  const [pVenda, setPVenda] = useState("");
+  const [pVendaNumerico, setPVendaNumerico] = useState("");
+  const [pCusto, setPCusto] = useState("");
+  const [pCustoNumerico, setPCustoNumerico] = useState("");
 
   if (!session) {
     redirect("/");
@@ -48,17 +48,6 @@ export default function TextualInputs(product: any) {
   function Salvar(form: FormData) {
     const data = Object.fromEntries(form);
     if (!product.searchParams.id) {
-      // console.log({
-      //   name_product: data.name_product,
-      //   manage_stock: data.manage_stock,
-      //   barcode: data.barcode,
-      //   ncm_id: ncmsId,
-      //   category_id: categoryId,
-      //   unit_id: unimedId,
-      //   stock_min: data.stock_min,
-      //   price_sale: data.price_sale,
-      //   price_cost: data.price_cost,
-      // });
       const result = async () => {
         const response = await fetch(
           "https://erp.sitesdahora.com.br/api/product-create",
@@ -66,14 +55,14 @@ export default function TextualInputs(product: any) {
             method: "POST",
             body: JSON.stringify({
               name_product: data.name_product,
-              manage_stock: data.manage_stock,
+              manage_stock: gEstoque,
               barcode: data.barcode,
               ncm_id: ncmsId,
               category_id: categoryId,
               unit_id: unimedId,
               stock_min: data.stock_min,
-              price_sale: data.price_sale,
-              price_cost: data.price_cost,
+              price_sale: pVendaNumerico,
+              price_cost: pCustoNumerico,
             }),
             headers: {
               "Content-Type": "application/json",
@@ -81,13 +70,24 @@ export default function TextualInputs(product: any) {
             },
           }
         );
+        console.log(
+          JSON.stringify({
+            name_product: data.name_product,
+            manage_stock: gEstoque,
+            barcode: data.barcode,
+            ncm_id: ncmsId,
+            category_id: categoryId,
+            unit_id: unimedId,
+            stock_min: data.stock_min,
+            price_sale: pVendaNumerico,
+            price_cost: pCustoNumerico,
+          })
+        );
         if (response.status === 200) {
-          // redirect("/page/cadastro/produto");
           router.push("/page/cadastro/produto");
-          console.log(response)
-        };
-      }
-      result()
+        }
+      };
+      result();
     } else {
       const url = `https://erp.sitesdahora.com.br/api/product-edit/${product.searchParams.id}`;
       const options = {
@@ -98,10 +98,6 @@ export default function TextualInputs(product: any) {
           Authorization: `Bearer ${jwt}`,
         },
       };
-      // const response = await fetch(url, options);
-      // if (response.status === 200) {
-      //   redirect("/page/cadastro/produto");
-      // }
     }
   }
 
@@ -166,8 +162,33 @@ export default function TextualInputs(product: any) {
     fetchData3();
   }, []);
 
+  const handleChange = (e) => {
+    const rawValue = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+    const formattedValue = new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(rawValue / 100); // Divida por 100 para lidar com valores decimais
+
+    setPVenda(formattedValue);
+
+    // Convertendo para formato numérico: substituindo vírgulas por pontos
+    setPVendaNumerico(formattedValue.replace(/\./g, "").replace(",", ".")); // Converte para número
+  };
+
+  const handleChange2 = (e) => {
+    const rawValue = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+    const formattedValue = new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(rawValue / 100); // Divida por 100 para lidar com valores decimais
+
+    setPCusto(formattedValue);
+
+    setPCustoNumerico(formattedValue.replace(/\./g, "").replace(",", ".")); // Converte para número
+  };
+
   const result = ncms.map((item: any) => ({
-    label: item.name_ncm,
+    label: `${item.cod_ncm} / ${item.name_ncm}`,
     id: item.id,
   }));
 
@@ -253,7 +274,7 @@ export default function TextualInputs(product: any) {
                     variant="filled"
                     id="name_product"
                     name="name_product"
-                    defaultValue={product.searchParams.nome_product}
+                    defaultValue={product.searchParams.name_product}
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -380,9 +401,11 @@ export default function TextualInputs(product: any) {
                   <TextField
                     label="Preço de venda"
                     variant="filled"
-                    type="number"
+                    type="text"
                     id="price_sale"
                     name="price_sale"
+                    value={pVenda}
+                    onChange={handleChange}
                     defaultValue={product.searchParams.price_sale}
                     sx={{
                       "& .MuiInputBase-root": {
@@ -406,9 +429,11 @@ export default function TextualInputs(product: any) {
                   <TextField
                     label="Preço de custo"
                     variant="filled"
-                    type="number"
+                    type="text"
                     id="price_cost"
                     name="price_cost"
+                    value={pCusto}
+                    onChange={handleChange2}
                     defaultValue={product.searchParams.price_cost}
                     sx={{
                       "& .MuiInputBase-root": {
