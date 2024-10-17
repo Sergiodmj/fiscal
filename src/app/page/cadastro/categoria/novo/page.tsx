@@ -10,6 +10,7 @@ import {
   Select,
   SelectChangeEvent,
   Button,
+  Alert,
 } from "@mui/material";
 import { getServerSession } from "next-auth";
 import { auth as authOptions } from "@/app/libs/auth-config";
@@ -43,7 +44,16 @@ export default async function TextualInputs(category: any) {
       };
       const response = await fetch(url, options);
       if (response.status === 200) {
-        redirect("/page/cadastro/categoria");
+        const message = await response.json();
+        <Alert
+          variant="filled"
+          severity="success"
+          sx={{ color: "#fff", fontSize: "14px" }}
+        >
+         { message.message}
+        </Alert>;
+
+        // redirect("/page/cadastro/categoria");
       }
     } else {
       const url = `https://erp.sitesdahora.com.br/api/category-edit/${category.searchParams.id}`;
@@ -58,6 +68,7 @@ export default async function TextualInputs(category: any) {
       const response = await fetch(url, options);
       console.log(response);
       if (response.status === 200) {
+        const mensage = await response.json();
         redirect("/page/cadastro/categoria");
       }
     }

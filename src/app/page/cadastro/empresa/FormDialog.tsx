@@ -11,6 +11,7 @@ import {
   DialogTitle,
   Dialog,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { format } from "date-fns";
@@ -47,9 +48,11 @@ export default function FormDialog(user: any) {
 
   return (
     <>
-      <Button onClick={handleClickOpen}>
-        <span className="material-symbols-outlined">add</span>
-      </Button>
+      <Tooltip title="RENOVAR">
+        <Button onClick={handleClickOpen}>
+          <span className="material-symbols-outlined">add</span>
+        </Button>
+      </Tooltip>
       <Dialog
         open={open}
         onClose={handleClose}

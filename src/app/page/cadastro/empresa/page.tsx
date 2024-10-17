@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
 import Link from "next/link";
-import { Button, Grid, TableCell, TableHead } from "@mui/material";
+import { Button, Grid, TableCell, TableHead, Tooltip } from "@mui/material";
 import {
   Card,
   Typography,
@@ -105,9 +105,7 @@ export default async function Empresa() {
                     <TableCell>{user.name_enterprise}</TableCell>
                     <TableCell>{user.cpf_cnpj_enterprise}</TableCell>
                     <TableCell>{user.city_enterprise}</TableCell>
-                    <TableCell>
-                      {user.state_enterprise}
-                    </TableCell>
+                    <TableCell>{user.state_enterprise}</TableCell>
                     <TableCell>
                       {format(new Date(user.validade), "dd/MM/yyyy")}
                     </TableCell>
@@ -118,13 +116,15 @@ export default async function Empresa() {
                           query: user,
                         }}
                       >
-                        <Button>
-                          <span className="material-symbols-outlined">
-                            edit
-                          </span>
-                        </Button>
+                        <Tooltip title="EDITAR">
+                          <Button>
+                            <span className="material-symbols-outlined">
+                              edit
+                            </span>
+                          </Button>
+                        </Tooltip>
                       </Link>
-                      <FormDialog user={user} />
+                        <FormDialog user={user} />
                     </TableCell>
                   </TableRow>
                 );

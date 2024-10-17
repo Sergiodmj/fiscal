@@ -23,7 +23,6 @@ export default async function Produto() {
     },
   });
   const data = await res.json();
-  console.log(data)
 
   const res2 = await fetch(
     "https://erp.sitesdahora.com.br/api/products-inactive",
@@ -36,8 +35,6 @@ export default async function Produto() {
     }
   );
   const data2 = await res2.json();
-
-  console.log(data.products);
 
   return (
     <>

@@ -14,9 +14,6 @@ import {
   Autocomplete,
 } from "@mui/material";
 import { useSession } from "next-auth/react";
-// import { getServerSession } from "next-auth";
-// import { auth as authOptions } from "@/app/libs/auth-config";
-
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -61,8 +58,8 @@ export default function TextualInputs(product: any) {
               category_id: categoryId,
               unit_id: unimedId,
               stock_min: data.stock_min,
-              price_sale: pVendaNumerico,
-              price_cost: pCustoNumerico,
+              price_sale: pVendaNumerico.toString,
+              price_cost: pCustoNumerico.toString,
             }),
             headers: {
               "Content-Type": "application/json",
@@ -70,21 +67,11 @@ export default function TextualInputs(product: any) {
             },
           }
         );
-        console.log(
-          JSON.stringify({
-            name_product: data.name_product,
-            manage_stock: gEstoque,
-            barcode: data.barcode,
-            ncm_id: ncmsId,
-            category_id: categoryId,
-            unit_id: unimedId,
-            stock_min: data.stock_min,
-            price_sale: pVendaNumerico,
-            price_cost: pCustoNumerico,
-          })
-        );
         if (response.status === 200) {
-          router.push("/page/cadastro/produto");
+          const mensage = await response.json()
+          
+          console.log(mensage.message);
+          // router.push("/page/cadastro/produto");
         }
       };
       result();
@@ -113,7 +100,7 @@ export default function TextualInputs(product: any) {
               Authorization: `Bearer ${jwt}`,
             },
           }
-        ); // URL relativa ou absoluta
+        ); 
         const result = await response.json();
         setNcms(result.ncms);
       } catch (error) {
@@ -131,7 +118,7 @@ export default function TextualInputs(product: any) {
               Authorization: `Bearer ${jwt}`,
             },
           }
-        ); // URL relativa ou absoluta
+        ); 
         const result = await response.json();
         setCategory(result.categorys);
       } catch (error) {
@@ -162,7 +149,7 @@ export default function TextualInputs(product: any) {
     fetchData3();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const rawValue = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
     const formattedValue = new Intl.NumberFormat("pt-BR", {
       minimumFractionDigits: 2,
@@ -175,7 +162,7 @@ export default function TextualInputs(product: any) {
     setPVendaNumerico(formattedValue.replace(/\./g, "").replace(",", ".")); // Converte para número
   };
 
-  const handleChange2 = (e) => {
+  const handleChange2 = (e: any) => {
     const rawValue = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
     const formattedValue = new Intl.NumberFormat("pt-BR", {
       minimumFractionDigits: 2,
@@ -406,7 +393,6 @@ export default function TextualInputs(product: any) {
                     name="price_sale"
                     value={pVenda}
                     onChange={handleChange}
-                    defaultValue={product.searchParams.price_sale}
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -434,7 +420,6 @@ export default function TextualInputs(product: any) {
                     name="price_cost"
                     value={pCusto}
                     onChange={handleChange2}
-                    defaultValue={product.searchParams.price_cost}
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",

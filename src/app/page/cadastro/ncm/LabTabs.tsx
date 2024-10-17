@@ -14,6 +14,7 @@ import {
   TableCell,
   TableBody,
   Button,
+  Tooltip,
 } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -99,33 +100,37 @@ export default function LabTabs(data: any) {
                                 query: ncm,
                               }}
                             >
-                              <Button>
+                              <Tooltip title="EDITAR">
+                                <Button>
+                                  <span className="material-symbols-outlined">
+                                    edit
+                                  </span>
+                                </Button>
+                              </Tooltip>
+                            </Link>
+                            <Tooltip title="INABILITAR">
+                              <Button
+                                onClick={() => {
+                                  fetch(
+                                    `https://erp.sitesdahora.com.br/api/ncm-edit-status/${ncm.id}`,
+                                    {
+                                      cache: "no-cache",
+                                      method: "PUT",
+                                      body: JSON.stringify(inativar),
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${jwt}`,
+                                      },
+                                    }
+                                  );
+                                  window.location.reload();
+                                }}
+                              >
                                 <span className="material-symbols-outlined">
-                                  edit
+                                  remove
                                 </span>
                               </Button>
-                            </Link>
-                            <Button
-                              onClick={() => {
-                                fetch(
-                                  `https://erp.sitesdahora.com.br/api/ncm-edit-status/${ncm.id}`,
-                                  {
-                                    cache: "no-cache",
-                                    method: "PUT",
-                                    body: JSON.stringify(inativar),
-                                    headers: {
-                                      "Content-Type": "application/json",
-                                      Authorization: `Bearer ${jwt}`,
-                                    },
-                                  }
-                                );
-                                window.location.reload();
-                              }}
-                            >
-                              <span className="material-symbols-outlined">
-                                remove
-                              </span>
-                            </Button>
+                            </Tooltip>
                           </TableCell>
                         </TableRow>
                       );
@@ -167,33 +172,37 @@ export default function LabTabs(data: any) {
                                 query: ncm,
                               }}
                             >
-                              <Button>
+                              <Tooltip title="EDITAR">
+                                <Button>
+                                  <span className="material-symbols-outlined">
+                                    edit
+                                  </span>
+                                </Button>
+                              </Tooltip>
+                            </Link>
+                            <Tooltip title="HABILITAR">
+                              <Button
+                                onClick={() => {
+                                  fetch(
+                                    `https://erp.sitesdahora.com.br/api/ncm-edit-status/${ncm.id}`,
+                                    {
+                                      cache: "no-cache",
+                                      method: "PUT",
+                                      body: JSON.stringify(ativar),
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${jwt}`,
+                                      },
+                                    }
+                                  );
+                                  window.location.reload();
+                                }}
+                              >
                                 <span className="material-symbols-outlined">
-                                  edit
+                                  add
                                 </span>
                               </Button>
-                            </Link>
-                            <Button
-                              onClick={() => {
-                                fetch(
-                                  `https://erp.sitesdahora.com.br/api/ncm-edit-status/${ncm.id}`,
-                                  {
-                                    cache: "no-cache",
-                                    method: "PUT",
-                                    body: JSON.stringify(ativar),
-                                    headers: {
-                                      "Content-Type": "application/json",
-                                      Authorization: `Bearer ${jwt}`,
-                                    },
-                                  }
-                                );
-                                window.location.reload();
-                              }}
-                            >
-                              <span className="material-symbols-outlined">
-                                add
-                              </span>
-                            </Button>
+                            </Tooltip>
                           </TableCell>
                         </TableRow>
                       );

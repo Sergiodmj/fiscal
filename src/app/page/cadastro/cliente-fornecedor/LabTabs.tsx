@@ -14,6 +14,7 @@ import {
   TableCell,
   TableBody,
   Button,
+  Tooltip,
 } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -26,7 +27,6 @@ export default function LabTabs(data: any) {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-
 
   return (
     <>
@@ -98,11 +98,13 @@ export default function LabTabs(data: any) {
                                 query: client,
                               }}
                             >
-                              <Button>
-                                <span className="material-symbols-outlined">
-                                  edit
-                                </span>
-                              </Button>
+                              <Tooltip title="EDITAR">
+                                <Button>
+                                  <span className="material-symbols-outlined">
+                                    edit
+                                  </span>
+                                </Button>
+                              </Tooltip>
                             </Link>
                           </TableCell>
                         </TableRow>
@@ -144,11 +146,13 @@ export default function LabTabs(data: any) {
                                 query: providers,
                               }}
                             >
-                              <Button>
-                                <span className="material-symbols-outlined">
-                                  edit
-                                </span>
-                              </Button>
+                              <Tooltip title="EDITAR">
+                                <Button>
+                                  <span className="material-symbols-outlined">
+                                    edit
+                                  </span>
+                                </Button>
+                              </Tooltip>
                             </Link>
                           </TableCell>
                         </TableRow>
