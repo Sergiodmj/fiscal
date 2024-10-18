@@ -35,7 +35,8 @@
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.3.1",
     "remixicon": "^4.3.0",
-    "swiper": "^11.1.4"
+    "swiper": "^11.1.4",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",
