@@ -25,7 +25,7 @@ import { useSession } from "next-auth/react";
 export default function LabTabs(data: any) {
   const { data: session } = useSession();
   const jwt = session?.user.token;
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = React.useState("1");  
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
