@@ -71,7 +71,7 @@ export default function TextualInputs(product: any) {
           const mensage = await response.json()
           
           console.log(mensage.message);
-          // router.push("/page/cadastro/produto");
+          router.push("/page/cadastro/produto");
         }
       };
       result();
