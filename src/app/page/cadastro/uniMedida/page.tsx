@@ -4,7 +4,6 @@ import { auth as authOptions } from "@/app/libs/auth-config";
 import Link from "next/link";
 import { Button, Grid } from "@mui/material";
 
-import LabTabs from "./LabTabs";
 import CustomPaginationActions from "./CustomPaginationActions";
 
 export default async function uniMedida() {
