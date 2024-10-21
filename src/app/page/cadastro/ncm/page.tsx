@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button, Grid } from "@mui/material";
 
 import LabTabs from "./LabTabs";
+import CustomPaginationActions from "./CustomPaginationActions";
 
 export default async function Ncm() {
   const seesion = await getServerSession(authOptions);
@@ -59,7 +60,7 @@ export default async function Ncm() {
         </Link>
       </Grid>
 
-      <LabTabs data={data} data2={data2} />
+      <CustomPaginationActions data={data} data2={data2} />
     </>
   );
 }

@@ -112,6 +112,11 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
+function createData(name: string, calories: number, fat: number) {
+  return { name, calories, fat };
+}
+
+
 export default function CustomPaginationActions(data: any) {
   const { data: session } = useSession();
   const jwt = session?.user.token;
@@ -119,13 +124,14 @@ export default function CustomPaginationActions(data: any) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
-  const data1 = data.data.products;
-  const data2 = data.data2.products;
+  const data1 = data.data.clients;
+  const data2 = data.data2.providers;
+;
+  console.log(data);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-  // Avoid a layout jump when reaching the last page with empty rows.
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -147,14 +153,14 @@ export default function CustomPaginationActions(data: any) {
   const buscaFiltrada1 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
     return data1.filter((data1: any) =>
-      data1.name_product.toLowerCase().includes(lowerBusca)
+      data1.nome_client.toLowerCase().includes(lowerBusca)
     );
   }, [busca]);
 
   const buscaFiltrada2 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
     return data2.filter((data2: any) =>
-      data2.name_product.toLowerCase().includes(lowerBusca)
+      data2.nome_client.toLowerCase().includes(lowerBusca)
     );
   }, [busca]);
 
@@ -178,7 +184,7 @@ export default function CustomPaginationActions(data: any) {
           }}
           className="text-black"
         >
-          Produto
+          Cliente / Fornecedor
         </Typography>
 
         <Box sx={{ width: "100%", typography: "body1" }}>
@@ -188,8 +194,8 @@ export default function CustomPaginationActions(data: any) {
                 onChange={handleChange}
                 aria-label="lab API tabs example"
               >
-                <Tab label="Ativo" value="1" sx={{ fontWeight: "600" }} />
-                <Tab label="Inativo" value="2" sx={{ fontWeight: "600" }} />
+                <Tab label="Cliente" value="1" sx={{ fontWeight: "600" }} />
+                <Tab label="fornecedor" value="2" sx={{ fontWeight: "600" }} />
               </TabList>
 
               <TabPanel value="1">
@@ -224,9 +230,8 @@ export default function CustomPaginationActions(data: any) {
                         }}
                       >
                         <TableCell>Nome</TableCell>
-                        <TableCell>Categoria</TableCell>
-                        <TableCell>Uni Medida</TableCell>
-                        <TableCell>Preço de venda</TableCell>
+                        <TableCell>Telefone</TableCell>
+                        <TableCell>CPF / CNPJ</TableCell>
                         <TableCell> </TableCell>
                       </TableRow>
                     </TableHead>
@@ -247,24 +252,20 @@ export default function CustomPaginationActions(data: any) {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.name_product}
+                            {row.nome_client}
                           </TableCell>
                           <TableCell style={{ width: 160 }} align="right">
-                            {row.category.name_category}
+                            {row.fone_client}
                           </TableCell>
                           <TableCell style={{ width: 160 }} align="right">
-                            {row.unit.name_unit}
+                            {row.cpf_cnpj_client}
                           </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            {new Intl.NumberFormat("pt-BR", {
-                              style: "currency",
-                              currency: "BRL",
-                            }).format(row.price_sale)}
-                          </TableCell>
+
                           <TableCell style={{ width: 160 }} align="right">
                             <Link
                               href={{
-                                pathname: "/page/cadastro/produto/novo",
+                                pathname:
+                                  "/page/cadastro/cliente-fornecedor/novo",
                                 query: row,
                               }}
                             >
@@ -276,30 +277,6 @@ export default function CustomPaginationActions(data: any) {
                                 </Button>
                               </Tooltip>
                             </Link>
-
-                            <Tooltip title="INABILITAR">
-                              <Button
-                                onClick={() => {
-                                  fetch(
-                                    `https://erp.sitesdahora.com.br/api/product-edit-status/${row.id}`,
-                                    {
-                                      cache: "no-cache",
-                                      method: "PUT",
-                                      body: JSON.stringify(inativar),
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: `Bearer ${jwt}`,
-                                      },
-                                    }
-                                  );
-                                  window.location.reload();
-                                }}
-                              >
-                                <span className="material-symbols-outlined">
-                                  remove
-                                </span>
-                              </Button>
-                            </Tooltip>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -321,7 +298,6 @@ export default function CustomPaginationActions(data: any) {
                   </Table>
                 </TableContainer>
               </TabPanel>
-
               <TabPanel value="2">
                 <TableContainer component={Paper}>
                   <Grid item xs={12} md={12} lg={12} xl={6}>
@@ -354,9 +330,8 @@ export default function CustomPaginationActions(data: any) {
                         }}
                       >
                         <TableCell>Nome</TableCell>
-                        <TableCell>Categoria</TableCell>
-                        <TableCell>Uni Medida</TableCell>
-                        <TableCell>Preço de venda</TableCell>
+                        <TableCell>Telefone</TableCell>
+                        <TableCell>CPF / CNPJ</TableCell>
                         <TableCell> </TableCell>
                       </TableRow>
                     </TableHead>
@@ -377,24 +352,20 @@ export default function CustomPaginationActions(data: any) {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.name_product}
+                            {row.nome_client}
                           </TableCell>
                           <TableCell style={{ width: 160 }} align="right">
-                            {row.category.name_category}
+                            {row.fone_client}
                           </TableCell>
                           <TableCell style={{ width: 160 }} align="right">
-                            {row.unit.name_unit}
+                            {row.cpf_cnpj_client}
                           </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            {new Intl.NumberFormat("pt-BR", {
-                              style: "currency",
-                              currency: "BRL",
-                            }).format(row.price_sale)}
-                          </TableCell>
+
                           <TableCell style={{ width: 160 }} align="right">
                             <Link
                               href={{
-                                pathname: "/page/cadastro/produto/novo",
+                                pathname:
+                                  "/page/cadastro/cliente-fornecedor/novo",
                                 query: row,
                               }}
                             >
@@ -406,30 +377,6 @@ export default function CustomPaginationActions(data: any) {
                                 </Button>
                               </Tooltip>
                             </Link>
-
-                            <Tooltip title="INABILITAR">
-                              <Button
-                                onClick={() => {
-                                  fetch(
-                                    `https://erp.sitesdahora.com.br/api/product-edit-status/${row.id}`,
-                                    {
-                                      cache: "no-cache",
-                                      method: "PUT",
-                                      body: JSON.stringify(ativar),
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: `Bearer ${jwt}`,
-                                      },
-                                    }
-                                  );
-                                  window.location.reload();
-                                }}
-                              >
-                                <span className="material-symbols-outlined">
-                                  add
-                                </span>
-                              </Button>
-                            </Tooltip>
                           </TableCell>
                         </TableRow>
                       ))}

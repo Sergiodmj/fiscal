@@ -119,14 +119,14 @@ export default function CustomPaginationActions(data: any) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
-  const data1 = data.data.products;
-  const data2 = data.data2.products;
+  const data1 = data.data.categorys
+  const data2 = data.data2.categorys;
+
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
   // Avoid a layout jump when reaching the last page with empty rows.
-
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -147,14 +147,14 @@ export default function CustomPaginationActions(data: any) {
   const buscaFiltrada1 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
     return data1.filter((data1: any) =>
-      data1.name_product.toLowerCase().includes(lowerBusca)
+      data1.name_category.toLowerCase().includes(lowerBusca)
     );
   }, [busca]);
 
   const buscaFiltrada2 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
     return data2.filter((data2: any) =>
-      data2.name_product.toLowerCase().includes(lowerBusca)
+      data2.name_category.toLowerCase().includes(lowerBusca)
     );
   }, [busca]);
 
@@ -178,7 +178,7 @@ export default function CustomPaginationActions(data: any) {
           }}
           className="text-black"
         >
-          Produto
+          Categoria
         </Typography>
 
         <Box sx={{ width: "100%", typography: "body1" }}>
@@ -224,9 +224,7 @@ export default function CustomPaginationActions(data: any) {
                         }}
                       >
                         <TableCell>Nome</TableCell>
-                        <TableCell>Categoria</TableCell>
-                        <TableCell>Uni Medida</TableCell>
-                        <TableCell>Preço de venda</TableCell>
+                        <TableCell>Status</TableCell>
                         <TableCell> </TableCell>
                       </TableRow>
                     </TableHead>
@@ -247,24 +245,15 @@ export default function CustomPaginationActions(data: any) {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.name_product}
+                            {row.name_category}
                           </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            {row.category.name_category}
-                          </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            {row.unit.name_unit}
-                          </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            {new Intl.NumberFormat("pt-BR", {
-                              style: "currency",
-                              currency: "BRL",
-                            }).format(row.price_sale)}
+                          <TableCell component="th" scope="row">
+                            {row.status_category}
                           </TableCell>
                           <TableCell style={{ width: 160 }} align="right">
                             <Link
                               href={{
-                                pathname: "/page/cadastro/produto/novo",
+                                pathname: "/page/cadastro/categoria/novo",
                                 query: row,
                               }}
                             >
@@ -281,7 +270,8 @@ export default function CustomPaginationActions(data: any) {
                               <Button
                                 onClick={() => {
                                   fetch(
-                                    `https://erp.sitesdahora.com.br/api/product-edit-status/${row.id}`,
+                                    `https://erp.sitesdahora.com.br/api/inactive-category/${row.id}`,
+
                                     {
                                       cache: "no-cache",
                                       method: "PUT",
@@ -321,7 +311,6 @@ export default function CustomPaginationActions(data: any) {
                   </Table>
                 </TableContainer>
               </TabPanel>
-
               <TabPanel value="2">
                 <TableContainer component={Paper}>
                   <Grid item xs={12} md={12} lg={12} xl={6}>
@@ -354,9 +343,7 @@ export default function CustomPaginationActions(data: any) {
                         }}
                       >
                         <TableCell>Nome</TableCell>
-                        <TableCell>Categoria</TableCell>
-                        <TableCell>Uni Medida</TableCell>
-                        <TableCell>Preço de venda</TableCell>
+                        <TableCell>Status</TableCell>
                         <TableCell> </TableCell>
                       </TableRow>
                     </TableHead>
@@ -377,24 +364,15 @@ export default function CustomPaginationActions(data: any) {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.name_product}
+                            {row.name_category}
                           </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            {row.category.name_category}
-                          </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            {row.unit.name_unit}
-                          </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            {new Intl.NumberFormat("pt-BR", {
-                              style: "currency",
-                              currency: "BRL",
-                            }).format(row.price_sale)}
+                          <TableCell component="th" scope="row">
+                            {row.status_category}
                           </TableCell>
                           <TableCell style={{ width: 160 }} align="right">
                             <Link
                               href={{
-                                pathname: "/page/cadastro/produto/novo",
+                                pathname: "/page/cadastro/categoria/novo",
                                 query: row,
                               }}
                             >
@@ -411,11 +389,12 @@ export default function CustomPaginationActions(data: any) {
                               <Button
                                 onClick={() => {
                                   fetch(
-                                    `https://erp.sitesdahora.com.br/api/product-edit-status/${row.id}`,
+                                    `https://erp.sitesdahora.com.br/api/inactive-category/${row.id}`,
+
                                     {
                                       cache: "no-cache",
                                       method: "PUT",
-                                      body: JSON.stringify(ativar),
+                                      body: JSON.stringify(inativar),
                                       headers: {
                                         "Content-Type": "application/json",
                                         Authorization: `Bearer ${jwt}`,
