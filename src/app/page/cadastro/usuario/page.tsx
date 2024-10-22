@@ -15,6 +15,7 @@ import {
   TableFooter,
   TablePagination,
 } from "@mui/material";
+import CustomPaginationActions from "./CustomPaginationActions";
 
 export default async function Usuario() {
   const seesion = await getServerSession(authOptions);
@@ -77,52 +78,7 @@ export default async function Usuario() {
         >
           Usuários
         </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow
-                sx={{
-                  th: {
-                    fontSize: "15px",
-                    color: "red",
-                  },
-                }}
-              >
-                <TableCell>Nome</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Função</TableCell>
-                <TableCell> </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.users.map((user: any) => {
-                return (
-                  <TableRow key={user.id}>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.level}</TableCell>
-                    <TableCell>
-                      <Link
-                        href={{
-                          pathname: "/page/cadastro/usuario/novo",
-                          query: user,
-                        }}
-                      >
-                        <Tooltip title="EDITAR">
-                          <Button>
-                            <span className="material-symbols-outlined">
-                              edit
-                            </span>
-                          </Button>
-                        </Tooltip>
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <CustomPaginationActions data={data} />
       </Card>
     </>
   );

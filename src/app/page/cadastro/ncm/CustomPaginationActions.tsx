@@ -315,6 +315,7 @@ export default function CustomPaginationActions(data: any) {
                   </Table>
                 </TableContainer>
               </TabPanel>
+
               <TabPanel value="2">
                 <TableContainer component={Paper}>
                   <Grid item xs={12} md={12} lg={12} xl={6}>
@@ -393,7 +394,7 @@ export default function CustomPaginationActions(data: any) {
                               </Tooltip>
                             </Link>
 
-                            <Tooltip title="INABILITAR">
+                            <Tooltip title="HABILITAR">
                               <Button
                                 onClick={() => {
                                   fetch(

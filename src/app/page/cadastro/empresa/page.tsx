@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import FormDialog from "./FormDialog";
 import { format } from "date-fns";
+import CustomPaginationActions from "./CustomPaginationActions";
 
 export default async function Empresa() {
   const seesion = await getServerSession(authOptions);
@@ -79,59 +80,8 @@ export default async function Empresa() {
         >
           Empresas
         </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow
-                sx={{
-                  th: {
-                    fontSize: "15px",
-                    color: "red",
-                  },
-                }}
-              >
-                <TableCell>Nome</TableCell>
-                <TableCell>CPF / CNPM</TableCell>
-                <TableCell>Cidde</TableCell>
-                <TableCell>Estado</TableCell>
-                <TableCell>Vencimento</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.profile.map((user: any) => {
-                return (
-                  <TableRow key={user.id}>
-                    <TableCell>{user.name_enterprise}</TableCell>
-                    <TableCell>{user.cpf_cnpj_enterprise}</TableCell>
-                    <TableCell>{user.city_enterprise}</TableCell>
-                    <TableCell>{user.state_enterprise}</TableCell>
-                    <TableCell>
-                      {format(new Date(user.validade), "dd/MM/yyyy")}
-                    </TableCell>
-                    <TableCell>
-                      <Link
-                        href={{
-                          pathname: "/page/cadastro/empresa/novo",
-                          query: user,
-                        }}
-                      >
-                        <Tooltip title="EDITAR">
-                          <Button>
-                            <span className="material-symbols-outlined">
-                              edit
-                            </span>
-                          </Button>
-                        </Tooltip>
-                      </Link>
-                        <FormDialog user={user} />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        
+        <CustomPaginationActions data={data}/>
       </Card>
     </>
   );

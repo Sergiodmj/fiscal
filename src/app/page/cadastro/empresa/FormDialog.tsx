@@ -40,10 +40,17 @@ export default function FormDialog(user: any) {
         Authorization: `Bearer ${jwt}`,
       },
     };
-    fetch(url, options);
-    window.location.reload();
+    // fetch(url, options);
+    const result = async () => {
+      const response = await fetch(url, options);
+      if (response.status === 200) {
+        const message = await response.json();
+        console.log(message.message);
+        window.location.reload();
+      }
+    };
 
-    // console.log(response)
+    result();
   }
 
   return (
@@ -79,7 +86,7 @@ export default function FormDialog(user: any) {
             margin="dense"
             id="validade"
             name="validade"
-            type="text"
+            type="date"
             fullWidth
             variant="standard"
           />

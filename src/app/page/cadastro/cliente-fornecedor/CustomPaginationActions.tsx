@@ -147,9 +147,6 @@ export default function CustomPaginationActions(data: any) {
     setPage(0);
   };
 
-  const inativar = { status_product: "INATIVO" };
-  const ativar = { status_product: "ATIVO" };
-
   const buscaFiltrada1 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
     return data1.filter((data1: any) =>
@@ -298,6 +295,7 @@ export default function CustomPaginationActions(data: any) {
                   </Table>
                 </TableContainer>
               </TabPanel>
+              
               <TabPanel value="2">
                 <TableContainer component={Paper}>
                   <Grid item xs={12} md={12} lg={12} xl={6}>

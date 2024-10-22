@@ -407,7 +407,7 @@ export default function CustomPaginationActions(data: any) {
                               </Tooltip>
                             </Link>
 
-                            <Tooltip title="INABILITAR">
+                            <Tooltip title="HABILITAR">
                               <Button
                                 onClick={() => {
                                   fetch(
