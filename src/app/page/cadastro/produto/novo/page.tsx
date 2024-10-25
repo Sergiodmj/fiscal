@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Flip, toast } from "react-toastify";
 
 export default function TextualInputs(product: any) {
   const router = useRouter();
@@ -68,10 +69,19 @@ export default function TextualInputs(product: any) {
           }
         );
         if (response.status === 200) {
-          const mensage = await response.json()
-          
-          console.log(mensage.message);
-          router.push("/page/cadastro/produto");
+          const mensage = await response.json();
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          // router.push("/page/cadastro/produto");
         }
       };
       result();
@@ -100,12 +110,13 @@ export default function TextualInputs(product: any) {
               Authorization: `Bearer ${jwt}`,
             },
           }
-        ); 
+        );
         const result = await response.json();
         setNcms(result.ncms);
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
       }
+      // setSelectedResult(result);
     };
     const fetchData2 = async () => {
       try {
@@ -118,7 +129,7 @@ export default function TextualInputs(product: any) {
               Authorization: `Bearer ${jwt}`,
             },
           }
-        ); 
+        );
         const result = await response.json();
         setCategory(result.categorys);
       } catch (error) {
@@ -183,6 +194,7 @@ export default function TextualInputs(product: any) {
     label: item.name_category,
     id: item.id,
   }));
+
   const result3 = unimed.map((item: any) => ({
     label: item.name_unit,
     id: item.id,
@@ -231,7 +243,8 @@ export default function TextualInputs(product: any) {
                   <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="type_partner"
+                    name="manage_stock"
+                    defaultValue={product.searchParams.manage_stock || 1}
                   >
                     <FormControlLabel
                       value="1"
@@ -287,19 +300,6 @@ export default function TextualInputs(product: any) {
                     id="barcode"
                     name="barcode"
                     defaultValue={product.searchParams.barcode}
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
                   />
                 </FormControl>
               </Grid>
@@ -383,59 +383,65 @@ export default function TextualInputs(product: any) {
                 ""
               )}
 
-              <Grid item xs={12} md={12} lg={12} xl={6}>
-                <FormControl fullWidth>
-                  <TextField
-                    label="Preço de venda"
-                    variant="filled"
-                    type="text"
-                    id="price_sale"
-                    name="price_sale"
-                    value={pVenda}
-                    onChange={handleChange}
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
-              </Grid>
+              {!product.searchParams.id ? (
+                <>
+                  <Grid item xs={12} md={12} lg={12} xl={6}>
+                    <FormControl fullWidth>
+                      <TextField
+                        label="Preço de venda"
+                        variant="filled"
+                        type="text"
+                        id="price_sale"
+                        name="price_sale"
+                        value={pVenda}
+                        onChange={handleChange}
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            border: "1px solid #D5D9E2",
+                            backgroundColor: "#fff",
+                            borderRadius: "7px",
+                          },
+                          "& .MuiInputBase-root::before": {
+                            border: "none",
+                          },
+                          "& .MuiInputBase-root:hover::before": {
+                            border: "none",
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  </Grid>
 
-              <Grid item xs={12} md={12} lg={12} xl={6}>
-                <FormControl fullWidth>
-                  <TextField
-                    label="Preço de custo"
-                    variant="filled"
-                    type="text"
-                    id="price_cost"
-                    name="price_cost"
-                    value={pCusto}
-                    onChange={handleChange2}
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
-              </Grid>
+                  <Grid item xs={12} md={12} lg={12} xl={6}>
+                    <FormControl fullWidth>
+                      <TextField
+                        label="Preço de custo"
+                        variant="filled"
+                        type="text"
+                        id="price_cost"
+                        name="price_cost"
+                        value={pCusto}
+                        onChange={handleChange2}
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            border: "1px solid #D5D9E2",
+                            backgroundColor: "#fff",
+                            borderRadius: "7px",
+                          },
+                          "& .MuiInputBase-root::before": {
+                            border: "none",
+                          },
+                          "& .MuiInputBase-root:hover::before": {
+                            border: "none",
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  </Grid>
+                </>
+              ) : (
+                ""
+              )}
             </Grid>
           </Card>
 

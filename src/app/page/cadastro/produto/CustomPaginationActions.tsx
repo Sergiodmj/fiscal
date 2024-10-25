@@ -31,6 +31,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import FormDialog from "./FormDialog";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -261,10 +262,14 @@ export default function CustomPaginationActions(data: any) {
                               currency: "BRL",
                             }).format(row.price_sale)}
                           </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
+                          <TableCell
+                            style={{ width: 160 }}
+                            align="right"
+                            colSpan={2}
+                          >
                             <Link
                               href={{
-                                pathname: "/page/cadastro/produto/novo",
+                                pathname: "/page/cadastro/uniMedida/novo",
                                 query: row,
                               }}
                             >
@@ -300,6 +305,8 @@ export default function CustomPaginationActions(data: any) {
                                 </span>
                               </Button>
                             </Tooltip>
+
+                            <FormDialog data={row} />
                           </TableCell>
                         </TableRow>
                       ))}

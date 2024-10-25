@@ -61,7 +61,6 @@ export default async function TextualInputs(client: any) {
         },
       };
       const response = await fetch(url, options);
-      console.log(response);
       if (response.status === 200) {
         redirect("/page/cadastro/cliente-fornecedor");
       }
@@ -112,6 +111,7 @@ export default async function TextualInputs(client: any) {
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="type_partner"
+                    defaultValue={client.searchParams.type_partner}
                   >
                     <FormControlLabel
                       value="CLIENTE"
@@ -133,6 +133,7 @@ export default async function TextualInputs(client: any) {
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="type_client"
+                    defaultValue={client.searchParams.type_client}
                   >
                     <FormControlLabel
                       value="PF"
@@ -432,7 +433,6 @@ export default async function TextualInputs(client: any) {
                   />
                 </FormControl>
               </Grid>
-              
             </Grid>
           </Card>
 

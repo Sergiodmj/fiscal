@@ -31,6 +31,8 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Flip, toast } from "react-toastify";
+import { revalidateTag } from "next/cache";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -119,9 +121,8 @@ export default function CustomPaginationActions(data: any) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
-  const data1 = data.data.categorys
+  const data1 = data.data.categorys;
   const data2 = data.data2.categorys;
-
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -141,8 +142,8 @@ export default function CustomPaginationActions(data: any) {
     setPage(0);
   };
 
-  const inativar = { status_product: "INATIVO" };
-  const ativar = { status_product: "ATIVO" };
+  const inativar = { status_category: "INATIVO" };
+  const ativar = { status_category: "ATIVO" };
 
   const buscaFiltrada1 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
@@ -268,10 +269,9 @@ export default function CustomPaginationActions(data: any) {
 
                             <Tooltip title="INABILITAR">
                               <Button
-                                onClick={() => {
-                                  fetch(
+                                onClick={async () => {
+                                  const response = await fetch(
                                     `https://erp.sitesdahora.com.br/api/inactive-category/${row.id}`,
-
                                     {
                                       cache: "no-cache",
                                       method: "PUT",
@@ -282,7 +282,20 @@ export default function CustomPaginationActions(data: any) {
                                       },
                                     }
                                   );
-                                  window.location.reload();
+                                  const mensagem = await response.json();
+                                  if (mensagem.success === true) {
+                                    toast.success("Inabilidado com Sucesso", {
+                                      position: "top-center",
+                                      autoClose: 1000,
+                                      hideProgressBar: true,
+                                      closeOnClick: true,
+                                      pauseOnHover: true,
+                                      draggable: true,
+                                      progress: undefined,
+                                      theme: "colored",
+                                      transition: Flip,
+                                    });
+                                  }
                                 }}
                               >
                                 <span className="material-symbols-outlined">
@@ -311,6 +324,7 @@ export default function CustomPaginationActions(data: any) {
                   </Table>
                 </TableContainer>
               </TabPanel>
+
               <TabPanel value="2">
                 <TableContainer component={Paper}>
                   <Grid item xs={12} md={12} lg={12} xl={6}>

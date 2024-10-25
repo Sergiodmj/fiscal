@@ -127,7 +127,6 @@ export default function CustomPaginationActions(data: any) {
   const data1 = data.data.clients;
   const data2 = data.data2.providers;
 ;
-  console.log(data);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);

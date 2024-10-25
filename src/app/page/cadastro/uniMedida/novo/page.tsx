@@ -16,6 +16,7 @@ import { auth as authOptions } from "@/app/libs/auth-config";
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import SimpleAlert from "@/app/components/alert";
 
 export default async function TextualInputs(unit: any) {
   const seesion = await getServerSession(authOptions);
@@ -42,11 +43,15 @@ export default async function TextualInputs(unit: any) {
         },
       };
       const response = await fetch(url, options);
-      console.log(response);
+      // console.log(response);
 
       if (response.status === 200) {
-        redirect("/page/cadastro/uniMedida");
+        <SimpleAlert severity="success" message="Salvo com Sucesso" />
+        // redirect("/page/cadastro/uniMedida");
       }
+        console.log(response);
+
+
     } else {
       const url = `https://erp.sitesdahora.com.br/api/unit-edit/${unit.searchParams.id}`;
       const options = {
@@ -60,7 +65,9 @@ export default async function TextualInputs(unit: any) {
       const response = await fetch(url, options);
       console.log(response);
       if (response.status === 200) {
-        redirect("/page/cadastro/uniMedida");
+        // redirect("/page/cadastro/uniMedida");
+        <SimpleAlert severity="success" message="Salvo com Sucesso" />;
+
       }
     }
   }
@@ -164,7 +171,7 @@ export default async function TextualInputs(unit: any) {
               </Grid>
 
               <Grid item xs={12} md={12} lg={12} xl={12}>
-                <Link href={"/page/cadastro/categoria"}>
+                <Link href={"/page/cadastro/uniMedida"}>
                   <Button
                     type="submit"
                     variant="contained"

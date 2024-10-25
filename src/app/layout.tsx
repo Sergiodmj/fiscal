@@ -18,6 +18,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/theme";
 import LayoutProvider from "@/providers/LayoutProvider";
 import AuthProvider from "./components/providers/outh-provider";
+import ToastProvider from "@/providers/ToastProvider";
 
 export const metadata = {
   title: "Comercial",
@@ -40,7 +41,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
 
-              <LayoutProvider>{props.children}</LayoutProvider>
+              <LayoutProvider>
+                <ToastProvider>{props.children}</ToastProvider>
+              </LayoutProvider>
             </ThemeProvider>
           </AppRouterCacheProvider>
         </AuthProvider>
