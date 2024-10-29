@@ -31,6 +31,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Flip, toast } from "react-toastify";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -119,9 +120,35 @@ export default function CustomPaginationActions(data: any) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
-  const data1 = data.data.ncms
-  const data2 = data.data2.ncms;
+  const [data1, setData1] = React.useState(data.data.ncms);
+  const [data2, setData2] = React.useState(data.data2.ncms);
 
+  const fetchData1 = async () => {
+    const response = await fetch("https://erp.sitesdahora.com.br/api/ncms", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+    const data = await response.json();
+    setData1(data.ncms);
+  };
+
+  const fetchData2 = async () => {
+    const response = await fetch(
+      "https://erp.sitesdahora.com.br/api/ncms-inactive",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    );
+    const data = await response.json();
+    setData2(data.ncms);
+  };
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -149,14 +176,14 @@ export default function CustomPaginationActions(data: any) {
     return data1.filter((data1: any) =>
       data1.name_ncm.toLowerCase().includes(lowerBusca)
     );
-  }, [busca]);
+  }, [busca, data1]);
 
   const buscaFiltrada2 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
     return data2.filter((data2: any) =>
       data2.name_ncm.toLowerCase().includes(lowerBusca)
     );
-  }, [busca]);
+  }, [busca, data2]);
 
   return (
     <>
@@ -235,7 +262,7 @@ export default function CustomPaginationActions(data: any) {
                             page * rowsPerPage,
                             page * rowsPerPage + rowsPerPage
                           )
-                        : buscaFiltrada1
+                        : data1
                       ).map((row: any) => (
                         <TableRow
                           key={row.id}
@@ -272,10 +299,9 @@ export default function CustomPaginationActions(data: any) {
 
                             <Tooltip title="INABILITAR">
                               <Button
-                                onClick={() => {
-                                  fetch(
+                                onClick={async () => {
+                                  const response = await fetch(
                                     `https://erp.sitesdahora.com.br/api/ncm-edit-status/${row.id}`,
-
                                     {
                                       cache: "no-cache",
                                       method: "PUT",
@@ -286,7 +312,22 @@ export default function CustomPaginationActions(data: any) {
                                       },
                                     }
                                   );
-                                  window.location.reload();
+                                  const mensagem = await response.json();
+                                  if (mensagem.success === true) {
+                                    toast.success("Habilitado com Sucesso", {
+                                      position: "top-center",
+                                      autoClose: 1000,
+                                      hideProgressBar: true,
+                                      closeOnClick: true,
+                                      pauseOnHover: true,
+                                      draggable: true,
+                                      progress: undefined,
+                                      theme: "colored",
+                                      transition: Flip,
+                                    });
+                                  }
+                                  fetchData2();
+                                  fetchData1();
                                 }}
                               >
                                 <span className="material-symbols-outlined">
@@ -359,7 +400,7 @@ export default function CustomPaginationActions(data: any) {
                             page * rowsPerPage,
                             page * rowsPerPage + rowsPerPage
                           )
-                        : buscaFiltrada2
+                        : data2
                       ).map((row: any) => (
                         <TableRow
                           key={row.id}
@@ -396,10 +437,9 @@ export default function CustomPaginationActions(data: any) {
 
                             <Tooltip title="HABILITAR">
                               <Button
-                                onClick={() => {
-                                  fetch(
+                                onClick={async () => {
+                                  const response = await fetch(
                                     `https://erp.sitesdahora.com.br/api/ncm-edit-status/${row.id}`,
-
                                     {
                                       cache: "no-cache",
                                       method: "PUT",
@@ -410,7 +450,22 @@ export default function CustomPaginationActions(data: any) {
                                       },
                                     }
                                   );
-                                  window.location.reload();
+                                  const mensagem = await response.json();
+                                  if (mensagem.success === true) {
+                                    toast.success("Habilitado com Sucesso", {
+                                      position: "top-center",
+                                      autoClose: 1000,
+                                      hideProgressBar: true,
+                                      closeOnClick: true,
+                                      pauseOnHover: true,
+                                      draggable: true,
+                                      progress: undefined,
+                                      theme: "colored",
+                                      transition: Flip,
+                                    });
+                                  }
+                                  fetchData2();
+                                  fetchData1();
                                 }}
                               >
                                 <span className="material-symbols-outlined">

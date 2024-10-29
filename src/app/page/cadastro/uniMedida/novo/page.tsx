@@ -16,7 +16,6 @@ import { auth as authOptions } from "@/app/libs/auth-config";
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import SimpleAlert from "@/app/components/alert";
 
 export default async function TextualInputs(unit: any) {
   const seesion = await getServerSession(authOptions);
@@ -46,8 +45,7 @@ export default async function TextualInputs(unit: any) {
       // console.log(response);
 
       if (response.status === 200) {
-        <SimpleAlert severity="success" message="Salvo com Sucesso" />
-        // redirect("/page/cadastro/uniMedida");
+        redirect("/page/cadastro/uniMedida");
       }
         console.log(response);
 
@@ -65,9 +63,7 @@ export default async function TextualInputs(unit: any) {
       const response = await fetch(url, options);
       console.log(response);
       if (response.status === 200) {
-        // redirect("/page/cadastro/uniMedida");
-        <SimpleAlert severity="success" message="Salvo com Sucesso" />;
-
+        redirect("/page/cadastro/uniMedida");
       }
     }
   }
