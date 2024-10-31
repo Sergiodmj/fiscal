@@ -163,7 +163,7 @@ export default function CustomPaginationActions(data: any) {
           }}
           className="text-black"
         >
-          Unidade de Medida
+          Usuários
         </Typography>
 
         <Box sx={{ width: "100%", typography: "body1" }}>
