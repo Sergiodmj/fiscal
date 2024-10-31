@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Card,
   Typography,
@@ -146,9 +145,14 @@ export default function CustomPaginationActions(data: any) {
       }
     );
     const data = await response.json();
-    console.log(data)
+    console.log(data);
     setData2(data.units);
   };
+
+  useEffect(() => {
+    fetchData1();
+    fetchData2();
+  }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -280,7 +284,7 @@ export default function CustomPaginationActions(data: any) {
                           <TableCell style={{ width: 160 }} align="right">
                             <Link
                               href={{
-                                pathname: "/page/cadastro/categoria/novo",
+                                pathname: "/page/cadastro/uniMedida/novo",
                                 query: row,
                               }}
                             >
@@ -310,7 +314,7 @@ export default function CustomPaginationActions(data: any) {
                                   );
                                   const mensagem = await response.json();
                                   if (mensagem.success === true) {
-                                    toast.success("Habilitado com Sucesso", {
+                                    toast.success("Inabilitado com Sucesso", {
                                       position: "top-center",
                                       autoClose: 1000,
                                       hideProgressBar: true,

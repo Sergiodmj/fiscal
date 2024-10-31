@@ -1,69 +1,123 @@
+"use client";
 import {
   Grid,
   Card,
   Box,
   Typography,
   FormControl,
-  InputLabel,
-  MenuItem,
   TextField,
-  Select,
-  SelectChangeEvent,
   Button,
   FormLabel,
   RadioGroup,
   FormControlLabel,
   Radio,
 } from "@mui/material";
-import { getServerSession } from "next-auth";
-import { auth as authOptions } from "@/app/libs/auth-config";
+import { useSession } from "next-auth/react";
 
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { Flip, toast } from "react-toastify";
 
-export default async function TextualInputs(client: any) {
-  const seesion = await getServerSession(authOptions);
-  if (!seesion) {
+export default function TextualInputs(client: any) {
+  const { data: session } = useSession();
+
+  const router = useRouter();
+
+  if (!session) {
     redirect("/");
   }
-  if (seesion?.user.permission != "ADMINISTRADOR") {
+  if (session?.user.permission != "ADMINISTRADOR") {
     redirect("/page/unauthorized");
   }
 
-  const jwt = seesion?.user.token;
+  const jwt = session?.user.token;
 
-  async function Salvar(form: FormData) {
-    "use server";
+  function Salvar(form: FormData) {
     const data = Object.fromEntries(form);
     if (!client.searchParams.id) {
-      const url = "https://erp.sitesdahora.com.br/api/client-create";
-      const options = {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
+      const result = async () => {
+        const response = await fetch(
+          "https://erp.sitesdahora.com.br/api/client-create",
+          {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        if (mensage.success === true) {
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          router.push("/page/cadastro/cliente-fornecedor");
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
       };
-      const response = await fetch(url, options);
-
-      if (response.status === 200) {
-        redirect("/page/cadastro/cliente-fornecedor");
-      }
+      result();
     } else {
-      const url = `https://erp.sitesdahora.com.br/api/client-edit/${client.searchParams.id}`;
-      const options = {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
+      const result = async () => {
+        const response = await fetch(
+          `https://erp.sitesdahora.com.br/api/client-edit/${client.searchParams.id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        if (mensage.success === true) {
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          router.push(`/page/cadastro/cliente-fornecedor`);
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
       };
-      const response = await fetch(url, options);
-      if (response.status === 200) {
-        redirect("/page/cadastro/cliente-fornecedor");
-      }
+      result();
     }
   }
 

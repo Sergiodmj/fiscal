@@ -2,8 +2,6 @@
 
 import React, { useState } from "react";
 import {
-  Card,
-  Typography,
   Button,
   DialogActions,
   DialogContentText,
@@ -11,17 +9,16 @@ import {
   DialogTitle,
   Dialog,
   TextField,
-  Tooltip,
-  InputAdornment,
+  Tooltip
 } from "@mui/material";
 import { useSession } from "next-auth/react";
-import { format } from "date-fns";
+import { Flip, toast } from "react-toastify";
 
 export default function FormDialog(data: any) {
   const [open, setOpen] = React.useState(false);
   const { data: session } = useSession();
-  const [pVenda, setPVenda] = useState(data.data.price_sale || null);
-  const [pCompra, setPCompra] = useState(data.data.price_cost || null);
+  const [pVenda, setPVenda] = useState<string>();
+  const [pCompra, setPCompra] = useState<string>();
   const [pVendaNumerico, setPVendaNumerico] = useState("");
   const [pCompraNumerico, setPCompraNumerico] = useState("");
 
@@ -76,10 +73,34 @@ export default function FormDialog(data: any) {
 
     const result = async () => {
       const response = await fetch(url, options);
-      if (response.status === 200) {
-        const message = await response.json();
-        console.log(message.message);
-        window.location.reload();
+      const message = await response.json();
+      if (message.success === true) {
+        toast.success(`${message.message}`, {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Flip,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1010);
+      } else {
+        toast.error(`${message.message}`, {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Flip,
+        });
       }
     };
 

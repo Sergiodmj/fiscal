@@ -1,76 +1,119 @@
+"use client";
 import {
   Grid,
   Card,
   Box,
   Typography,
   FormControl,
-  InputLabel,
-  MenuItem,
   TextField,
-  Select,
-  SelectChangeEvent,
   Button,
-  Alert,
 } from "@mui/material";
 import { getServerSession } from "next-auth";
-import { auth as authOptions } from "@/app/libs/auth-config";
+import { Flip, toast } from "react-toastify";
 
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-export default async function TextualInputs(category: any) {
-  const seesion = await getServerSession(authOptions);
-  if (!seesion) {
+export default function TextualInputs(category: any) {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  if (!session) {
     redirect("/");
   }
-  if (seesion?.user.permission != "ADMINISTRADOR") {
+  if (session?.user.permission != "ADMINISTRADOR") {
     redirect("/page/unauthorized");
   }
 
-  const jwt = seesion?.user.token;
+  const jwt = session?.user.token;
 
   async function Salvar(form: FormData) {
-    "use server";
     const data = Object.fromEntries(form);
     if (!category.searchParams.id) {
-      const url = "https://erp.sitesdahora.com.br/api/category-create";
-      const options = {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      };
-      const response = await fetch(url, options);
-      if (response.status === 200) {
-        const message = await response.json();
-        <Alert
-          variant="filled"
-          severity="success"
-          sx={{ color: "#fff", fontSize: "14px" }}
-        >
-         { message.message}
-        </Alert>;
-
-        // redirect("/page/cadastro/categoria");
-      }
-    } else {
-      const url = `https://erp.sitesdahora.com.br/api/category-edit/${category.searchParams.id}`;
-      const options = {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      };
-      const response = await fetch(url, options);
-      console.log(response);
-      if (response.status === 200) {
+      const result = async () => {
+        const response = await fetch(
+          "https://erp.sitesdahora.com.br/api/category-create",
+          {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
         const mensage = await response.json();
-        redirect("/page/cadastro/categoria");
+        if (mensage.success === true) {
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          router.push("/page/cadastro/categoria");
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
+      };
+      result()
+    } else {
+      const result = async () => {
+        const response = await fetch(
+          `https://erp.sitesdahora.com.br/api/category-edit/${category.searchParams.id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        if (mensage.success === true) {
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          router.push(`/page/cadastro/categoria`);
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
       }
+      result()
     }
   }
 

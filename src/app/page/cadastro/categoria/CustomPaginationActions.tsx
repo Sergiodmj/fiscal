@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Card,
   Typography,
@@ -123,7 +123,6 @@ export default function CustomPaginationActions(data: any) {
   const [data1, setData1] = React.useState(data.data.categorys);
   const [data2, setData2] = React.useState(data.data2.categorys);
 
-
   const fetchData1 = async () => {
     const response = await fetch(
       "https://erp.sitesdahora.com.br/api/categories",
@@ -138,6 +137,7 @@ export default function CustomPaginationActions(data: any) {
     const data = await response.json();
     setData1(data.categorys);
   };
+
   const fetchData2 = async () => {
     const response = await fetch(
       "https://erp.sitesdahora.com.br/api/categories-inactive",
@@ -152,6 +152,11 @@ export default function CustomPaginationActions(data: any) {
     const data = await response.json();
     setData2(data.categorys);
   };
+
+  useEffect(() => {
+    fetchData1();
+    fetchData2();
+  }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -313,7 +318,7 @@ export default function CustomPaginationActions(data: any) {
                                   );
                                   const mensagem = await response.json();
                                   if (mensagem.success === true) {
-                                    toast.success("Habilitado com Sucesso", {
+                                    toast.success("Inabilitado com Sucesso", {
                                       position: "top-center",
                                       autoClose: 1000,
                                       hideProgressBar: true,

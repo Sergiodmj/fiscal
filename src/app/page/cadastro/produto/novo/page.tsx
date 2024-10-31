@@ -68,8 +68,8 @@ export default function TextualInputs(product: any) {
             },
           }
         );
-        if (response.status === 200) {
-          const mensage = await response.json();
+        const mensage = await response.json();
+        if (mensage.success === true) {
           toast.success(`${mensage.message}`, {
             position: "top-center",
             autoClose: 1000,
@@ -81,20 +81,72 @@ export default function TextualInputs(product: any) {
             theme: "colored",
             transition: Flip,
           });
-          // router.push("/page/cadastro/produto");
+          router.push("/page/cadastro/produto");
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
         }
       };
       result();
     } else {
-      const url = `https://erp.sitesdahora.com.br/api/product-edit/${product.searchParams.id}`;
-      const options = {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
+      const result2 = async () => {
+        const response = await fetch(
+          `https://erp.sitesdahora.com.br/api/product-edit/${product.searchParams.id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify({
+              name_product: data.name_product,
+              manage_stock: gEstoque,
+              barcode: data.barcode,
+              ncm_id: ncmsId,
+              category_id: categoryId,
+              unit_id: unimedId,
+              stock_min: data.stock_min,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        if (mensage.success === true) {
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          router.push(`/page/cadastro/produto`);
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
       };
+      result2();
     }
   }
 
@@ -160,6 +212,7 @@ export default function TextualInputs(product: any) {
     fetchData3();
   }, []);
 
+  //Formata os campos de preço de venda e compra
   const handleChange = (e: any) => {
     const rawValue = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
     const formattedValue = new Intl.NumberFormat("pt-BR", {
@@ -185,6 +238,7 @@ export default function TextualInputs(product: any) {
     setPCustoNumerico(formattedValue.replace(/\./g, "").replace(",", ".")); // Converte para número
   };
 
+  //Altocomplete
   const result = ncms.map((item: any) => ({
     label: `${item.cod_ncm} / ${item.name_ncm}`,
     id: item.id,
@@ -199,6 +253,22 @@ export default function TextualInputs(product: any) {
     label: item.name_unit,
     id: item.id,
   }));
+
+  //troca o ENTER pelo tab
+  const handleKeyDown = (event: any) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Impede o comportamento padrão do Enter
+
+      // Encontra o próximo elemento de input ou botão no formulário
+      const form = event.target.form;
+      const index = Array.from(form).indexOf(event.target);
+      const nextElement = form.elements[index + 1];
+
+      if (nextElement) {
+        nextElement.focus(); // Muda o foco para o próximo elemento
+      }
+    }
+  };
 
   return (
     <>
@@ -299,6 +369,7 @@ export default function TextualInputs(product: any) {
                     variant="filled"
                     id="barcode"
                     name="barcode"
+                    onKeyDown={handleKeyDown}
                     defaultValue={product.searchParams.barcode}
                   />
                 </FormControl>

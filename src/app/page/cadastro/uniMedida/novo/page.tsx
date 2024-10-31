@@ -1,70 +1,118 @@
+"use client";
 import {
   Grid,
   Card,
   Box,
   Typography,
   FormControl,
-  InputLabel,
-  MenuItem,
   TextField,
-  Select,
-  SelectChangeEvent,
   Button,
 } from "@mui/material";
-import { getServerSession } from "next-auth";
-import { auth as authOptions } from "@/app/libs/auth-config";
 
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { Flip, toast } from "react-toastify";
 
-export default async function TextualInputs(unit: any) {
-  const seesion = await getServerSession(authOptions);
-  if (!seesion) {
+export default function TextualInputs(unit: any) {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  if (!session) {
     redirect("/");
   }
-  if (seesion?.user.permission != "ADMINISTRADOR") {
+  if (session?.user.permission != "ADMINISTRADOR") {
     redirect("/page/unauthorized");
   }
 
-  const jwt = seesion?.user.token;
+  const jwt = session?.user.token;
 
   async function Salvar(form: FormData) {
-    "use server";
     const data = Object.fromEntries(form);
     if (!unit.searchParams.id) {
-      const url = "https://erp.sitesdahora.com.br/api/unit-create";
-      const options = {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
+      const result = async () => {
+        const response = await fetch(
+          "https://erp.sitesdahora.com.br/api/unit-create",
+          {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        if (mensage.success === true) {
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          router.push("/page/cadastro/uniMedida");
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
       };
-      const response = await fetch(url, options);
-      // console.log(response);
-
-      if (response.status === 200) {
-        redirect("/page/cadastro/uniMedida");
-      }
-        console.log(response);
-
-
+      result();
     } else {
-      const url = `https://erp.sitesdahora.com.br/api/unit-edit/${unit.searchParams.id}`;
-      const options = {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
+      const result = async () => {
+        const response = await fetch(
+          `https://erp.sitesdahora.com.br/api/unit-edit/${unit.searchParams.id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        if (mensage.success === true) {
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          router.push("/page/cadastro/uniMedida");
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
       };
-      const response = await fetch(url, options);
-      console.log(response);
-      if (response.status === 200) {
-        redirect("/page/cadastro/uniMedida");
-      }
+      result();
     }
   }
 
@@ -94,7 +142,7 @@ export default async function TextualInputs(unit: any) {
                 }}
                 className="text-black"
               >
-                Nova Categoria
+                Nova Unidade de Medida
               </Typography>
             </Box>
 
@@ -128,7 +176,6 @@ export default async function TextualInputs(unit: any) {
                   />
                 </FormControl>
               </Grid>
-
             </Grid>
           </Card>
 

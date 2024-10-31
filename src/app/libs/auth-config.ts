@@ -50,9 +50,6 @@ export const auth: NextAuthOptions = {
          return null
         }
 
-        // console.log(credentials)
-        // return null
-
      }
   })
   ],
@@ -68,14 +65,10 @@ export const auth: NextAuthOptions = {
         token.permission = user.permission
       }
 
-      // console.log("status",status)
-      // console.log("chave",chave)
-      // console.log("User",user)
       return token;
     },
 
     async session({ session, token }) {
-      // console.log("Token", token)
 
       if (token) {
         session.user.enterprise_id = token.enterprise_id

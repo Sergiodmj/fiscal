@@ -121,9 +121,6 @@ export default function CustomPaginationActions(data: any) {
   const [busca, setBusca] = React.useState("");
 
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
   // Avoid a layout jump when reaching the last page with empty rows.
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,

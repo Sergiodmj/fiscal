@@ -30,6 +30,7 @@ const Profile: React.FC<ProfileProps> = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { data: session } = useSession();
+  // console.log(session)
 
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {

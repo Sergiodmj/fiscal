@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Card,
   Typography,
@@ -116,7 +116,6 @@ function createData(name: string, calories: number, fat: number) {
   return { name, calories, fat };
 }
 
-
 export default function CustomPaginationActions(data: any) {
   const { data: session } = useSession();
   const jwt = session?.user.token;
@@ -124,9 +123,40 @@ export default function CustomPaginationActions(data: any) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
-  const data1 = data.data.clients;
-  const data2 = data.data2.providers;
-;
+  const [data1, setData1] = React.useState(data.data.clients);
+  const [data2, setData2] = React.useState(data.data2.providers);
+
+  const fetchData1 = async () => {
+    const response = await fetch("https://erp.sitesdahora.com.br/api/clients", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+    const data = await response.json();
+    setData1(data.clients);
+  };
+
+  const fetchData2 = async () => {
+    const response = await fetch(
+      "https://erp.sitesdahora.com.br/api/providers",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    );
+    const data = await response.json();
+    setData2(data.providers);
+  };
+
+  useEffect(() => {
+    fetchData1();
+    fetchData2();
+  }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -151,14 +181,14 @@ export default function CustomPaginationActions(data: any) {
     return data1.filter((data1: any) =>
       data1.nome_client.toLowerCase().includes(lowerBusca)
     );
-  }, [busca]);
+  }, [busca, data1]);
 
   const buscaFiltrada2 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
     return data2.filter((data2: any) =>
       data2.nome_client.toLowerCase().includes(lowerBusca)
     );
-  }, [busca]);
+  }, [busca, data2]);
 
   return (
     <>
@@ -237,7 +267,7 @@ export default function CustomPaginationActions(data: any) {
                             page * rowsPerPage,
                             page * rowsPerPage + rowsPerPage
                           )
-                        : buscaFiltrada1
+                        : data1
                       ).map((row: any) => (
                         <TableRow
                           key={row.id}
@@ -294,7 +324,7 @@ export default function CustomPaginationActions(data: any) {
                   </Table>
                 </TableContainer>
               </TabPanel>
-              
+
               <TabPanel value="2">
                 <TableContainer component={Paper}>
                   <Grid item xs={12} md={12} lg={12} xl={6}>
