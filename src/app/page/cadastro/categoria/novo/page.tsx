@@ -8,16 +8,17 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { getServerSession } from "next-auth";
 import { Flip, toast } from "react-toastify";
 
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 export default function TextualInputs(category: any) {
   const { data: session } = useSession();
   const router = useRouter();
+  const [categoria, setCategoria] = useState(category.searchParams || "");
 
   if (!session) {
     redirect("/");
@@ -160,7 +161,7 @@ export default function TextualInputs(category: any) {
                     id="name_category"
                     name="name_category"
                     required
-                    defaultValue={category.searchParams.name_category}
+                    defaultValue={categoria.name_category}
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
