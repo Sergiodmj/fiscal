@@ -19,6 +19,7 @@ export default function TextualInputs(category: any) {
   const { data: session } = useSession();
   const router = useRouter();
   const [categoria, setCategoria] = useState(category.searchParams || "");
+  console.log(categoria)
 
   if (!session) {
     redirect("/");
