@@ -431,7 +431,7 @@ export default function CustomPaginationActions(data: any) {
                             <Tooltip title="EDITAR">
                               <Link
                                 href={{
-                                  pathname: `/page/cadastro/categoria/novo/`,
+                                  pathname: `/page/cadastro/categoria/novo`,
                                   query: row,
                                 }}
                               >
