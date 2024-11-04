@@ -13,6 +13,7 @@ import { redirect } from "next/navigation";
 
 export default async function TextualInputs(ncm: any) {
   const seesion = await getServerSession(authOptions);
+  console.log(ncm)
   if (!seesion) {
     redirect("/");
   }

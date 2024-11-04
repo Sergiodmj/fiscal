@@ -145,7 +145,6 @@ export default function CustomPaginationActions(data: any) {
       }
     );
     const data = await response.json();
-    console.log(data);
     setData2(data.units);
   };
 

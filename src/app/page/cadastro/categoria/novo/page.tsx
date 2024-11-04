@@ -18,7 +18,7 @@ import { useState } from "react";
 export default function TextualInputs(category: any) {
   const { data: session } = useSession();
   const router = useRouter();
-  const [dados, setDados] = useState(sessionStorage.getItem("dados"));
+  // const [dados, setDados] = useState(sessionStorage.getItem("dados"));
 console.log(category.searchParams);
 
   if (!session) {
