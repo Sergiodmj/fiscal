@@ -32,6 +32,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Flip, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -123,6 +124,8 @@ export default function CustomPaginationActions(data: any) {
   const [data1, setData1] = React.useState(data.data.categorys);
   const [data2, setData2] = React.useState(data.data2.categorys);
 
+  const router = useRouter();
+
   const fetchData1 = async () => {
     const response = await fetch(
       "https://erp.sitesdahora.com.br/api/categories",
@@ -192,6 +195,11 @@ export default function CustomPaginationActions(data: any) {
       data2.name_category.toLowerCase().includes(lowerBusca)
     );
   }, [busca, data2]);
+
+  const handleEnviarDados = (row: any) => {
+    sessionStorage.setItem("dados", row);
+    router.push("/page/cadastro/categoria/novo");
+  };
 
   return (
     <>
@@ -288,7 +296,7 @@ export default function CustomPaginationActions(data: any) {
                           <TableCell style={{ width: 160 }} align="right">
                             <Link
                               href={{
-                                pathname: "/page/cadastro/categoria/novo",
+                                pathname: `/page/cadastro/categoria/novo/`,
                                 query: row,
                               }}
                             >
@@ -420,20 +428,20 @@ export default function CustomPaginationActions(data: any) {
                             {row.status_category}
                           </TableCell>
                           <TableCell style={{ width: 160 }} align="right">
-                            <Link
-                              href={{
-                                pathname: "/page/cadastro/categoria/novo",
-                                query: row,
-                              }}
-                            >
-                              <Tooltip title="EDITAR">
+                            <Tooltip title="EDITAR">
+                              <Link
+                                href={{
+                                  pathname: `/page/cadastro/categoria/novo/`,
+                                  query: row,
+                                }}
+                              >
                                 <Button>
                                   <span className="material-symbols-outlined">
                                     edit
                                   </span>
                                 </Button>
-                              </Tooltip>
-                            </Link>
+                              </Link>
+                            </Tooltip>
 
                             <Tooltip title="Habilitar">
                               <Button

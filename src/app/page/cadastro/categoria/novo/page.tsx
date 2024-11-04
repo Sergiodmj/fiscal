@@ -18,8 +18,8 @@ import { useState } from "react";
 export default function TextualInputs(category: any) {
   const { data: session } = useSession();
   const router = useRouter();
-  const [categoria, setCategoria] = useState(category.searchParams || "");
-  console.log(categoria)
+  const [dados, setDados] = useState(sessionStorage.getItem("dados"));
+console.log(category.searchParams);
 
   if (!session) {
     redirect("/");
@@ -162,7 +162,7 @@ export default function TextualInputs(category: any) {
                     id="name_category"
                     name="name_category"
                     required
-                    defaultValue={categoria.name_category}
+                    defaultValue={category.searchParams.name_category}
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -245,5 +245,3 @@ export default function TextualInputs(category: any) {
     </>
   );
 }
-
-// export default TextualInputs;
