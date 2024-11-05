@@ -28,7 +28,7 @@ export default async function Ncm() {
       Authorization: `Bearer ${jwt}`,
     },
   });
-  const data = await res.json();  
+  const data = await res.json();
 
   const res2 = await fetch("https://erp.sitesdahora.com.br/api/ncms-inactive", {
     // cache: "no-cache",
@@ -45,20 +45,6 @@ export default async function Ncm() {
 
   return (
     <>
-      <Grid item xs={12} md={12} lg={12} xl={12}>
-        <Link href={"/page/cadastro/ncm/novo"}>
-          <Button
-            variant="outlined"
-            color="success"
-            sx={{
-              padding: "10px 24px",
-            }}
-          >
-            Novo NCM
-          </Button>
-        </Link>
-      </Grid>
-
       <CustomPaginationActions data={data} data2={data2} />
     </>
   );

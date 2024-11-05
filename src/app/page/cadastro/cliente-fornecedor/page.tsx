@@ -40,23 +40,8 @@ export default async function Cliente() {
   });
   const data2 = await res2.json();
 
-
   return (
     <>
-      <Grid item xs={12} md={12} lg={12} xl={12}>
-        <Link href={"/page/cadastro/cliente-fornecedor/novo"}>
-          <Button
-            variant="outlined"
-            color="success"
-            sx={{
-              padding: "10px 24px",
-            }}
-          >
-            Novo cliente / fornecedor
-          </Button>
-        </Link>
-      </Grid>
-
       <CustomPaginationActions data={data} data2={data2} />
     </>
   );

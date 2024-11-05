@@ -20,6 +20,10 @@ import {
   Grid,
   FormControl,
   TextField,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
@@ -120,6 +124,8 @@ export default function CustomPaginationActions(data: any) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
+  const [visivel, setVisivel] = React.useState("tabela");
+  const [ncm, setNcm] = React.useState<any>();
   const [data1, setData1] = React.useState(data.data.ncms);
   const [data2, setData2] = React.useState(data.data2.ncms);
 
@@ -190,319 +196,579 @@ export default function CustomPaginationActions(data: any) {
     );
   }, [busca, data2]);
 
-  return (
-    <>
-      <Card
-        sx={{
-          boxShadow: "none",
-          borderRadius: "7px",
-          mb: "25px",
-          padding: { xs: "18px", sm: "20px", lg: "25px" },
-        }}
-        className="rmui-card"
-      >
-        <Typography
-          variant="h3"
+  async function Salvar(form: FormData) {
+    const data = Object.fromEntries(form);
+    if (ncm === "") {
+      const result = async () => {
+        const response = await fetch(
+          "https://erp.sitesdahora.com.br/api/ncm-create",
+          {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        console.log(mensage)
+        if (mensage.success === true) {
+          fetchData1();
+          fetchData2();
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          setVisivel("tabela");
+        } else {
+          toast.error(`${mensage.erros}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
+      };
+      result();
+    } else {
+      const result = async () => {
+        const response = await fetch(
+          `https://erp.sitesdahora.com.br/api/ncm-edit/${ncm.id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        console.log(mensage);
+        if (mensage.success === true) {
+          fetchData1();
+          fetchData2();
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          setVisivel("tabela");
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
+      };
+      result();
+    }
+  }
+
+  if (visivel === "tabela") {
+    return (
+      <>
+        <Grid item xs={12} md={12} lg={12} xl={12}>
+          <Button
+            onClick={() => {
+              setNcm("");
+              setVisivel("formulario");
+            }}
+            variant="outlined"
+            color="success"
+            sx={{
+              padding: "10px 24px",
+            }}
+          >
+            Novo NCM
+          </Button>
+        </Grid>
+        <Card
           sx={{
-            fontSize: { xs: "16px", md: "18px" },
-            fontWeight: 700,
+            boxShadow: "none",
+            borderRadius: "7px",
             mb: "25px",
+            padding: { xs: "18px", sm: "20px", lg: "25px" },
           }}
-          className="text-black"
+          className="rmui-card"
         >
-          Unidade de Medida
-        </Typography>
+          <Typography
+            variant="h3"
+            sx={{
+              fontSize: { xs: "16px", md: "18px" },
+              fontWeight: 700,
+              mb: "25px",
+            }}
+            className="text-black"
+          >
+            Unidade de Medida
+          </Typography>
 
-        <Box sx={{ width: "100%", typography: "body1" }}>
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
+          <Box sx={{ width: "100%", typography: "body1" }}>
+            <TabContext value={value}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList
+                  onChange={handleChange}
+                  aria-label="lab API tabs example"
+                >
+                  <Tab label="Ativo" value="1" sx={{ fontWeight: "600" }} />
+                  <Tab label="Inativo" value="2" sx={{ fontWeight: "600" }} />
+                </TabList>
+
+                <TabPanel value="1">
+                  <TableContainer component={Paper}>
+                    <Grid item xs={12} md={12} lg={12} xl={6}>
+                      <FormControl>
+                        <TextField
+                          label={
+                            <span className="material-symbols-outlined">
+                              search
+                            </span>
+                          }
+                          value={busca}
+                          onChange={(ev) => setBusca(ev.target.value)}
+                          variant="standard"
+                          id="barcode"
+                          type="search"
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Table
+                      sx={{ minWidth: 500 }}
+                      aria-label="custom pagination table"
+                    >
+                      <TableHead>
+                        <TableRow
+                          sx={{
+                            th: {
+                              fontSize: "15px",
+                              color: "red",
+                            },
+                          }}
+                        >
+                          <TableCell>Nome</TableCell>
+                          <TableCell>Código</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell> </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {(rowsPerPage > 0
+                          ? buscaFiltrada1.slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                          : data1
+                        ).map((row: any) => (
+                          <TableRow
+                            key={row.id}
+                            sx={{
+                              "th, td": {
+                                fontSize: "15px",
+                              },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {row.name_ncm}
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.cod_ncm}
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.status_ncm}
+                            </TableCell>
+                            <TableCell style={{ width: 160 }} align="right">
+                              <Tooltip title="EDITAR">
+                                <Button
+                                  onClick={() => {
+                                    setNcm(row);
+                                    setVisivel("formulario");
+                                  }}
+                                >
+                                  <span className="material-symbols-outlined">
+                                    edit
+                                  </span>
+                                </Button>
+                              </Tooltip>
+
+                              <Tooltip title="INABILITAR">
+                                <Button
+                                  onClick={async () => {
+                                    const response = await fetch(
+                                      `https://erp.sitesdahora.com.br/api/ncm-edit-status/${row.id}`,
+                                      {
+                                        cache: "no-cache",
+                                        method: "PUT",
+                                        body: JSON.stringify(inativar),
+                                        headers: {
+                                          "Content-Type": "application/json",
+                                          Authorization: `Bearer ${jwt}`,
+                                        },
+                                      }
+                                    );
+                                    const mensagem = await response.json();
+                                    if (mensagem.success === true) {
+                                      toast.success("Inabilitado com Sucesso", {
+                                        position: "top-center",
+                                        autoClose: 1000,
+                                        hideProgressBar: true,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: "colored",
+                                        transition: Flip,
+                                      });
+                                    }
+                                    fetchData2();
+                                    fetchData1();
+                                  }}
+                                >
+                                  <span className="material-symbols-outlined">
+                                    remove
+                                  </span>
+                                </Button>
+                              </Tooltip>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                      <TableFooter>
+                        <TableRow>
+                          <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            colSpan={5}
+                            count={buscaFiltrada1.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
+                          />
+                        </TableRow>
+                      </TableFooter>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+
+                <TabPanel value="2">
+                  <TableContainer component={Paper}>
+                    <Grid item xs={12} md={12} lg={12} xl={6}>
+                      <FormControl>
+                        <TextField
+                          label={
+                            <span className="material-symbols-outlined">
+                              search
+                            </span>
+                          }
+                          value={busca}
+                          onChange={(ev) => setBusca(ev.target.value)}
+                          variant="standard"
+                          id="barcode"
+                          type="search"
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Table
+                      sx={{ minWidth: 500 }}
+                      aria-label="custom pagination table"
+                    >
+                      <TableHead>
+                        <TableRow
+                          sx={{
+                            th: {
+                              fontSize: "15px",
+                              color: "red",
+                            },
+                          }}
+                        >
+                          <TableCell>Nome</TableCell>
+                          <TableCell>Código</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell> </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {(rowsPerPage > 0
+                          ? buscaFiltrada2.slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                          : data2
+                        ).map((row: any) => (
+                          <TableRow
+                            key={row.id}
+                            sx={{
+                              "th, td": {
+                                fontSize: "15px",
+                              },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {row.name_ncm}
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.cod_ncm}
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.status_ncm}
+                            </TableCell>
+                            <TableCell style={{ width: 160 }} align="right">
+                              <Tooltip title="EDITAR">
+                                <Button
+                                  onClick={() => {
+                                    setNcm(row);
+                                    setVisivel("formulario");
+                                  }}
+                                >
+                                  <span className="material-symbols-outlined">
+                                    edit
+                                  </span>
+                                </Button>
+                              </Tooltip>
+                              <Tooltip title="HABILITAR">
+                                <Button
+                                  onClick={async () => {
+                                    const response = await fetch(
+                                      `https://erp.sitesdahora.com.br/api/ncm-edit-status/${row.id}`,
+                                      {
+                                        cache: "no-cache",
+                                        method: "PUT",
+                                        body: JSON.stringify(ativar),
+                                        headers: {
+                                          "Content-Type": "application/json",
+                                          Authorization: `Bearer ${jwt}`,
+                                        },
+                                      }
+                                    );
+                                    const mensagem = await response.json();
+                                    if (mensagem.success === true) {
+                                      toast.success("Habilitado com Sucesso", {
+                                        position: "top-center",
+                                        autoClose: 1000,
+                                        hideProgressBar: true,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: "colored",
+                                        transition: Flip,
+                                      });
+                                    }
+                                    fetchData2();
+                                    fetchData1();
+                                  }}
+                                >
+                                  <span className="material-symbols-outlined">
+                                    add
+                                  </span>
+                                </Button>
+                              </Tooltip>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                      <TableFooter>
+                        <TableRow>
+                          <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            colSpan={5}
+                            count={buscaFiltrada2.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
+                          />
+                        </TableRow>
+                      </TableFooter>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+              </Box>
+            </TabContext>
+          </Box>
+        </Card>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <form action={Salvar}>
+          <Box>
+            <Card
+              sx={{
+                boxShadow: "none",
+                borderRadius: "7px",
+                mb: "25px",
+                padding: { xs: "18px", sm: "20px", lg: "25px" },
+              }}
+              className="rmui-card"
+            >
+              <Box
+                sx={{
+                  mb: "25px",
+                }}
               >
-                <Tab label="Ativo" value="1" sx={{ fontWeight: "600" }} />
-                <Tab label="Inativo" value="2" sx={{ fontWeight: "600" }} />
-              </TabList>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontSize: { xs: "16px", md: "18px" },
+                    fontWeight: 700,
+                  }}
+                  className="text-black"
+                >
+                  Novo Ncm
+                </Typography>
+              </Box>
 
-              <TabPanel value="1">
-                <TableContainer component={Paper}>
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
-                    <FormControl>
-                      <TextField
-                        label={
-                          <span className="material-symbols-outlined">
-                            search
-                          </span>
-                        }
-                        value={busca}
-                        onChange={(ev) => setBusca(ev.target.value)}
-                        variant="standard"
-                        id="barcode"
-                        type="search"
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Table
-                    sx={{ minWidth: 500 }}
-                    aria-label="custom pagination table"
+              <Grid
+                container
+                spacing={3}
+                columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+              >
+                <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Nome"
+                      variant="filled"
+                      id="name_ncm"
+                      name="name_ncm"
+                      required
+                      defaultValue={ncm.name_ncm}
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Código"
+                      variant="filled"
+                      id="cod_ncm"
+                      name="cod_ncm"
+                      required
+                      defaultValue={ncm.cod_ncm}
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Card>
+
+            <Card
+              sx={{
+                boxShadow: "none",
+                borderRadius: "7px",
+                mb: "25px",
+                padding: { xs: "18px", sm: "20px", lg: "25px" },
+              }}
+              className="rmui-card"
+            >
+              <Grid
+                container
+                spacing={3}
+                columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+              >
+                <Grid item xs={12} md={12} lg={12} xl={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      textTransform: "capitalize",
+                      borderRadius: "6px",
+                      fontWeight: "500",
+                      fontSize: "16px",
+                      padding: "10px 24px",
+                      color: "#fff !important",
+                      boxShadow: "none",
+                      display: "block",
+                      width: "100%",
+                    }}
                   >
-                    <TableHead>
-                      <TableRow
-                        sx={{
-                          th: {
-                            fontSize: "15px",
-                            color: "red",
-                          },
-                        }}
-                      >
-                        <TableCell>Nome</TableCell>
-                        <TableCell>Código</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell> </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {(rowsPerPage > 0
-                        ? buscaFiltrada1.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                        : data1
-                      ).map((row: any) => (
-                        <TableRow
-                          key={row.id}
-                          sx={{
-                            "th, td": {
-                              fontSize: "15px",
-                            },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {row.name_ncm}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.cod_ncm}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.status_ncm}
-                          </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            <Link
-                              href={{
-                                pathname: "/page/cadastro/ncm/novo",
-                                query: row,
-                              }}
-                            >
-                              <Tooltip title="EDITAR">
-                                <Button>
-                                  <span className="material-symbols-outlined">
-                                    edit
-                                  </span>
-                                </Button>
-                              </Tooltip>
-                            </Link>
+                    Salvar
+                  </Button>
+                </Grid>
 
-                            <Tooltip title="INABILITAR">
-                              <Button
-                                onClick={async () => {
-                                  const response = await fetch(
-                                    `https://erp.sitesdahora.com.br/api/ncm-edit-status/${row.id}`,
-                                    {
-                                      cache: "no-cache",
-                                      method: "PUT",
-                                      body: JSON.stringify(inativar),
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: `Bearer ${jwt}`,
-                                      },
-                                    }
-                                  );
-                                  const mensagem = await response.json();
-                                  if (mensagem.success === true) {
-                                    toast.success("Inabilitado com Sucesso", {
-                                      position: "top-center",
-                                      autoClose: 1000,
-                                      hideProgressBar: true,
-                                      closeOnClick: true,
-                                      pauseOnHover: true,
-                                      draggable: true,
-                                      progress: undefined,
-                                      theme: "colored",
-                                      transition: Flip,
-                                    });
-                                  }
-                                  fetchData2();
-                                  fetchData1();
-                                }}
-                              >
-                                <span className="material-symbols-outlined">
-                                  remove
-                                </span>
-                              </Button>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TablePagination
-                          rowsPerPageOptions={[5, 10, 25]}
-                          colSpan={5}
-                          count={buscaFiltrada1.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                          ActionsComponent={TablePaginationActions}
-                        />
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </TableContainer>
-              </TabPanel>
-
-              <TabPanel value="2">
-                <TableContainer component={Paper}>
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
-                    <FormControl>
-                      <TextField
-                        label={
-                          <span className="material-symbols-outlined">
-                            search
-                          </span>
-                        }
-                        value={busca}
-                        onChange={(ev) => setBusca(ev.target.value)}
-                        variant="standard"
-                        id="barcode"
-                        type="search"
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Table
-                    sx={{ minWidth: 500 }}
-                    aria-label="custom pagination table"
+                <Grid item xs={12} md={12} lg={12} xl={12}>
+                  <Button
+                    onClick={() => {
+                      setVisivel("tabela");
+                    }}
+                    type="submit"
+                    variant="contained"
+                    color="error"
+                    sx={{
+                      textTransform: "capitalize",
+                      borderRadius: "6px",
+                      fontWeight: "500",
+                      fontSize: "16px",
+                      padding: "10px 24px",
+                      color: "#fff !important",
+                      boxShadow: "none",
+                      display: "block",
+                      width: "100%",
+                    }}
                   >
-                    <TableHead>
-                      <TableRow
-                        sx={{
-                          th: {
-                            fontSize: "15px",
-                            color: "red",
-                          },
-                        }}
-                      >
-                        <TableCell>Nome</TableCell>
-                        <TableCell>Código</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell> </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {(rowsPerPage > 0
-                        ? buscaFiltrada2.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                        : data2
-                      ).map((row: any) => (
-                        <TableRow
-                          key={row.id}
-                          sx={{
-                            "th, td": {
-                              fontSize: "15px",
-                            },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {row.name_ncm}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.cod_ncm}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.status_ncm}
-                          </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            <Link
-                              href={{
-                                pathname: "/page/cadastro/ncm/novo",
-                                query: row,
-                              }}
-                            >
-                              <Tooltip title="EDITAR">
-                                <Button>
-                                  <span className="material-symbols-outlined">
-                                    edit
-                                  </span>
-                                </Button>
-                              </Tooltip>
-                            </Link>
-
-                            <Tooltip title="HABILITAR">
-                              <Button
-                                onClick={async () => {
-                                  const response = await fetch(
-                                    `https://erp.sitesdahora.com.br/api/ncm-edit-status/${row.id}`,
-                                    {
-                                      cache: "no-cache",
-                                      method: "PUT",
-                                      body: JSON.stringify(ativar),
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: `Bearer ${jwt}`,
-                                      },
-                                    }
-                                  );
-                                  const mensagem = await response.json();
-                                  if (mensagem.success === true) {
-                                    toast.success("Habilitado com Sucesso", {
-                                      position: "top-center",
-                                      autoClose: 1000,
-                                      hideProgressBar: true,
-                                      closeOnClick: true,
-                                      pauseOnHover: true,
-                                      draggable: true,
-                                      progress: undefined,
-                                      theme: "colored",
-                                      transition: Flip,
-                                    });
-                                  }
-                                  fetchData2();
-                                  fetchData1();
-                                }}
-                              >
-                                <span className="material-symbols-outlined">
-                                  add
-                                </span>
-                              </Button>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TablePagination
-                          rowsPerPageOptions={[5, 10, 25]}
-                          colSpan={5}
-                          count={buscaFiltrada2.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                          ActionsComponent={TablePaginationActions}
-                        />
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </TableContainer>
-              </TabPanel>
-            </Box>
-          </TabContext>
-        </Box>
-      </Card>
-    </>
-  );
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </Card>
+          </Box>
+        </form>
+      </>
+    );
+  }
 }

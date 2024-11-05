@@ -29,7 +29,6 @@ export default async function uniMedida() {
     },
   });
   const data = await res.json();
-  
 
   const res2 = await fetch("https://erp.sitesdahora.com.br/api/units-inative", {
     // cache: "no-cache",
@@ -46,20 +45,6 @@ export default async function uniMedida() {
 
   return (
     <>
-      <Grid item xs={12} md={12} lg={12} xl={12}>
-        <Link href={"/page/cadastro/uniMedida/novo"}>
-          <Button
-            variant="outlined"
-            color="success"
-            sx={{
-              padding: "10px 24px",
-            }}
-          >
-            Nova Unidade de medida
-          </Button>
-        </Link>
-      </Grid>
-
       <CustomPaginationActions data={data} data2={data2} />
     </>
   );

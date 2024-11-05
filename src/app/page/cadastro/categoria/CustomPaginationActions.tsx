@@ -121,10 +121,10 @@ export default function CustomPaginationActions(data: any) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
+  const [visivel, setVisivel] = React.useState("tabela");
+  const [category, setCategory] = React.useState<any>();
   const [data1, setData1] = React.useState(data.data.categorys);
   const [data2, setData2] = React.useState(data.data2.categorys);
-
-  const router = useRouter();
 
   const fetchData1 = async () => {
     const response = await fetch(
@@ -164,13 +164,12 @@ export default function CustomPaginationActions(data: any) {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-  // Avoid a layout jump when reaching the last page with empty rows.
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
     setPage(newPage);
-  };
+  }; 
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -196,317 +195,545 @@ export default function CustomPaginationActions(data: any) {
     );
   }, [busca, data2]);
 
-  const handleEnviarDados = (row: any) => {
-    sessionStorage.setItem("dados", row);
-    router.push("/page/cadastro/categoria/novo");
-  };
+  async function Salvar(form: FormData) {
+    const data = Object.fromEntries(form);
+    if (category === "") {
+      const result = async () => {
+        const response = await fetch(
+          "https://erp.sitesdahora.com.br/api/category-create",
+          {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        if (mensage.success === true) {
+          fetchData1();
+          fetchData2();
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          setVisivel("tabela");
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
+      };
+      result();
+    } else {
+      const result = async () => {
+        const response = await fetch(
+          `https://erp.sitesdahora.com.br/api/category-edit/${category.id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        if (mensage.success === true) {
+          fetchData1();
+          fetchData2();
+          setVisivel("tabela");
+          toast.success(`Alterado com sucesso`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        } else {
+          toast.error(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
+      };
+      result();
+    }
+  }
 
-  return (
-    <>
-      <Card
-        sx={{
-          boxShadow: "none",
-          borderRadius: "7px",
-          mb: "25px",
-          padding: { xs: "18px", sm: "20px", lg: "25px" },
-        }}
-        className="rmui-card"
-      >
-        <Typography
-          variant="h3"
+  if (visivel === "tabela") {
+    return (
+      <>
+        <Grid item xs={12} md={12} lg={12} xl={12}>
+          <Button
+            onClick={() => {
+              setCategory("");
+              setVisivel("formulario");
+            }}
+            variant="outlined"
+            color="success"
+            sx={{
+              padding: "10px 24px",
+            }}
+          >
+            Nova Categoria
+          </Button>
+        </Grid>
+        <Card
           sx={{
-            fontSize: { xs: "16px", md: "18px" },
-            fontWeight: 700,
+            boxShadow: "none",
+            borderRadius: "7px",
             mb: "25px",
+            padding: { xs: "18px", sm: "20px", lg: "25px" },
           }}
-          className="text-black"
+          className="rmui-card"
         >
-          Categoria
-        </Typography>
+          <Typography
+            variant="h3"
+            sx={{
+              fontSize: { xs: "16px", md: "18px" },
+              fontWeight: 700,
+              mb: "25px",
+            }}
+            className="text-black"
+          >
+            Categoria
+          </Typography>
 
-        <Box sx={{ width: "100%", typography: "body1" }}>
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
-              >
-                <Tab label="Ativo" value="1" sx={{ fontWeight: "600" }} />
-                <Tab label="Inativo" value="2" sx={{ fontWeight: "600" }} />
-              </TabList>
+          <Box sx={{ width: "100%", typography: "body1" }}>
+            <TabContext value={value}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList
+                  onChange={handleChange}
+                  aria-label="lab API tabs example"
+                >
+                  <Tab label="Ativo" value="1" sx={{ fontWeight: "600" }} />
+                  <Tab label="Inativo" value="2" sx={{ fontWeight: "600" }} />
+                </TabList>
 
-              <TabPanel value="1">
-                <TableContainer component={Paper}>
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
-                    <FormControl>
-                      <TextField
-                        label={
-                          <span className="material-symbols-outlined">
-                            search
-                          </span>
-                        }
-                        value={busca}
-                        onChange={(ev) => setBusca(ev.target.value)}
-                        variant="standard"
-                        id="barcode"
-                        type="search"
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Table
-                    sx={{ minWidth: 500 }}
-                    aria-label="custom pagination table"
-                  >
-                    <TableHead>
-                      <TableRow
-                        sx={{
-                          th: {
-                            fontSize: "15px",
-                            color: "red",
-                          },
-                        }}
-                      >
-                        <TableCell>Nome</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell> </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {(rowsPerPage > 0
-                        ? buscaFiltrada1.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                        : data1
-                      ).map((row: any) => (
+                <TabPanel value="1">
+                  <TableContainer component={Paper}>
+                    <Grid item xs={12} md={12} lg={12} xl={6}>
+                      <FormControl>
+                        <TextField
+                          label={
+                            <span className="material-symbols-outlined">
+                              search
+                            </span>
+                          }
+                          value={busca}
+                          onChange={(ev) => setBusca(ev.target.value)}
+                          variant="standard"
+                          id="barcode"
+                          type="search"
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Table
+                      sx={{ minWidth: 500 }}
+                      aria-label="custom pagination table"
+                    >
+                      <TableHead>
                         <TableRow
-                          key={row.id}
                           sx={{
-                            "th, td": {
+                            th: {
                               fontSize: "15px",
+                              color: "red",
                             },
                           }}
                         >
-                          <TableCell component="th" scope="row">
-                            {row.name_category}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.status_category}
-                          </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            <Link
-                              href={{
-                                pathname: `/page/cadastro/categoria/novo/`,
-                                query: row,
-                              }}
-                            >
+                          <TableCell>Nome</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell> </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {(rowsPerPage > 0
+                          ? buscaFiltrada1.slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                          : data1
+                        ).map((row: any) => (
+                          <TableRow
+                            key={row.id}
+                            sx={{
+                              "th, td": {
+                                fontSize: "15px",
+                              },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {row.name_category}
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.status_category}
+                            </TableCell>
+                            <TableCell style={{ width: 160 }} align="right">
                               <Tooltip title="EDITAR">
-                                <Button>
+                                <Button
+                                  onClick={() => {
+                                    setCategory(row);
+                                    setVisivel("formulario");
+                                  }}
+                                >
                                   <span className="material-symbols-outlined">
                                     edit
                                   </span>
                                 </Button>
                               </Tooltip>
-                            </Link>
 
-                            <Tooltip title="INABILITAR">
-                              <Button
-                                onClick={async () => {
-                                  const response = await fetch(
-                                    `https://erp.sitesdahora.com.br/api/inactive-category/${row.id}`,
-                                    {
-                                      cache: "no-cache",
-                                      method: "PUT",
-                                      body: JSON.stringify(inativar),
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: `Bearer ${jwt}`,
-                                      },
+                              <Tooltip title="INABILITAR">
+                                <Button
+                                  onClick={async () => {
+                                    const response = await fetch(
+                                      `https://erp.sitesdahora.com.br/api/inactive-category/${row.id}`,
+                                      {
+                                        cache: "no-cache",
+                                        method: "PUT",
+                                        body: JSON.stringify(inativar),
+                                        headers: {
+                                          "Content-Type": "application/json",
+                                          Authorization: `Bearer ${jwt}`,
+                                        },
+                                      }
+                                    );
+                                    const mensagem = await response.json();
+                                    if (mensagem.success === true) {
+                                      toast.success("Inabilitado com Sucesso", {
+                                        position: "top-center",
+                                        autoClose: 1000,
+                                        hideProgressBar: true,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: "colored",
+                                        transition: Flip,
+                                      });
                                     }
-                                  );
-                                  const mensagem = await response.json();
-                                  if (mensagem.success === true) {
-                                    toast.success("Inabilitado com Sucesso", {
-                                      position: "top-center",
-                                      autoClose: 1000,
-                                      hideProgressBar: true,
-                                      closeOnClick: true,
-                                      pauseOnHover: true,
-                                      draggable: true,
-                                      progress: undefined,
-                                      theme: "colored",
-                                      transition: Flip,
-                                    });
-                                  }
-                                  fetchData1();
-                                  fetchData2();
-                                }}
-                              >
-                                <span className="material-symbols-outlined">
-                                  remove
-                                </span>
-                              </Button>
-                            </Tooltip>
-                          </TableCell>
+                                    fetchData1();
+                                    fetchData2();
+                                  }}
+                                >
+                                  <span className="material-symbols-outlined">
+                                    remove
+                                  </span>
+                                </Button>
+                              </Tooltip>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                      <TableFooter>
+                        <TableRow>
+                          <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            colSpan={5}
+                            count={buscaFiltrada1.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
+                          />
                         </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TablePagination
-                          rowsPerPageOptions={[5, 10, 25]}
-                          colSpan={5}
-                          count={buscaFiltrada1.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                          ActionsComponent={TablePaginationActions}
-                        />
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </TableContainer>
-              </TabPanel>
+                      </TableFooter>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
 
-              <TabPanel value="2">
-                <TableContainer component={Paper}>
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
-                    <FormControl>
-                      <TextField
-                        label={
-                          <span className="material-symbols-outlined">
-                            search
-                          </span>
-                        }
-                        value={busca}
-                        onChange={(ev) => setBusca(ev.target.value)}
-                        variant="standard"
-                        id="barcode"
-                        type="search"
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Table
-                    sx={{ minWidth: 500 }}
-                    aria-label="custom pagination table"
-                  >
-                    <TableHead>
-                      <TableRow
-                        sx={{
-                          th: {
-                            fontSize: "15px",
-                            color: "red",
-                          },
-                        }}
-                      >
-                        <TableCell>Nome</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell> </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {(rowsPerPage > 0
-                        ? buscaFiltrada2.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                        : data2
-                      ).map((row: any) => (
+                <TabPanel value="2">
+                  <TableContainer component={Paper}>
+                    <Grid item xs={12} md={12} lg={12} xl={6}>
+                      <FormControl>
+                        <TextField
+                          label={
+                            <span className="material-symbols-outlined">
+                              search
+                            </span>
+                          }
+                          value={busca}
+                          onChange={(ev) => setBusca(ev.target.value)}
+                          variant="standard"
+                          id="barcode"
+                          type="search"
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Table
+                      sx={{ minWidth: 500 }}
+                      aria-label="custom pagination table"
+                    >
+                      <TableHead>
                         <TableRow
-                          key={row.id}
                           sx={{
-                            "th, td": {
+                            th: {
                               fontSize: "15px",
+                              color: "red",
                             },
                           }}
                         >
-                          <TableCell component="th" scope="row">
-                            {row.name_category}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.status_category}
-                          </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            <Tooltip title="EDITAR">
-                              <Link
-                                href={{
-                                  pathname: `/page/cadastro/categoria/novo`,
-                                  query: row,
-                                }}
-                              >
-                                <Button>
+                          <TableCell>Nome</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell> </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {(rowsPerPage > 0
+                          ? buscaFiltrada2.slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                          : data2
+                        ).map((row: any) => (
+                          <TableRow
+                            key={row.id}
+                            sx={{
+                              "th, td": {
+                                fontSize: "15px",
+                              },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {row.name_category}
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.status_category}
+                            </TableCell>
+                            <TableCell style={{ width: 160 }} align="right">
+                              <Tooltip title="EDITAR">
+                                <Button
+                                  onClick={() => {
+                                    setCategory(row);
+                                    setVisivel("formulario");
+                                  }}
+                                >
                                   <span className="material-symbols-outlined">
                                     edit
                                   </span>
                                 </Button>
-                              </Link>
-                            </Tooltip>
+                              </Tooltip>
 
-                            <Tooltip title="Habilitar">
-                              <Button
-                                onClick={async () => {
-                                  const response = await fetch(
-                                    `https://erp.sitesdahora.com.br/api/inactive-category/${row.id}`,
+                              <Tooltip title="Habilitar">
+                                <Button
+                                  onClick={async () => {
+                                    const response = await fetch(
+                                      `https://erp.sitesdahora.com.br/api/inactive-category/${row.id}`,
 
-                                    {
-                                      cache: "no-cache",
-                                      method: "PUT",
-                                      body: JSON.stringify(ativar),
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: `Bearer ${jwt}`,
-                                      },
+                                      {
+                                        cache: "no-cache",
+                                        method: "PUT",
+                                        body: JSON.stringify(ativar),
+                                        headers: {
+                                          "Content-Type": "application/json",
+                                          Authorization: `Bearer ${jwt}`,
+                                        },
+                                      }
+                                    );
+                                    const mensagem = await response.json();
+                                    if (mensagem.success === true) {
+                                      toast.success("Habilitado com Sucesso", {
+                                        position: "top-center",
+                                        autoClose: 1000,
+                                        hideProgressBar: true,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: "colored",
+                                        transition: Flip,
+                                      });
                                     }
-                                  );
-                                  const mensagem = await response.json();
-                                  if (mensagem.success === true) {
-                                    toast.success("Habilitado com Sucesso", {
-                                      position: "top-center",
-                                      autoClose: 1000,
-                                      hideProgressBar: true,
-                                      closeOnClick: true,
-                                      pauseOnHover: true,
-                                      draggable: true,
-                                      progress: undefined,
-                                      theme: "colored",
-                                      transition: Flip,
-                                    });
-                                  }
-                                  fetchData2();
-                                  fetchData1();
-                                }}
-                              >
-                                <span className="material-symbols-outlined">
-                                  add
-                                </span>
-                              </Button>
-                            </Tooltip>
-                          </TableCell>
+                                    fetchData2();
+                                    fetchData1();
+                                  }}
+                                >
+                                  <span className="material-symbols-outlined">
+                                    add
+                                  </span>
+                                </Button>
+                              </Tooltip>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                      <TableFooter>
+                        <TableRow>
+                          <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            colSpan={5}
+                            count={buscaFiltrada2.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
+                          />
                         </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TablePagination
-                          rowsPerPageOptions={[5, 10, 25]}
-                          colSpan={5}
-                          count={buscaFiltrada2.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                          ActionsComponent={TablePaginationActions}
-                        />
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </TableContainer>
-              </TabPanel>
-            </Box>
-          </TabContext>
-        </Box>
-      </Card>
-    </>
-  );
+                      </TableFooter>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+              </Box>
+            </TabContext>
+          </Box>
+        </Card>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <form action={Salvar}>
+          <Box>
+            <Card
+              sx={{
+                boxShadow: "none",
+                borderRadius: "7px",
+                mb: "25px",
+                padding: { xs: "18px", sm: "20px", lg: "25px" },
+              }}
+              className="rmui-card"
+            >
+              <Box
+                sx={{
+                  mb: "25px",
+                }}
+              >
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontSize: { xs: "16px", md: "18px" },
+                    fontWeight: 700,
+                  }}
+                  className="text-black"
+                >
+                  Nova Categoria
+                </Typography>
+              </Box>
+
+              <Grid
+                container
+                spacing={3}
+                columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+              >
+                <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Nome"
+                      variant="filled"
+                      id="name_category"
+                      name="name_category"
+                      defaultValue={category?.name_category}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Card>
+
+            <Card
+              sx={{
+                boxShadow: "none",
+                borderRadius: "7px",
+                mb: "25px",
+                padding: { xs: "18px", sm: "20px", lg: "25px" },
+              }}
+              className="rmui-card"
+            >
+              <Grid
+                container
+                spacing={3}
+                columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+              >
+                <Grid item xs={12} md={12} lg={12} xl={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      textTransform: "capitalize",
+                      borderRadius: "6px",
+                      fontWeight: "500",
+                      fontSize: "16px",
+                      padding: "10px 24px",
+                      color: "#fff !important",
+                      boxShadow: "none",
+                      display: "block",
+                      width: "100%",
+                    }}
+                  >
+                    Salvar
+                  </Button>
+                </Grid>
+
+                <Grid item xs={12} md={12} lg={12} xl={12}>
+                  <Button
+                    onClick={() => {
+                      setVisivel("tabela");
+                    }}
+                    type="submit"
+                    variant="contained"
+                    color="error"
+                    sx={{
+                      textTransform: "capitalize",
+                      borderRadius: "6px",
+                      fontWeight: "500",
+                      fontSize: "16px",
+                      padding: "10px 24px",
+                      color: "#fff !important",
+                      boxShadow: "none",
+                      display: "block",
+                      width: "100%",
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </Card>
+          </Box>
+        </form>
+      </>
+    );
+  }
 }

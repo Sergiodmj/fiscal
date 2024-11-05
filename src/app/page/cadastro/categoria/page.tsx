@@ -1,8 +1,6 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
-import Link from "next/link";
-import { Button, Grid } from "@mui/material";
 
 import CustomPaginationActions from "./CustomPaginationActions";
 
@@ -18,10 +16,6 @@ export default async function Categoria() {
   const jwt = seesion?.user.token;
 
   const res = await fetch("https://erp.sitesdahora.com.br/api/categories", {
-    // cache: "no-cache",
-    next: {
-      tags: ["tabela-categoria"],
-    },
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -34,10 +28,6 @@ export default async function Categoria() {
   const res2 = await fetch(
     "https://erp.sitesdahora.com.br/api/categories-inactive",
     {
-      // cache: "no-cache",
-      next: {
-        tags: ["tabela-categoria2"],
-      },
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -49,22 +39,7 @@ export default async function Categoria() {
 
   return (
     <>
-      <Grid item xs={12} md={12} lg={12} xl={12}>
-        <Link href={"/page/cadastro/categoria/novo"}>
-          <Button
-            variant="outlined"
-            color="success"
-            sx={{
-              padding: "10px 24px",
-            }}
-          >
-            Nova Categoria
-          </Button>
-        </Link>
-      </Grid>
-
       <CustomPaginationActions data={data} data2={data2} />
-
     </>
   );
 }

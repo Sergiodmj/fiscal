@@ -29,7 +29,6 @@ export default async function TextualInputs(user: any) {
   const jwt = seesion?.user.token;
 
   async function Salvar(form: FormData) {
-    "use server";
     const data = Object.fromEntries(form);
     if (!user.searchParams.id) {
       const url = "https://erp.sitesdahora.com.br/api/user-create";
