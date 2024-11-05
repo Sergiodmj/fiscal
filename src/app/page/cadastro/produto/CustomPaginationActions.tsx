@@ -332,7 +332,7 @@ export default function CustomPaginationActions(data: any) {
     } else {
       const result2 = async () => {
         const response = await fetch(
-          `https://erp.sitesdahora.com.br/api/product-edit/${product.searchParams.id}`,
+          `https://erp.sitesdahora.com.br/api/product-edit/${produto.id}`,
           {
             method: "PUT",
             body: JSON.stringify({
