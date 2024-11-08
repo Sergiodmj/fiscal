@@ -126,7 +126,9 @@ export default function CustomPaginationActions(data: any) {
   const [visivel, setVisivel] = React.useState("tabela");
   const [cliente, setCliente] = React.useState<any>();
   const [data1, setData1] = React.useState(data.data.clients);
+  const [typeClient, setTypeClient] = React.useState("");
   const [data2, setData2] = React.useState(data.data2.providers);
+  const [cpf, setCpf] = React.useState("");
 
   const fetchData1 = async () => {
     const response = await fetch("https://erp.sitesdahora.com.br/api/clients", {
@@ -287,6 +289,19 @@ export default function CustomPaginationActions(data: any) {
     }
   }
 
+  function formatarCPF(cpf: any) {
+    return cpf
+      .replace(/\D/g, "")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  }
+
+  const handleCPF = (e: any) => {
+    const cpfFormatado = formatarCPF(e.target.value);
+    setCpf(cpfFormatado);
+  };
+
   if (visivel === "tabela") {
     return (
       <>
@@ -295,6 +310,7 @@ export default function CustomPaginationActions(data: any) {
             onClick={() => {
               setCliente("");
               setVisivel("formulario");
+              setTypeClient("");
             }}
             variant="outlined"
             color="success"
@@ -410,6 +426,7 @@ export default function CustomPaginationActions(data: any) {
                                   onClick={() => {
                                     setCliente(row);
                                     setVisivel("formulario");
+                                    setTypeClient(row.type_client);
                                   }}
                                 >
                                   <span className="material-symbols-outlined">
@@ -615,11 +632,17 @@ export default function CustomPaginationActions(data: any) {
                         value="PF"
                         control={<Radio className="dark-radio" />}
                         label="PF"
+                        onClick={() => {
+                          setTypeClient("PF");
+                        }}
                       />
                       <FormControlLabel
                         value="PJ"
                         control={<Radio className="dark-radio" />}
                         label="PJ"
+                        onClick={() => {
+                          setTypeClient("PJ");
+                        }}
                       />
                     </RadioGroup>
                   </FormControl>
@@ -705,11 +728,12 @@ export default function CustomPaginationActions(data: any) {
 
                 <Grid item xs={12} md={12} lg={12} xl={6}>
                   <FormControl fullWidth>
+                    <FormLabel>Aniversário</FormLabel>
                     <TextField
-                      label="Aniversário"
                       variant="filled"
                       id="date_birth_client"
                       name="date_birth_client"
+                      type="date"
                       required
                       defaultValue={cliente.date_birth_client}
                       sx={{

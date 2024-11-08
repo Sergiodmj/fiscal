@@ -46,19 +46,7 @@ export default async function Empresa() {
 
   return (
     <>
-      <Grid item xs={12} md={12} lg={12} xl={12}>
-        <Link href={"/page/cadastro/empresa/novo"}>
-          <Button
-            variant="outlined"
-            color="success"
-            sx={{
-              padding: "10px 24px",
-            }}
-          >
-            Nova Empresa
-          </Button>
-        </Link>
-      </Grid>
+      
 
       <Card
         sx={{

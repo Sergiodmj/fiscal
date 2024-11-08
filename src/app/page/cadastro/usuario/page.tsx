@@ -44,42 +44,7 @@ export default async function Usuario() {
 
   return (
     <>
-      <Grid item xs={12} md={12} lg={12} xl={12}>
-        <Link href={"/page/cadastro/usuario/novo"}>
-          <Button
-            variant="outlined"
-            color="success"
-            sx={{
-              padding: "10px 24px",
-            }}
-          >
-            Novo Usuário
-          </Button>
-        </Link>
-      </Grid>
-
-      <Card
-        sx={{
-          boxShadow: "none",
-          borderRadius: "7px",
-          mb: "25px",
-          padding: { xs: "18px", sm: "20px", lg: "25px" },
-        }}
-        className="rmui-card"
-      >
-        <Typography
-          variant="h3"
-          sx={{
-            fontSize: { xs: "16px", md: "18px" },
-            fontWeight: 700,
-            mb: "25px",
-          }}
-          className="text-black"
-        >
-          Usuários
-        </Typography>
-        <CustomPaginationActions data={data} />
-      </Card>
+      <CustomPaginationActions data={data} />
     </>
   );
 }
