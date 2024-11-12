@@ -9,7 +9,7 @@ import {
   DialogTitle,
   Dialog,
   TextField,
-  Tooltip
+  Tooltip,
 } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { Flip, toast } from "react-toastify";
@@ -17,10 +17,9 @@ import { Flip, toast } from "react-toastify";
 export default function FormDialog(data: any) {
   const [open, setOpen] = React.useState(false);
   const { data: session } = useSession();
-  const [pVenda, setPVenda] = useState<string>();
-  const [pCompra, setPCompra] = useState<string>();
+  const [pVenda, setPVenda] = useState<string>("");
   const [pVendaNumerico, setPVendaNumerico] = useState("");
-  const [pCompraNumerico, setPCompraNumerico] = useState("");
+  const jwt = session?.user.token;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -42,28 +41,14 @@ export default function FormDialog(data: any) {
     // Convertendo para formato numérico: substituindo vírgulas por pontos
     setPVendaNumerico(formattedValue.replace(/\./g, "").replace(",", ".")); // Converte para número
   };
-  const handleChange2 = (e: any) => {
-    const rawValue = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
-    const formattedValue = new Intl.NumberFormat("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(rawValue / 100); // Divida por 100 para lidar com valores decimais
-
-    setPCompra(formattedValue);
-
-    // Convertendo para formato numérico: substituindo vírgulas por pontos
-    setPCompraNumerico(formattedValue.replace(/\./g, "").replace(",", ".")); // Converte para número
-  };
 
   async function Alterar() {
-    const jwt = session?.user.token;
     const url = `https://erp.sitesdahora.com.br/api/product-edit-price/${data.data.id}`;
     console.log(url);
     const options = {
       method: "PUT",
       body: JSON.stringify({
         price_sale: pVendaNumerico,
-        price_cost: pCompraNumerico,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -86,9 +71,6 @@ export default function FormDialog(data: any) {
           theme: "colored",
           transition: Flip,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1010);
       } else {
         toast.error(`${message.message}`, {
           position: "top-center",
@@ -141,20 +123,6 @@ export default function FormDialog(data: any) {
             name="price_sale"
             value={pVenda}
             onChange={handleChange}
-          />
-        </DialogContent>
-
-        <DialogContent>
-          <DialogContentText>Preço de compra</DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            type="text"
-            fullWidth
-            variant="standard"
-            name="price_cost"
-            value={pCompra}
-            onChange={handleChange2}
           />
         </DialogContent>
         <DialogActions>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Card,
   Typography,
@@ -20,11 +20,9 @@ import {
   Grid,
   FormControl,
   TextField,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Autocomplete,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
@@ -35,7 +33,6 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { useSession } from "next-auth/react";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import FormDialog from "./FormDialog";
 import { Flip, toast } from "react-toastify";
 
 interface TablePaginationActionsProps {
@@ -126,24 +123,13 @@ export default function CustomPaginationActions(data: any) {
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
   const [visivel, setVisivel] = React.useState("tabela");
-  const [produto, setProduto] = React.useState<any>("");
-  const [data1, setData1] = React.useState(data.data.products);
-  const [data2, setData2] = React.useState(data.data2.products);
-  const [gEstoque, setGEestoque] = useState("1");
-  const [ncms, setNcms] = useState([]);
-  const [ncmsId, setNcmsID] = useState([]);
-  const [category, setCategory] = useState([]);
-  const [categoryId, setCategoryID] = useState([]);
-  const [unimed, setUnimed] = useState([]);
-  const [unimedId, setUnimedID] = useState([]);
-  const [pVenda, setPVenda] = useState("");
-  const [pVendaNumerico, setPVendaNumerico] = useState("");
-  const [pCusto, setPCusto] = useState("");
-  const [pCustoNumerico, setPCustoNumerico] = useState("");
+  const [pagamento, setPagamento] = React.useState<any>();
+  const [data1, setData1] = React.useState(data.data.payments);
+  const [data2, setData2] = React.useState(data.data2.payments);
 
   const fetchData1 = async () => {
     const response = await fetch(
-      "https://erp.sitesdahora.com.br/api/products",
+      "https://erp.sitesdahora.com.br/api/payments",
       {
         method: "GET",
         headers: {
@@ -153,12 +139,12 @@ export default function CustomPaginationActions(data: any) {
       }
     );
     const data = await response.json();
-    setData1(data.products);
+    setData1(data.payments);
   };
 
   const fetchData2 = async () => {
     const response = await fetch(
-      "https://erp.sitesdahora.com.br/api/products-inactive",
+      "https://erp.sitesdahora.com.br/api/payments-inativo",
       {
         method: "GET",
         headers: {
@@ -168,77 +154,17 @@ export default function CustomPaginationActions(data: any) {
       }
     );
     const data = await response.json();
-    setData2(data.products);
+    setData2(data.payments);
   };
 
   useEffect(() => {
     fetchData1();
     fetchData2();
-    const fetchBusca = async () => {
-      try {
-        const response = await fetch(
-          "https://erp.sitesdahora.com.br/api/ncms",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${jwt}`,
-            },
-          }
-        );
-        const result = await response.json();
-        setNcms(result.ncms);
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-      }
-      // setSelectedResult(result);
-    };
-    const fetchBusca2 = async () => {
-      try {
-        const response = await fetch(
-          "https://erp.sitesdahora.com.br/api/categories",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${jwt}`,
-            },
-          }
-        );
-        const result = await response.json();
-        setCategory(result.categorys);
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-      }
-    };
-    const fetchBusca3 = async () => {
-      try {
-        const response = await fetch(
-          "https://erp.sitesdahora.com.br/api/units",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${jwt}`,
-            },
-          }
-        ); // URL relativa ou absoluta
-        const result = await response.json();
-        setUnimed(result.units);
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-      }
-    };
-
-    fetchBusca();
-    fetchBusca2();
-    fetchBusca3();
   }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -253,42 +179,32 @@ export default function CustomPaginationActions(data: any) {
     setPage(0);
   };
 
-  const inativar = { status_product: "INATIVO" };
-  const ativar = { status_product: "ATIVO" };
+  const inativar = { status_payments: "INATIVO" };
+  const ativar = { status_payments: "ATIVO" };
 
   const buscaFiltrada1 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
     return data1.filter((data1: any) =>
-      data1.name_product.toLowerCase().includes(lowerBusca)
+      data1.name_payments.toLowerCase().includes(lowerBusca)
     );
   }, [busca, data1]);
 
   const buscaFiltrada2 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
     return data2.filter((data2: any) =>
-      data2.name_product.toLowerCase().includes(lowerBusca)
+      data2.name_payments.toLowerCase().includes(lowerBusca)
     );
   }, [busca, data2]);
 
-  function Salvar(form: FormData) {
+  async function Salvar(form: FormData) {
     const data = Object.fromEntries(form);
-    if (produto === "") {
+    if (pagamento === "") {
       const result = async () => {
         const response = await fetch(
-          "https://erp.sitesdahora.com.br/api/product-create",
+          "https://erp.sitesdahora.com.br/api/payment-create",
           {
             method: "POST",
-            body: JSON.stringify({
-              name_product: data.name_product,
-              manage_stock: gEstoque,
-              barcode: data.barcode,
-              ncm_id: ncmsId,
-              category_id: categoryId,
-              unit_id: unimedId,
-              stock_min: data.stock_min,
-              price_sale: pVendaNumerico.toString,
-              price_cost: pCustoNumerico.toString,
-            }),
+            body: JSON.stringify(data),
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${jwt}`,
@@ -300,8 +216,51 @@ export default function CustomPaginationActions(data: any) {
         if (mensage.success === true) {
           fetchData1();
           fetchData2();
-          setPCusto("");
-          setPVenda("");
+          toast.success(`${mensage.message}`, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+          setVisivel("tabela");
+        } else {
+          toast.error(`${mensage.erros}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Flip,
+          });
+        }
+      };
+      result();
+    } else {
+      const result = async () => {
+        const response = await fetch(
+          `https://erp.sitesdahora.com.br/api/payment-edit/${pagamento.id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+        const mensage = await response.json();
+        console.log(mensage);
+        if (mensage.success === true) {
+          fetchData1();
+          fetchData2();
           toast.success(`${mensage.message}`, {
             position: "top-center",
             autoClose: 1000,
@@ -329,114 +288,8 @@ export default function CustomPaginationActions(data: any) {
         }
       };
       result();
-    } else {
-      const result2 = async () => {
-        const response = await fetch(
-          `https://erp.sitesdahora.com.br/api/product-edit/${produto.id}`,
-          {
-            method: "PUT",
-            body: JSON.stringify({
-              name_product: data.name_product,
-              manage_stock: gEstoque,
-              barcode: data.barcode,
-              ncm_id: ncmsId,
-              category_id: categoryId,
-              unit_id: unimedId,
-              stock_min: data.stock_min,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${jwt}`,
-            },
-          }
-        );
-        const mensage = await response.json();
-        console.log(mensage);
-        if (mensage.success === true) {
-          toast.success(`${mensage.message}`, {
-            position: "top-center",
-            autoClose: 1000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            transition: Flip,
-          });
-        } else {
-          toast.error(`${mensage.message}`, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            transition: Flip,
-          });
-        }
-      };
-      result2();
     }
   }
-
-  //Formata os campos de preço de venda e compra
-  const handleChange3 = (e: any) => {
-    const rawValue = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
-    const formattedValue = new Intl.NumberFormat("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(rawValue / 100); // Divida por 100 para lidar com valores decimais
-
-    setPVenda(formattedValue);
-
-    // Convertendo para formato numérico: substituindo vírgulas por pontos
-    setPVendaNumerico(formattedValue.replace(/\./g, "").replace(",", ".")); // Converte para número
-  };
-
-  const handleChange2 = (e: any) => {
-    const rawValue = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
-    const formattedValue = new Intl.NumberFormat("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(rawValue / 100); // Divida por 100 para lidar com valores decimais
-
-    setPCusto(formattedValue);
-
-    setPCustoNumerico(formattedValue.replace(/\./g, "").replace(",", ".")); // Converte para número
-  };
-
-  const result = ncms.map((item: any) => ({
-    label: `${item.cod_ncm} / ${item.name_ncm}`,
-    id: item.id,
-  }));
-
-  const result2 = category.map((item: any) => ({
-    label: item.name_category,
-    id: item.id,
-  }));
-
-  const result3 = unimed.map((item: any) => ({
-    label: item.name_unit,
-    id: item.id,
-  }));
-
-  const handleKeyDown = (event: any) => {
-    if (event.key === "Enter") {
-      event.preventDefault(); // Impede o comportamento padrão do Enter
-
-      // Encontra o próximo elemento de input ou botão no formulário
-      const form = event.target.form;
-      const index = Array.from(form).indexOf(event.target);
-      const nextElement = form.elements[index + 1];
-
-      if (nextElement) {
-        nextElement.focus(); // Muda o foco para o próximo elemento
-      }
-    }
-  };
 
   if (visivel === "tabela") {
     return (
@@ -444,10 +297,8 @@ export default function CustomPaginationActions(data: any) {
         <Grid item xs={12} md={12} lg={12} xl={12}>
           <Button
             onClick={() => {
-              setProduto("");
+              setPagamento("");
               setVisivel("formulario");
-              setPCusto("");
-              setPVenda("");
             }}
             variant="outlined"
             color="success"
@@ -455,7 +306,7 @@ export default function CustomPaginationActions(data: any) {
               padding: "10px 24px",
             }}
           >
-            Novo produto
+            Novo Metodo de Pagamento
           </Button>
         </Grid>
         <Card
@@ -476,7 +327,7 @@ export default function CustomPaginationActions(data: any) {
             }}
             className="text-black"
           >
-            Produto
+            Método de Pagamento
           </Typography>
 
           <Box sx={{ width: "100%", typography: "body1" }}>
@@ -522,9 +373,8 @@ export default function CustomPaginationActions(data: any) {
                           }}
                         >
                           <TableCell>Nome</TableCell>
-                          <TableCell>Categoria</TableCell>
-                          <TableCell>Uni Medida</TableCell>
-                          <TableCell>Preço de venda</TableCell>
+                          <TableCell>TIPO</TableCell>
+                          <TableCell> </TableCell>
                           <TableCell> </TableCell>
                         </TableRow>
                       </TableHead>
@@ -545,29 +395,19 @@ export default function CustomPaginationActions(data: any) {
                             }}
                           >
                             <TableCell component="th" scope="row">
-                              {row.name_product}
+                              {row.name_payments}
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.type_payments}
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.status_ncm}
                             </TableCell>
                             <TableCell style={{ width: 160 }} align="right">
-                              {row.category.name_category}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                              {row.unit.name_unit}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                              {new Intl.NumberFormat("pt-BR", {
-                                style: "currency",
-                                currency: "BRL",
-                              }).format(row.price_sale)}
-                            </TableCell>
-                            <TableCell
-                              style={{ width: 160 }}
-                              align="right"
-                              colSpan={2}
-                            >
                               <Tooltip title="EDITAR">
                                 <Button
                                   onClick={() => {
-                                    setProduto(row);
+                                    setPagamento(row);
                                     setVisivel("formulario");
                                   }}
                                 >
@@ -576,11 +416,12 @@ export default function CustomPaginationActions(data: any) {
                                   </span>
                                 </Button>
                               </Tooltip>
+
                               <Tooltip title="INABILITAR">
                                 <Button
                                   onClick={async () => {
                                     const response = await fetch(
-                                      `https://erp.sitesdahora.com.br/api/product-edit-status/${row.id}`,
+                                      `https://erp.sitesdahora.com.br/api/payment-status/${row.id}`,
                                       {
                                         cache: "no-cache",
                                         method: "PUT",
@@ -605,8 +446,8 @@ export default function CustomPaginationActions(data: any) {
                                         transition: Flip,
                                       });
                                     }
-                                    fetchData1();
                                     fetchData2();
+                                    fetchData1();
                                   }}
                                 >
                                   <span className="material-symbols-outlined">
@@ -614,7 +455,6 @@ export default function CustomPaginationActions(data: any) {
                                   </span>
                                 </Button>
                               </Tooltip>
-                              <FormDialog data={row} />
                             </TableCell>
                           </TableRow>
                         ))}
@@ -669,9 +509,8 @@ export default function CustomPaginationActions(data: any) {
                           }}
                         >
                           <TableCell>Nome</TableCell>
-                          <TableCell>Categoria</TableCell>
-                          <TableCell>Uni Medida</TableCell>
-                          <TableCell>Preço de venda</TableCell>
+                          <TableCell>TIPO</TableCell>
+                          <TableCell> </TableCell>
                           <TableCell> </TableCell>
                         </TableRow>
                       </TableHead>
@@ -681,7 +520,7 @@ export default function CustomPaginationActions(data: any) {
                               page * rowsPerPage,
                               page * rowsPerPage + rowsPerPage
                             )
-                          : buscaFiltrada2
+                          : data2
                         ).map((row: any) => (
                           <TableRow
                             key={row.id}
@@ -692,25 +531,19 @@ export default function CustomPaginationActions(data: any) {
                             }}
                           >
                             <TableCell component="th" scope="row">
-                              {row.name_product}
+                              {row.name_payments}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                              {row.category.name_category}
+                            <TableCell component="th" scope="row">
+                              {row.type_payments}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                              {row.unit.name_unit}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                              {new Intl.NumberFormat("pt-BR", {
-                                style: "currency",
-                                currency: "BRL",
-                              }).format(row.price_sale)}
+                            <TableCell component="th" scope="row">
+                              {row.status_ncm}
                             </TableCell>
                             <TableCell style={{ width: 160 }} align="right">
                               <Tooltip title="EDITAR">
                                 <Button
                                   onClick={() => {
-                                    setProduto(row);
+                                    setPagamento(row);
                                     setVisivel("formulario");
                                   }}
                                 >
@@ -719,11 +552,12 @@ export default function CustomPaginationActions(data: any) {
                                   </span>
                                 </Button>
                               </Tooltip>
+
                               <Tooltip title="HABILITAR">
                                 <Button
                                   onClick={async () => {
                                     const response = await fetch(
-                                      `https://erp.sitesdahora.com.br/api/product-edit-status/${row.id}`,
+                                      `https://erp.sitesdahora.com.br/api/payment-status/${row.id}`,
                                       {
                                         cache: "no-cache",
                                         method: "PUT",
@@ -736,7 +570,7 @@ export default function CustomPaginationActions(data: any) {
                                     );
                                     const mensagem = await response.json();
                                     if (mensagem.success === true) {
-                                      toast.success("Habilitado com Sucesso", {
+                                      toast.success("Inabilitado com Sucesso", {
                                         position: "top-center",
                                         autoClose: 1000,
                                         hideProgressBar: true,
@@ -748,8 +582,8 @@ export default function CustomPaginationActions(data: any) {
                                         transition: Flip,
                                       });
                                     }
-                                    fetchData1();
                                     fetchData2();
+                                    fetchData1();
                                   }}
                                 >
                                   <span className="material-symbols-outlined">
@@ -766,7 +600,7 @@ export default function CustomPaginationActions(data: any) {
                           <TablePagination
                             rowsPerPageOptions={[5, 10, 25]}
                             colSpan={5}
-                            count={buscaFiltrada2.length}
+                            count={buscaFiltrada1.length}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             onPageChange={handleChangePage}
@@ -811,7 +645,7 @@ export default function CustomPaginationActions(data: any) {
                   }}
                   className="text-black"
                 >
-                  Novo Produto
+                  Nova Forma de Pagamento
                 </Typography>
               </Box>
 
@@ -822,44 +656,13 @@ export default function CustomPaginationActions(data: any) {
               >
                 <Grid item xs={12} md={12} lg={12} xl={6}>
                   <FormControl fullWidth>
-                    <FormLabel id="demo-row-radio-buttons-group-label">
-                      Gerenciar estoque para esse produto ?
-                    </FormLabel>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-row-radio-buttons-group-label"
-                      name="manage_stock"
-                      defaultValue={produto.manage_stock || 1}
-                    >
-                      <FormControlLabel
-                        value="1"
-                        // onChange={() => {setGEestoque("1")}}
-                        onClick={() => {
-                          setGEestoque("1");
-                        }}
-                        control={<Radio className="dark-radio" />}
-                        label="Gerenciar"
-                      />
-                      <FormControlLabel
-                        value="0"
-                        onClick={() => {
-                          setGEestoque("0");
-                        }}
-                        control={<Radio className="dark-radio" />}
-                        label="Não Gerenciar"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={12} lg={12} xl={6}>
-                  <FormControl fullWidth>
                     <TextField
                       label="Nome"
                       variant="filled"
-                      id="name_product"
-                      name="name_product"
-                      defaultValue={produto.name_product}
+                      id="name_payments"
+                      name="name_payments"
+                      required
+                      defaultValue={pagamento.name_payments}
                       sx={{
                         "& .MuiInputBase-root": {
                           border: "1px solid #D5D9E2",
@@ -878,156 +681,31 @@ export default function CustomPaginationActions(data: any) {
                 </Grid>
 
                 <Grid item xs={12} md={12} lg={12} xl={6}>
-                  <FormControl fullWidth>
-                    <TextField
-                      label="Código de barras"
-                      variant="filled"
-                      id="barcode"
-                      name="barcode"
-                      onKeyDown={handleKeyDown}
-                      defaultValue={produto.barcode}
-                    />
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={12} lg={12} xl={6}>
-                  <FormControl fullWidth>
-                    <Autocomplete
-                      disablePortal
-                      options={result}
-                      onChange={(event: any, newValue: any | null) => {
-                        setNcmsID(newValue.id);
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="NCM" required />
-                      )}
-                    />
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={12} lg={12} xl={6}>
-                  <FormControl fullWidth>
-                    <Autocomplete
-                      disablePortal
-                      options={result2}
-                      onChange={(event: any, newValue: any | null) => {
-                        setCategoryID(newValue.id);
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Categoria" required />
-                      )}
-                    />
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={12} lg={12} xl={6}>
-                  <FormControl fullWidth>
-                    <Autocomplete
-                      disablePortal
-                      options={result3}
-                      onChange={(event: any, newValue: any | null) => {
-                        setUnimedID(newValue.id);
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Unidade de medida"
-                          required
-                        />
-                      )}
-                    />
-                  </FormControl>
-                </Grid>
-
-                {gEstoque === "1" ? (
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <Box>
                     <FormControl fullWidth>
-                      <TextField
-                        label="Estoque Mínimo"
-                        variant="filled"
-                        type="number"
-                        id="stock_min"
-                        name="stock_min"
-                        defaultValue={produto.stock_min}
+                      <InputLabel>Tipo de Pagamento</InputLabel>
+                      <Select
+                        labelId="Tipo de pagamento"
+                        id="type_payments"
+                        name="type_payments"
+                        label="Tipo de pagamento"
+                        required
                         sx={{
-                          "& .MuiInputBase-root": {
+                          "& fieldset": {
                             border: "1px solid #D5D9E2",
-                            backgroundColor: "#fff",
                             borderRadius: "7px",
                           },
-                          "& .MuiInputBase-root::before": {
-                            border: "none",
-                          },
-                          "& .MuiInputBase-root:hover::before": {
-                            border: "none",
-                          },
                         }}
-                      />
+                      >
+                        <MenuItem value="PIX">PIX</MenuItem>
+                        <MenuItem value="CREDITO">CREDITO</MenuItem>
+                        <MenuItem value="DINHEIRO">DINHEIRO</MenuItem>
+                        <MenuItem value="CHEQUE">CHEQUE</MenuItem>
+                        <MenuItem value="CREDIARIO">CREDIARIO</MenuItem>
+                      </Select>
                     </FormControl>
-                  </Grid>
-                ) : (
-                  ""
-                )}
-
-                {produto === "" ? (
-                  <>
-                    <Grid item xs={12} md={12} lg={12} xl={6}>
-                      <FormControl fullWidth>
-                        <TextField
-                          label="Preço de venda"
-                          variant="filled"
-                          type="text"
-                          id="price_sale"
-                          name="price_sale"
-                          value={pVenda}
-                          onChange={handleChange3}
-                          sx={{
-                            "& .MuiInputBase-root": {
-                              border: "1px solid #D5D9E2",
-                              backgroundColor: "#fff",
-                              borderRadius: "7px",
-                            },
-                            "& .MuiInputBase-root::before": {
-                              border: "none",
-                            },
-                            "& .MuiInputBase-root:hover::before": {
-                              border: "none",
-                            },
-                          }}
-                        />
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12} md={12} lg={12} xl={6}>
-                      <FormControl fullWidth>
-                        <TextField
-                          label="Preço de custo"
-                          variant="filled"
-                          type="text"
-                          id="price_cost"
-                          name="price_cost"
-                          value={pCusto}
-                          onChange={handleChange2}
-                          sx={{
-                            "& .MuiInputBase-root": {
-                              border: "1px solid #D5D9E2",
-                              backgroundColor: "#fff",
-                              borderRadius: "7px",
-                            },
-                            "& .MuiInputBase-root::before": {
-                              border: "none",
-                            },
-                            "& .MuiInputBase-root:hover::before": {
-                              border: "none",
-                            },
-                          }}
-                        />
-                      </FormControl>
-                    </Grid>
-                  </>
-                ) : (
-                  ""
-                )}
+                  </Box>
+                </Grid>
               </Grid>
             </Card>
 
@@ -1069,8 +747,6 @@ export default function CustomPaginationActions(data: any) {
                   <Button
                     onClick={() => {
                       setVisivel("tabela");
-                      setPCusto("");
-                      setPVenda("");
                     }}
                     type="submit"
                     variant="contained"
