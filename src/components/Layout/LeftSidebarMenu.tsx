@@ -57,7 +57,7 @@ interface LeftSidebarProps {
 const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
   const pathname = usePathname();
 
-  const [expanded, setExpanded] = React.useState<string | false>("panel1");
+  const [expanded, setExpanded] = React.useState<string | false>(false);
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -187,8 +187,8 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                                 Uni medida
                                 <span className="trezo-badge">adm</span>
                               </Link>
-                              </li>
-                              
+                            </li>
+
                             <li className="sidemenu-item">
                               <Link
                                 href="/page/cadastro/pagamento"
@@ -199,6 +199,20 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                                 }`}
                               >
                                 Pagamento
+                                <span className="trezo-badge">adm</span>
+                              </Link>
+                            </li>
+
+                            <li className="sidemenu-item">
+                              <Link
+                                href="/page/cadastro/banco"
+                                className={`sidemenu-link ${
+                                  pathname === "/page/cadastro/banco"
+                                    ? "active"
+                                    : ""
+                                }`}
+                              >
+                                Banco
                                 <span className="trezo-badge">adm</span>
                               </Link>
                             </li>

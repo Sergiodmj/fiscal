@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
 import CustomPaginationActions from "./CustomPaginationActions";
 
-export default async function Pagamento() {
+export default async function Banco() {
   const seesion = await getServerSession(authOptions);
   if (!seesion) {
     redirect("/");
@@ -14,7 +14,7 @@ export default async function Pagamento() {
 
   const jwt = seesion?.user.token;
 
-  const res = await fetch("https://erp.sitesdahora.com.br/api/payments", {
+  const res = await fetch("https://erp.sitesdahora.com.br/api/banks", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -23,21 +23,21 @@ export default async function Pagamento() {
   });
   const data = await res.json();
 
-  const res2 = await fetch(
-    "https://erp.sitesdahora.com.br/api/payments-inativo",
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+  const res2 = await fetch("https://erp.sitesdahora.com.br/api/banks-inativo", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
   const data2 = await res2.json();
+
 
   return (
     <>
+      teste
       <CustomPaginationActions data={data} data2={data2} />
     </>
   );
 }
+
