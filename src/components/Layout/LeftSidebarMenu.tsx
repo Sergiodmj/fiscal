@@ -254,6 +254,56 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                 </AccordionDetails>
               </Accordion>
 
+              <Accordion
+                expanded={expanded === "panel2"}
+                onChange={handleChange("panel2")}
+                className="mat-accordion"
+              >
+                <AccordionSummary
+                  className="mat-summary"
+                  aria-controls="panel2d-content"
+                  id="panel2d-header"
+                >
+                  <i className="material-symbols-outlined">swap_horiz</i>
+                  <span className="title">Movimento</span>
+                </AccordionSummary>
+
+                <AccordionDetails className="mat-details">
+                  <ul className="sidebar-sub-menu">
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/movimento/estoque"
+                        className={`sidemenu-link ${
+                          pathname === "/page/movimento/estoque" ? "active" : ""
+                        }`}
+                      >
+                        Estoque
+                      </Link>
+                    </li>
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/movimento/entrada"
+                        className={`sidemenu-link ${
+                          pathname === "/page/movimento/entrada" ? "active" : ""
+                        }`}
+                      >
+                        Entrada
+                      </Link>
+                    </li>
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/movimento/saida"
+                        className={`sidemenu-link ${
+                          pathname === "/page/movimento/saida" ? "active" : ""
+                        }`}
+                      >
+                        Saída
+                      </Link>
+                    </li>
+                  </ul>
+                </AccordionDetails>
+              </Accordion>
+
               <Typography
                 className="sub-title"
                 sx={{
