@@ -1,8 +1,6 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
-import Link from "next/link";
-import { Button, Grid } from "@mui/material";
 import CustomPaginationActions from "./CustomPaginationActions";
 
 export default async function Produto() {
