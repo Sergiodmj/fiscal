@@ -1,22 +1,10 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
-import Link from "next/link";
-import { Button, Grid, TableCell, TableHead, Tooltip } from "@mui/material";
 import {
   Card,
-  Typography,
-  Table,
-  TableBody,
-  TableContainer,
-  Box,
-  TableRow,
-  Paper,
-  TableFooter,
-  TablePagination,
+  Typography
 } from "@mui/material";
-import FormDialog from "./FormDialog";
-import { format } from "date-fns";
 import CustomPaginationActions from "./CustomPaginationActions";
 
 export default async function Empresa() {
