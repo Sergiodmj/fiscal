@@ -8,6 +8,7 @@ import {
   FormControl,
   TextField,
   Button,
+  Autocomplete,
 } from "@mui/material";
 
 import { useSession } from "next-auth/react";
@@ -19,51 +20,73 @@ export default function CustomPaginationActions(data: any) {
   const { data: session } = useSession();
   const jwt = session?.user.token;
   const [produto, setProduto] = useState([]);
+  const [produtoId, setProdutoId] = useState([]);
 
-
-  useEffect(() => {
-
-  }, []);
-
-  async function Salvar(form: FormData) {
-    const data = Object.fromEntries(form);
-    const result = async () => {
-      const response = await fetch(`***`, {
-        method: "PUT",
-        body: JSON.stringify(data),
+  const fetchData1 = async () => {
+    const response = await fetch(
+      "https://erp.sitesdahora.com.br/api/products",
+      {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
         },
-      });
-      const mensage = await response.json();
-      if (mensage.success === true) {
-        toast.success(`Alterado com sucesso`, {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Flip,
-        });
-      } else {
-        toast.error(`${mensage.message}`, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Flip,
-        });
       }
-    };
-    result();
+    );
+    const data = await response.json();
+    setProduto(data.products);
+  };
+
+  useEffect(() => {
+    fetchData1();
+  }, []);
+  console.log(produto);
+
+  const result = produto.map((item: any) => ({
+    label: `${item.name_product}`,
+    id: item.id,
+  }));
+
+  async function Salvar(form: FormData) {
+    const data = Object.fromEntries(form);
+    console.log(produtoId)
+    // const result = async () => {
+    //   const response = await fetch(`***`, {
+    //     method: "PUT",
+    //     body: JSON.stringify(data),
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${jwt}`,
+    //     },
+    //   });
+    //   const mensage = await response.json();
+    //   if (mensage.success === true) {
+    //     toast.success(`Alterado com sucesso`, {
+    //       position: "top-center",
+    //       autoClose: 1000,
+    //       hideProgressBar: true,
+    //       closeOnClick: true,
+    //       pauseOnHover: true,
+    //       draggable: true,
+    //       progress: undefined,
+    //       theme: "colored",
+    //       transition: Flip,
+    //     });
+    //   } else {
+    //     toast.error(`${mensage.message}`, {
+    //       position: "top-center",
+    //       autoClose: 5000,
+    //       hideProgressBar: true,
+    //       closeOnClick: true,
+    //       pauseOnHover: true,
+    //       draggable: true,
+    //       progress: undefined,
+    //       theme: "colored",
+    //       transition: Flip,
+    //     });
+    //   }
+    // };
+    // result();
   }
 
   return (
@@ -103,25 +126,15 @@ export default function CustomPaginationActions(data: any) {
             >
               <Grid item xs={12} md={12} lg={12} xl={6}>
                 <FormControl fullWidth>
-                  <TextField
-                    label="Nome"
-                    variant="filled"
-                    id="name_category"
-                    name="name_category"
-                    required
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
+                  <Autocomplete
+                    disablePortal
+                    options={result}
+                    onChange={(event: any, newValue: any | null) => {
+                      setProdutoId(newValue.id);
                     }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Produto" required />
+                    )}
                   />
                 </FormControl>
               </Grid>
