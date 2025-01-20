@@ -16,8 +16,9 @@ import {
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Flip, toast } from "react-toastify";
+import React, { useEffect, useState } from "react";
+import InputAdornment from "@mui/material/InputAdornment";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 export default function CustomPaginationActions(data: any) {
   const { data: session } = useSession();
@@ -312,8 +313,90 @@ export default function CustomPaginationActions(data: any) {
                       setFornecedorId(newValue.id);
                     }}
                     renderInput={(params) => (
-                      <TextField {...params} label="Fornecedor" required/>
+                      <TextField {...params} label="Fornecedor" required />
                     )}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={6} md={6} lg={6} xl={6}>
+                <FormControl fullWidth>
+                  <Autocomplete
+                    disablePortal
+                    options={result2}
+                    onChange={(event: any, newValue: any | null) => {
+                      setFornecedorId(newValue.id);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Formas de Pagamento"
+                        required
+                      />
+                    )}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={6} md={6} lg={6} xl={6}>
+                <FormControl fullWidth>
+                  <TextField
+                    label="Número do cheque"
+                    variant="filled"
+                    id="number_check"
+                    name="number_check"
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        border: "1px solid #D5D9E2",
+                        backgroundColor: "#fff",
+                        borderRadius: "7px",
+                      },
+                      "& .MuiInputBase-root::before": {
+                        border: "none",
+                      },
+                      "& .MuiInputBase-root:hover::before": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={4} md={4} lg={4} xl={4}>
+                <FormControl fullWidth>
+                  <TextField
+                    label="Banco do cheque"
+                    variant="filled"
+                    id="banck_transmitter_cheque"
+                    name="banck_transmitter_cheque"
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        border: "1px solid #D5D9E2",
+                        backgroundColor: "#fff",
+                        borderRadius: "7px",
+                      },
+                      "& .MuiInputBase-root::before": {
+                        border: "none",
+                      },
+                      "& .MuiInputBase-root:hover::before": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={4} md={4} lg={4} xl={4}>
+                <FormControl fullWidth>
+                  <OutlinedInput
+                    id="outlined-adornment-weight"
+                    endAdornment={
+                      <InputAdornment position="end">kg</InputAdornment>
+                    }
+                    aria-describedby="outlined-weight-helper-text"
+                    inputProps={{
+                      "aria-label": "weight",
+                    }}
                   />
                 </FormControl>
               </Grid>

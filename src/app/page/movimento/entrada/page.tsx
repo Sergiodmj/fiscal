@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { auth as authOptions } from "@/app/libs/auth-config";
 import CustomPaginationActions from "./CustomPaginationActions";
 
-export default async function Pagamento() {
+export default async function Entrada() {
   const seesion = await getServerSession(authOptions);
   if (!seesion) {
     redirect("/");

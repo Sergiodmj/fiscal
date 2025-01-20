@@ -20,6 +20,10 @@ import {
   Grid,
   FormControl,
   TextField,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  FormLabel,
 } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
@@ -119,10 +123,11 @@ export default function CustomPaginationActions(data: any) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
-  const [visivel, setVisivel] = React.useState("formulario");
-  const [pagamento, setPagamento] = React.useState<any>();
-  const [data1, setData1] = React.useState(data.data.payment);
-  const [data2, setData2] = React.useState(data.data2.payment);
+  const [visivel, setVisivel] = React.useState("tabela");
+  const [pagamento, setPagamento] = React.useState<any>("");
+  const [data1, setData1] = React.useState(data.data.payments);
+  const [data2, setData2] = React.useState(data.data2.payments);
+  const [internal, setInternal] = React.useState("0");
 
   const fetchData1 = async () => {
     const response = await fetch(
@@ -136,8 +141,7 @@ export default function CustomPaginationActions(data: any) {
       }
     );
     const data = await response.json();
-    setData1(data.payment);
-
+    setData1(data.payments);
   };
 
   const fetchData2 = async () => {
@@ -152,7 +156,8 @@ export default function CustomPaginationActions(data: any) {
       }
     );
     const data = await response.json();
-    setData2(data.payment);
+    setData2(data.payments);
+    console.log(data2);
   };
 
   useEffect(() => {
@@ -181,19 +186,19 @@ export default function CustomPaginationActions(data: any) {
   const inativar = { status_payment: "INATIVO" };
   const ativar = { status_payment: "ATIVO" };
 
-  // const buscaFiltrada1 = useMemo(() => {
-  //   const lowerBusca = busca.toLowerCase();
-  //   return data1.filter((data1: any) =>
-  //     data1.name_payments.toLowerCase().includes(lowerBusca)
-  //   );
-  // }, [busca, data1]);
+  const buscaFiltrada1 = useMemo(() => {
+    const lowerBusca = busca.toLowerCase();
+    return data1.filter((data1: any) =>
+      data1.name_payments.toLowerCase().includes(lowerBusca)
+    );
+  }, [busca, data1]);
 
-  // const buscaFiltrada2 = useMemo(() => {
-  //   const lowerBusca = busca.toLowerCase();
-  //   return data2.filter((data2: any) =>
-  //     data2.name_payments.toLowerCase().includes(lowerBusca)
-  //   );
-  // }, [busca, data2]);
+  const buscaFiltrada2 = useMemo(() => {
+    const lowerBusca = busca.toLowerCase();
+    return data2.filter((data2: any) =>
+      data2.name_payments.toLowerCase().includes(lowerBusca)
+    );
+  }, [busca, data2]);
 
   async function Salvar(form: FormData) {
     const data = Object.fromEntries(form);
@@ -203,7 +208,11 @@ export default function CustomPaginationActions(data: any) {
           "https://erp.sitesdahora.com.br/api/payment-create",
           {
             method: "POST",
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+              name_payments: data.name_payments,
+              type_payments: data.type_payments,
+              internal_payment: internal,
+            }),
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${jwt}`,
@@ -248,7 +257,11 @@ export default function CustomPaginationActions(data: any) {
           `https://erp.sitesdahora.com.br/api/payment-edit/${pagamento.id}`,
           {
             method: "PUT",
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+              name_payments: data.name_payments,
+              type_payments: data.type_payments,
+              internal_payment: internal,
+            }),
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${jwt}`,
@@ -293,8 +306,7 @@ export default function CustomPaginationActions(data: any) {
   if (visivel === "tabela") {
     return (
       <>
-        teste
-        {/* <Grid item xs={12} md={12} lg={12} xl={12}>
+        <Grid item xs={12} md={12} lg={12} xl={12}>
           <Button
             onClick={() => {
               setPagamento("");
@@ -472,7 +484,7 @@ export default function CustomPaginationActions(data: any) {
               </Box>
             </TabContext>
           </Box>
-        </Card> */}
+        </Card>
       </>
     );
   } else {
@@ -519,7 +531,7 @@ export default function CustomPaginationActions(data: any) {
                       id="name_payments"
                       name="name_payments"
                       required
-                      // defaultValue={pagamento.name_payments}
+                      defaultValue={pagamento.name_payments}
                       sx={{
                         "& .MuiInputBase-root": {
                           border: "1px solid #D5D9E2",
@@ -534,6 +546,63 @@ export default function CustomPaginationActions(data: any) {
                         },
                       }}
                     />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Forma de Pagamento"
+                      variant="filled"
+                      id="type_payments"
+                      name="type_payments"
+                      required
+                      defaultValue={pagamento.type_payments}
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <FormControl fullWidth>
+                    <FormLabel id="demo-row-radio-buttons-group-label">
+                      Tipo de pagamento
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                      name="manage_stock"
+                      defaultValue={pagamento.internal_payment || internal}
+                    >
+                      <FormControlLabel
+                        value="0"
+                        onClick={() => {
+                          setInternal("0");
+                        }}
+                        control={<Radio className="dark-radio" />}
+                        label="Pagamento de cliente"
+                      />
+                      <FormControlLabel
+                        value="1"
+                        onClick={() => {
+                          setInternal("1");
+                        }}
+                        control={<Radio className="dark-radio" />}
+                        label="Pagamento ao fornnecedor"
+                      />
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
               </Grid>
