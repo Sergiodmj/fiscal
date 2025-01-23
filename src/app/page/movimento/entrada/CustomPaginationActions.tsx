@@ -12,6 +12,8 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Popover,
+  Popper,
 } from "@mui/material";
 
 import { useSession } from "next-auth/react";
@@ -19,16 +21,23 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import InputAdornment from "@mui/material/InputAdornment";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import { Flip, toast } from "react-toastify";
 
 export default function CustomPaginationActions(data: any) {
   const { data: session } = useSession();
   const jwt = session?.user.token;
   const [produto, setProduto] = useState([]);
-  const [produtoId, setProdutoId] = useState([]);
+  const [produtoId, setProdutoId] = useState("");
   const [fornecedor, setFornecedor] = useState([]);
-  const [fornecedorId, setFornecedorId] = useState([]);
+  const [fornecedorId, setFornecedorId] = useState("");
+  const [banco, setBanco] = useState([]);
+  const [bancoId, setBancoId] = useState("");
+  const [pagamento, setPagamento] = useState([]);
+  const [pagamentoId, setPagamentoId] = useState("");
   const [pCusto, setPCusto] = useState("");
   const [pCustoNumerico, setPCustoNumerico] = useState("");
+  const [numero, setNumero] = useState(2);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const fetchData1 = async () => {
     const response = await fetch(
@@ -58,18 +67,56 @@ export default function CustomPaginationActions(data: any) {
     const data = await response.json();
     setFornecedor(data.providers);
   };
+  const fetchData3 = async () => {
+    const response = await fetch(
+      "https://erp.sitesdahora.com.br/api/payments",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    );
+    const data = await response.json();
+    setPagamento(data.payments);
+  };
+  const fetchData4 = async () => {
+    const response = await fetch("https://erp.sitesdahora.com.br/api/banks", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+    const data = await response.json();
+    setBanco(data.banks);
+  };
 
   useEffect(() => {
     fetchData1();
     fetchData2();
+    fetchData3();
+    fetchData4();
   }, []);
 
   const result = produto.map((item: any) => ({
     label: `${item.name_product}`,
     id: item.id,
   }));
+
   const result2 = fornecedor.map((item: any) => ({
     label: `${item.nome_client}`,
+    id: item.id,
+  }));
+
+  const result3 = pagamento.map((item: any) => ({
+    label: `${item.name_payments}`,
+    id: item.id,
+  }));
+
+  const result4 = banco.map((item: any) => ({
+    label: `${item.name_bank}`,
     id: item.id,
   }));
 
@@ -87,46 +134,64 @@ export default function CustomPaginationActions(data: any) {
 
   async function Salvar(form: FormData) {
     const data = Object.fromEntries(form);
-    console.log(produtoId);
-    console.log(fornecedorId);
-    // const result = async () => {
-    //   const response = await fetch(`***`, {
-    //     method: "PUT",
-    //     body: JSON.stringify(data),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${jwt}`,
-    //     },
-    //   });
-    //   const mensage = await response.json();
-    //   if (mensage.success === true) {
-    //     toast.success(`Alterado com sucesso`, {
-    //       position: "top-center",
-    //       autoClose: 1000,
-    //       hideProgressBar: true,
-    //       closeOnClick: true,
-    //       pauseOnHover: true,
-    //       draggable: true,
-    //       progress: undefined,
-    //       theme: "colored",
-    //       transition: Flip,
-    //     });
-    //   } else {
-    //     toast.error(`${mensage.message}`, {
-    //       position: "top-center",
-    //       autoClose: 5000,
-    //       hideProgressBar: true,
-    //       closeOnClick: true,
-    //       pauseOnHover: true,
-    //       draggable: true,
-    //       progress: undefined,
-    //       theme: "colored",
-    //       transition: Flip,
-    //     });
-    //   }
-    // };
-    // result();
+    const result = async () => {
+      const response = await fetch(
+        `https://erp.sitesdahora.com.br/api/manage-stock`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            product_id: produtoId,
+            type_moviment: data.type_moviment,
+            qtd_stock: data.qtd_stock,
+            price_cost: data.price_cost,
+            note_number: data.note_number,
+            motive: data.motive,
+            provider_id: fornecedorId,
+            operation_id: data.operation_id,
+            forms_payments_id: pagamentoId,
+            number_check: data.number_check,
+            banck_transmitter_cheque: data.banck_transmitter_cheque,
+            parcel: data.parcel,
+            banck_id: bancoId,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+      const mensage = await response.json();
+      if (mensage.success === true) {
+        toast.success(`Alterado com sucesso`, {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Flip,
+        });
+      } else {
+        toast.error(`${mensage.message}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Flip,
+        });
+      }
+    };
+    result();
   }
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popper" : undefined;
 
   return (
     <>
@@ -323,9 +388,9 @@ export default function CustomPaginationActions(data: any) {
                 <FormControl fullWidth>
                   <Autocomplete
                     disablePortal
-                    options={result2}
+                    options={result3}
                     onChange={(event: any, newValue: any | null) => {
-                      setFornecedorId(newValue.id);
+                      setPagamentoId(newValue.id);
                     }}
                     renderInput={(params) => (
                       <TextField
@@ -388,15 +453,58 @@ export default function CustomPaginationActions(data: any) {
 
               <Grid item xs={4} md={4} lg={4} xl={4}>
                 <FormControl fullWidth>
-                  <OutlinedInput
-                    id="outlined-adornment-weight"
-                    endAdornment={
-                      <InputAdornment position="end">kg</InputAdornment>
-                    }
-                    aria-describedby="outlined-weight-helper-text"
-                    inputProps={{
-                      "aria-label": "weight",
+                  {numero == 1 ? (
+                    <Box>
+                      Para parcela em Dias utilizar o "/" Ex: 30/60. parcela
+                      para 30 e 60 dias. Para meses basta colocar a quantidade
+                      de meses que ira parcela.
+                    </Box>
+                  ) : (
+                    ""
+                  )}
+                  <TextField
+                    onFocus={() => {
+                      setNumero(1);
                     }}
+                    onBlur={() => {
+                      setNumero(2);
+                    }}
+                    label="Parcela"
+                    variant="filled"
+                    id="parcel"
+                    name="parcel"
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        border: "1px solid #D5D9E2",
+                        backgroundColor: "#fff",
+                        borderRadius: "7px",
+                      },
+                      "& .MuiInputBase-root::before": {
+                        border: "none",
+                      },
+                      "& .MuiInputBase-root:hover::before": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={4} md={4} lg={4} xl={4}>
+                <FormControl fullWidth>
+                  <Autocomplete
+                    disablePortal
+                    options={result4}
+                    onChange={(event: any, newValue: any | null) => {
+                      setBancoId(newValue.id);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Banco"
+                        required
+                      />
+                    )}
                   />
                 </FormControl>
               </Grid>

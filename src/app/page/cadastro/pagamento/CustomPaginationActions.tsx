@@ -426,7 +426,7 @@ export default function CustomPaginationActions(data: any) {
                                 <Button
                                   onClick={async () => {
                                     const response = await fetch(
-                                      `https://erp.sitesdahora.com.br/api/ncm-edit-status/${row.id}`,
+                                      `https://erp.sitesdahora.com.br/api/payment-edit-status/${row.id}`,
                                       {
                                         cache: "no-cache",
                                         method: "PUT",
