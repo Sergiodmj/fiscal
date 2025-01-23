@@ -11,16 +11,12 @@ import {
   Autocomplete,
   InputLabel,
   MenuItem,
-  Select,
-  Popover,
-  Popper,
+  Select
 } from "@mui/material";
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import InputAdornment from "@mui/material/InputAdornment";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import { Flip, toast } from "react-toastify";
 
 export default function CustomPaginationActions(data: any) {
@@ -134,6 +130,21 @@ export default function CustomPaginationActions(data: any) {
 
   async function Salvar(form: FormData) {
     const data = Object.fromEntries(form);
+    const teste = JSON.stringify({
+      product_id: produtoId,
+      type_moviment: data.type_moviment,
+      qtd_stock: data.qtd_stock,
+      price_cost: data.price_cost,
+      note_number: data.note_number,
+      motive: data.motive,
+      provider_id: fornecedorId,
+      operation_id: data.operation_id,
+      forms_payments_id: pagamentoId,
+      number_check: data.number_check,
+      banck_transmitter_cheque: data.banck_transmitter_cheque,
+      parcel: data.parcel,
+      banck_id: bancoId,
+    });
     const result = async () => {
       const response = await fetch(
         `https://erp.sitesdahora.com.br/api/manage-stock`,
@@ -188,10 +199,9 @@ export default function CustomPaginationActions(data: any) {
       }
     };
     result();
-  }
+    console.log(teste);
 
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popper" : undefined;
+  }
 
   return (
     <>
