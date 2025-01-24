@@ -11,7 +11,7 @@ import {
   Autocomplete,
   InputLabel,
   MenuItem,
-  Select
+  Select,
 } from "@mui/material";
 
 import { useSession } from "next-auth/react";
@@ -32,6 +32,8 @@ export default function CustomPaginationActions(data: any) {
   const [pagamentoId, setPagamentoId] = useState("");
   const [pCusto, setPCusto] = useState("");
   const [pCustoNumerico, setPCustoNumerico] = useState("");
+  const [total, setTotal] = useState("");
+  const [totalNumerico, setTotalNumerico] = useState("");
   const [numero, setNumero] = useState(2);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -116,6 +118,18 @@ export default function CustomPaginationActions(data: any) {
     id: item.id,
   }));
 
+  const handleChange = (e: any) => {
+    const rawValue = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+    const formattedValue = new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(rawValue / 100); // Divida por 100 para lidar com valores decimais
+
+    setTotal(formattedValue);
+
+    setTotalNumerico(formattedValue.replace(/\./g, "").replace(",", ".")); // Converte para número
+  };
+
   const handleChange2 = (e: any) => {
     const rawValue = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
     const formattedValue = new Intl.NumberFormat("pt-BR", {
@@ -132,7 +146,7 @@ export default function CustomPaginationActions(data: any) {
     const data = Object.fromEntries(form);
     const teste = JSON.stringify({
       product_id: produtoId,
-      type_moviment: data.type_moviment,
+      type_moviment: "ENTRADA",
       qtd_stock: data.qtd_stock,
       price_cost: data.price_cost,
       note_number: data.note_number,
@@ -144,6 +158,8 @@ export default function CustomPaginationActions(data: any) {
       banck_transmitter_cheque: data.banck_transmitter_cheque,
       parcel: data.parcel,
       banck_id: bancoId,
+      name_debit: data.name_debit,
+      value_total_debit: totalNumerico,
     });
     const result = async () => {
       const response = await fetch(
@@ -152,7 +168,7 @@ export default function CustomPaginationActions(data: any) {
           method: "POST",
           body: JSON.stringify({
             product_id: produtoId,
-            type_moviment: data.type_moviment,
+            type_moviment: "ENTRADA",
             qtd_stock: data.qtd_stock,
             price_cost: data.price_cost,
             note_number: data.note_number,
@@ -164,6 +180,8 @@ export default function CustomPaginationActions(data: any) {
             banck_transmitter_cheque: data.banck_transmitter_cheque,
             parcel: data.parcel,
             banck_id: bancoId,
+            name_debit: data.name_debit,
+            value_total_debit: totalNumerico,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -200,7 +218,6 @@ export default function CustomPaginationActions(data: any) {
     };
     result();
     console.log(teste);
-
   }
 
   return (
@@ -253,7 +270,7 @@ export default function CustomPaginationActions(data: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={4} md={4} lg={4} xl={4}>
+              <Grid item xs={6} md={6} lg={6} xl={6}>
                 <Box>
                   <FormControl fullWidth>
                     <InputLabel>Operção</InputLabel>
@@ -280,7 +297,7 @@ export default function CustomPaginationActions(data: any) {
                 </Box>
               </Grid>
 
-              <Grid item xs={4} md={4} lg={4} xl={4}>
+              <Grid item xs={2} md={2} lg={2} xl={2}>
                 <FormControl fullWidth>
                   <TextField
                     label="Quantidade"
@@ -304,7 +321,7 @@ export default function CustomPaginationActions(data: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={4} md={4} lg={4} xl={4}>
+              <Grid item xs={2} md={2} lg={2} xl={2}>
                 <FormControl fullWidth>
                   <TextField
                     label="Preço de custo"
@@ -314,6 +331,33 @@ export default function CustomPaginationActions(data: any) {
                     name="price_cost"
                     value={pCusto}
                     onChange={handleChange2}
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        border: "1px solid #D5D9E2",
+                        backgroundColor: "#fff",
+                        borderRadius: "7px",
+                      },
+                      "& .MuiInputBase-root::before": {
+                        border: "none",
+                      },
+                      "& .MuiInputBase-root:hover::before": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={2} md={2} lg={2} xl={2}>
+                <FormControl fullWidth>
+                  <TextField
+                    label="Preço total"
+                    variant="filled"
+                    type="text"
+                    id="value_total_debit"
+                    name="value_total_debit"
+                    value={total}
+                    onChange={handleChange}
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -360,8 +404,8 @@ export default function CustomPaginationActions(data: any) {
                   <TextField
                     label="Motivo"
                     variant="filled"
-                    id="motive"
-                    name="motive"
+                    id="name_debit"
+                    name="name_debit"
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -509,11 +553,7 @@ export default function CustomPaginationActions(data: any) {
                       setBancoId(newValue.id);
                     }}
                     renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Banco"
-                        required
-                      />
+                      <TextField {...params} label="Banco" required />
                     )}
                   />
                 </FormControl>
