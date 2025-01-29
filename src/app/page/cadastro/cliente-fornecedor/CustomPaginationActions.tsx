@@ -129,6 +129,7 @@ export default function CustomPaginationActions(data: any) {
   const [typeClient, setTypeClient] = React.useState("");
   const [data2, setData2] = React.useState(data.data2.providers);
   const [cpf, setCpf] = React.useState("");
+  const [numero, setNumero] = React.useState(2);
 
   const fetchData1 = async () => {
     const response = await fetch("https://erp.sitesdahora.com.br/api/clients", {
@@ -296,11 +297,6 @@ export default function CustomPaginationActions(data: any) {
       .replace(/(\d{3})(\d)/, "$1.$2")
       .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
   }
-
-  const handleCPF = (e: any) => {
-    const cpfFormatado = formatarCPF(e.target.value);
-    setCpf(cpfFormatado);
-  };
 
   if (visivel === "tabela") {
     return (
@@ -648,7 +644,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={12} lg={12} xl={12}>
                   <FormControl fullWidth>
                     <TextField
                       label="Nome"
@@ -674,7 +670,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={3} lg={3} xl={3}>
                   <FormControl fullWidth>
                     <TextField
                       label="Telefone"
@@ -700,7 +696,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={3} lg={3} xl={3}>
                   <FormControl fullWidth>
                     <TextField
                       label="CPF / CNPJ"
@@ -726,9 +722,9 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={3} lg={3} xl={3}>
                   <FormControl fullWidth>
-                    <FormLabel>Aniversário</FormLabel>
+                    {numero === 1 ? <FormLabel>Aniversário</FormLabel> : ""}
                     <TextField
                       variant="filled"
                       id="date_birth_client"
@@ -736,6 +732,12 @@ export default function CustomPaginationActions(data: any) {
                       type="date"
                       required
                       defaultValue={cliente.date_birth_client}
+                      onFocus={() => {
+                        setNumero(1);
+                      }}
+                      onBlur={() => {
+                        setNumero(2);
+                      }}
                       sx={{
                         "& .MuiInputBase-root": {
                           border: "1px solid #D5D9E2",
@@ -753,7 +755,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={3} lg={3} xl={3}>
                   <FormControl fullWidth>
                     <TextField
                       label="RG / IE"
@@ -779,7 +781,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={9} lg={9} xl={9}>
                   <FormControl fullWidth>
                     <TextField
                       label="Emdereço"
@@ -805,7 +807,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={3} lg={3} xl={3}>
                   <FormControl fullWidth>
                     <TextField
                       label="Número"
@@ -831,7 +833,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={7} lg={7} xl={7}>
                   <FormControl fullWidth>
                     <TextField
                       label="Cidade"
@@ -857,7 +859,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={5} lg={5} xl={5}>
                   <FormControl fullWidth>
                     <TextField
                       label="Estado"
@@ -883,7 +885,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={4} lg={4} xl={4}>
                   <FormControl fullWidth>
                     <TextField
                       label="Email"
@@ -909,7 +911,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={8} lg={8} xl={8}>
                   <FormControl fullWidth>
                     <TextField
                       label="OBS"

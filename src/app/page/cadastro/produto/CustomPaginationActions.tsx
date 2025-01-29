@@ -286,8 +286,8 @@ export default function CustomPaginationActions(data: any) {
               category_id: categoryId,
               unit_id: unimedId,
               stock_min: data.stock_min,
-              price_sale: pVendaNumerico.toString,
-              price_cost: pCustoNumerico.toString,
+              price_sale: pVendaNumerico,
+              price_cost: pCustoNumerico,
             }),
             headers: {
               "Content-Type": "application/json",
@@ -820,7 +820,7 @@ export default function CustomPaginationActions(data: any) {
                 spacing={3}
                 columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
               >
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={12} lg={12} xl={12}>
                   <FormControl fullWidth>
                     <FormLabel id="demo-row-radio-buttons-group-label">
                       Gerenciar estoque para esse produto ?
@@ -852,7 +852,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={12} lg={12} xl={12}>
                   <FormControl fullWidth>
                     <TextField
                       label="Nome"
@@ -877,7 +877,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={6} lg={6} xl={6}>
                   <FormControl fullWidth>
                     <TextField
                       label="Código de barras"
@@ -890,7 +890,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={6} lg={6} xl={6}>
                   <FormControl fullWidth>
                     <Autocomplete
                       disablePortal
@@ -905,7 +905,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={4} lg={4} xl={4}>
                   <FormControl fullWidth>
                     <Autocomplete
                       disablePortal
@@ -920,7 +920,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={2} lg={2} xl={2}>
                   <FormControl fullWidth>
                     <Autocomplete
                       disablePortal
@@ -931,7 +931,7 @@ export default function CustomPaginationActions(data: any) {
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          label="Unidade de medida"
+                          label="Un de Medida"
                           required
                         />
                       )}
@@ -940,7 +940,7 @@ export default function CustomPaginationActions(data: any) {
                 </Grid>
 
                 {gEstoque === "1" ? (
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <Grid item xs={12} md={2} lg={2} xl={2}>
                     <FormControl fullWidth>
                       <TextField
                         label="Estoque Mínimo"
@@ -971,7 +971,7 @@ export default function CustomPaginationActions(data: any) {
 
                 {produto === "" ? (
                   <>
-                    <Grid item xs={12} md={12} lg={12} xl={6}>
+                    <Grid item xs={12} md={2} lg={2} xl={2}>
                       <FormControl fullWidth>
                         <TextField
                           label="Preço de venda"
@@ -998,7 +998,7 @@ export default function CustomPaginationActions(data: any) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} md={12} lg={12} xl={6}>
+                    <Grid item xs={12} md={2} lg={2} xl={2}>
                       <FormControl fullWidth>
                         <TextField
                           label="Preço de custo"

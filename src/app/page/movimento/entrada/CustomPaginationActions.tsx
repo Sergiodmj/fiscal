@@ -34,8 +34,8 @@ export default function CustomPaginationActions(data: any) {
   const [pCustoNumerico, setPCustoNumerico] = useState("");
   const [total, setTotal] = useState("");
   const [totalNumerico, setTotalNumerico] = useState("");
+  const [op, setOp] = useState(0);
   const [numero, setNumero] = useState(2);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const fetchData1 = async () => {
     const response = await fetch(
@@ -144,23 +144,6 @@ export default function CustomPaginationActions(data: any) {
 
   async function Salvar(form: FormData) {
     const data = Object.fromEntries(form);
-    const teste = JSON.stringify({
-      product_id: produtoId,
-      type_moviment: "ENTRADA",
-      qtd_stock: data.qtd_stock,
-      price_cost: data.price_cost,
-      note_number: data.note_number,
-      motive: data.motive,
-      provider_id: fornecedorId,
-      operation_id: data.operation_id,
-      forms_payments_id: pagamentoId,
-      number_check: data.number_check,
-      banck_transmitter_cheque: data.banck_transmitter_cheque,
-      parcel: data.parcel,
-      banck_id: bancoId,
-      name_debit: data.name_debit,
-      value_total_debit: totalNumerico,
-    });
     const result = async () => {
       const response = await fetch(
         `https://erp.sitesdahora.com.br/api/manage-stock`,
@@ -170,7 +153,7 @@ export default function CustomPaginationActions(data: any) {
             product_id: produtoId,
             type_moviment: "ENTRADA",
             qtd_stock: data.qtd_stock,
-            price_cost: data.price_cost,
+            price_cost: pCustoNumerico.toString,
             note_number: data.note_number,
             motive: data.motive,
             provider_id: fornecedorId,
@@ -181,7 +164,7 @@ export default function CustomPaginationActions(data: any) {
             parcel: data.parcel,
             banck_id: bancoId,
             name_debit: data.name_debit,
-            value_total_debit: totalNumerico,
+            value_total_debit: totalNumerico.toString,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -190,8 +173,9 @@ export default function CustomPaginationActions(data: any) {
         }
       );
       const mensage = await response.json();
+      console.log(mensage);
       if (mensage.success === true) {
-        toast.success(`Alterado com sucesso`, {
+        toast.success(`${mensage.message}`, {
           position: "top-center",
           autoClose: 1000,
           hideProgressBar: true,
@@ -217,7 +201,6 @@ export default function CustomPaginationActions(data: any) {
       }
     };
     result();
-    console.log(teste);
   }
 
   return (
@@ -270,14 +253,39 @@ export default function CustomPaginationActions(data: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={6} md={6} lg={6} xl={6}>
+              <Grid item xs={12} md={12} lg={12} xl={12}>
+                <FormControl fullWidth>
+                  <TextField
+                    label="Motivo da operação"
+                    variant="filled"
+                    id="motive"
+                    name="motive"
+                    required
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        border: "1px solid #D5D9E2",
+                        backgroundColor: "#fff",
+                        borderRadius: "7px",
+                      },
+                      "& .MuiInputBase-root::before": {
+                        border: "none",
+                      },
+                      "& .MuiInputBase-root:hover::before": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={6} lg={6} xl={6}>
                 <Box>
                   <FormControl fullWidth>
                     <InputLabel>Operção</InputLabel>
                     <Select
                       labelId="motivo"
-                      id="motive"
-                      name="motive"
+                      id="operation_id"
+                      name="operation_id"
                       label="Motivo"
                       sx={{
                         "& fieldset": {
@@ -286,10 +294,36 @@ export default function CustomPaginationActions(data: any) {
                         },
                       }}
                     >
-                      <MenuItem value="1">Compra de mercadoria</MenuItem>
-                      <MenuItem value="2">Devoluções de clientes</MenuItem>
-                      <MenuItem value="3">Ajuste de Estoque</MenuItem>
-                      <MenuItem value="4">
+                      <MenuItem
+                        value="1"
+                        onClick={() => {
+                          setOp(1);
+                        }}
+                      >
+                        Compra de mercadoria
+                      </MenuItem>
+                      <MenuItem
+                        value="2"
+                        onClick={() => {
+                          setOp(2);
+                        }}
+                      >
+                        Devoluções de clientes
+                      </MenuItem>
+                      <MenuItem
+                        value="3"
+                        onClick={() => {
+                          setOp(3);
+                        }}
+                      >
+                        Ajuste de Estoque
+                      </MenuItem>
+                      <MenuItem
+                        value="4"
+                        onClick={() => {
+                          setOp(4);
+                        }}
+                      >
                         Bonificações / brindes recebidos
                       </MenuItem>
                     </Select>
@@ -297,7 +331,7 @@ export default function CustomPaginationActions(data: any) {
                 </Box>
               </Grid>
 
-              <Grid item xs={2} md={2} lg={2} xl={2}>
+              <Grid item xs={12} md={2} lg={2} xl={2}>
                 <FormControl fullWidth>
                   <TextField
                     label="Quantidade"
@@ -321,7 +355,7 @@ export default function CustomPaginationActions(data: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={2} md={2} lg={2} xl={2}>
+              <Grid item xs={12} md={2} lg={2} xl={2}>
                 <FormControl fullWidth>
                   <TextField
                     label="Preço de custo"
@@ -348,7 +382,7 @@ export default function CustomPaginationActions(data: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={2} md={2} lg={2} xl={2}>
+              <Grid item xs={12} md={2} lg={2} xl={2}>
                 <FormControl fullWidth>
                   <TextField
                     label="Preço total"
@@ -375,7 +409,7 @@ export default function CustomPaginationActions(data: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={4} md={4} lg={4} xl={4}>
+              <Grid item xs={12} md={4} lg={4} xl={4}>
                 <FormControl fullWidth>
                   <TextField
                     label="Nº da nota"
@@ -399,13 +433,14 @@ export default function CustomPaginationActions(data: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={8} md={8} lg={8} xl={8}>
+              <Grid item xs={12} md={8} lg={8} xl={8}>
                 <FormControl fullWidth>
                   <TextField
-                    label="Motivo"
+                    label="Título da operação"
                     variant="filled"
                     id="name_debit"
                     name="name_debit"
+                    required
                     sx={{
                       "& .MuiInputBase-root": {
                         border: "1px solid #D5D9E2",
@@ -438,126 +473,132 @@ export default function CustomPaginationActions(data: any) {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={6} md={6} lg={6} xl={6}>
-                <FormControl fullWidth>
-                  <Autocomplete
-                    disablePortal
-                    options={result3}
-                    onChange={(event: any, newValue: any | null) => {
-                      setPagamentoId(newValue.id);
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Formas de Pagamento"
-                        required
+              {op == 1 ? (
+                <>
+                  <Grid item xs={12} md={6} lg={6} xl={6}>
+                    <FormControl fullWidth>
+                      <Autocomplete
+                        disablePortal
+                        options={result3}
+                        onChange={(event: any, newValue: any | null) => {
+                          setPagamentoId(newValue.id);
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Formas de Pagamento"
+                            required
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </FormControl>
-              </Grid>
+                    </FormControl>
+                  </Grid>
 
-              <Grid item xs={6} md={6} lg={6} xl={6}>
-                <FormControl fullWidth>
-                  <TextField
-                    label="Número do cheque"
-                    variant="filled"
-                    id="number_check"
-                    name="number_check"
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
-              </Grid>
+                  <Grid item xs={12} md={6} lg={6} xl={6}>
+                    <FormControl fullWidth>
+                      <TextField
+                        label="Número do cheque"
+                        variant="filled"
+                        id="number_check"
+                        name="number_check"
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            border: "1px solid #D5D9E2",
+                            backgroundColor: "#fff",
+                            borderRadius: "7px",
+                          },
+                          "& .MuiInputBase-root::before": {
+                            border: "none",
+                          },
+                          "& .MuiInputBase-root:hover::before": {
+                            border: "none",
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  </Grid>
 
-              <Grid item xs={4} md={4} lg={4} xl={4}>
-                <FormControl fullWidth>
-                  <TextField
-                    label="Banco do cheque"
-                    variant="filled"
-                    id="banck_transmitter_cheque"
-                    name="banck_transmitter_cheque"
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
-              </Grid>
+                  <Grid item xs={12} md={4} lg={4} xl={4}>
+                    <FormControl fullWidth>
+                      <TextField
+                        label="Banco do cheque"
+                        variant="filled"
+                        id="banck_transmitter_cheque"
+                        name="banck_transmitter_cheque"
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            border: "1px solid #D5D9E2",
+                            backgroundColor: "#fff",
+                            borderRadius: "7px",
+                          },
+                          "& .MuiInputBase-root::before": {
+                            border: "none",
+                          },
+                          "& .MuiInputBase-root:hover::before": {
+                            border: "none",
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  </Grid>
 
-              <Grid item xs={4} md={4} lg={4} xl={4}>
-                <FormControl fullWidth>
-                  {numero == 1 ? (
-                    <Box>
-                      Para parcela em Dias utilizar o "/" Ex: 30/60. parcela
-                      para 30 e 60 dias. Para meses basta colocar a quantidade
-                      de meses que ira parcela.
-                    </Box>
-                  ) : (
-                    ""
-                  )}
-                  <TextField
-                    onFocus={() => {
-                      setNumero(1);
-                    }}
-                    onBlur={() => {
-                      setNumero(2);
-                    }}
-                    label="Parcela"
-                    variant="filled"
-                    id="parcel"
-                    name="parcel"
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        border: "1px solid #D5D9E2",
-                        backgroundColor: "#fff",
-                        borderRadius: "7px",
-                      },
-                      "& .MuiInputBase-root::before": {
-                        border: "none",
-                      },
-                      "& .MuiInputBase-root:hover::before": {
-                        border: "none",
-                      },
-                    }}
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={4} md={4} lg={4} xl={4}>
-                <FormControl fullWidth>
-                  <Autocomplete
-                    disablePortal
-                    options={result4}
-                    onChange={(event: any, newValue: any | null) => {
-                      setBancoId(newValue.id);
-                    }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Banco" required />
-                    )}
-                  />
-                </FormControl>
-              </Grid>
+                  <Grid item xs={12} md={4} lg={4} xl={4}>
+                    <FormControl fullWidth>
+                      {numero == 1 ? (
+                        <Box>
+                          Para parcela em Dias utilizar o "/" Ex: 30/60. parcela
+                          para 30 e 60 dias. Para meses basta colocar a
+                          quantidade de meses que ira parcela.
+                        </Box>
+                      ) : (
+                        ""
+                      )}
+                      <TextField
+                        onFocus={() => {
+                          setNumero(1);
+                        }}
+                        onBlur={() => {
+                          setNumero(2);
+                        }}
+                        label="Parcela"
+                        variant="filled"
+                        id="parcel"
+                        name="parcel"
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            border: "1px solid #D5D9E2",
+                            backgroundColor: "#fff",
+                            borderRadius: "7px",
+                          },
+                          "& .MuiInputBase-root::before": {
+                            border: "none",
+                          },
+                          "& .MuiInputBase-root:hover::before": {
+                            border: "none",
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  </Grid>
+                  
+                  <Grid item xs={12} md={4} lg={4} xl={4}>
+                    <FormControl fullWidth>
+                      <Autocomplete
+                        disablePortal
+                        options={result4}
+                        onChange={(event: any, newValue: any | null) => {
+                          setBancoId(newValue.id);
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Banco" required />
+                        )}
+                      />
+                    </FormControl>
+                  </Grid>
+                </>
+              ) : (
+                ""
+              )}
             </Grid>
           </Card>
 

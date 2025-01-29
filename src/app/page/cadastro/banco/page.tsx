@@ -35,7 +35,6 @@ export default async function Banco() {
 
   return (
     <>
-      teste
       <CustomPaginationActions data={data} data2={data2} />
     </>
   );

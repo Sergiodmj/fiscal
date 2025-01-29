@@ -523,7 +523,7 @@ export default function CustomPaginationActions(data: any) {
                 spacing={3}
                 columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
               >
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={6} lg={6} xl={6}>
                   <FormControl fullWidth>
                     <TextField
                       label="Nome"
@@ -549,7 +549,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={6} lg={6} xl={6}>
                   <FormControl fullWidth>
                     <TextField
                       label="Forma de Pagamento"

@@ -15,9 +15,10 @@ import {
   TablePagination,
   TableHead,
   Tooltip,
-  Button, Grid,
+  Button,
+  Grid,
   FormControl,
-  TextField
+  TextField,
 } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
@@ -443,7 +444,7 @@ export default function CustomPaginationActions(data: any) {
                 spacing={3}
                 columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
               >
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={12} lg={12} xl={12}>
                   <FormControl fullWidth>
                     <TextField
                       label="Nome da empresa"
@@ -469,7 +470,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={6} lg={6} xl={6}>
                   <FormControl fullWidth>
                     <TextField
                       label="CNPJ / CPF"
@@ -495,7 +496,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={6} lg={6} xl={6}>
                   <FormControl fullWidth>
                     <TextField
                       label="RG / IE"
@@ -520,7 +521,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={6} lg={6} xl={6}>
                   <FormControl fullWidth>
                     <TextField
                       label="Endereço"
@@ -546,7 +547,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={3} lg={3} xl={3}>
                   <FormControl fullWidth>
                     <TextField
                       label="Número"
@@ -571,7 +572,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={3} lg={3} xl={3}>
                   <FormControl fullWidth>
                     <TextField
                       label="CEP"
@@ -597,7 +598,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={5} lg={5} xl={5}>
                   <FormControl fullWidth>
                     <TextField
                       label="Cidade"
@@ -623,7 +624,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={4} lg={4} xl={4}>
                   <FormControl fullWidth>
                     <TextField
                       label="Estado"
@@ -650,7 +651,7 @@ export default function CustomPaginationActions(data: any) {
                 </Grid>
 
                 {profile === "" ? (
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <Grid item xs={12} md={3} lg={3} xl={3}>
                     <FormControl fullWidth>
                       <TextField
                         label="Validade"
@@ -713,7 +714,7 @@ export default function CustomPaginationActions(data: any) {
                   spacing={3}
                   columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
                 >
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <Grid item xs={12} md={12} lg={12} xl={12}>
                     <FormControl fullWidth>
                       <TextField
                         label="Nome"
@@ -739,7 +740,7 @@ export default function CustomPaginationActions(data: any) {
                     </FormControl>
                   </Grid>
 
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <Grid item xs={12} md={6} lg={6} xl={6}>
                     <FormControl fullWidth>
                       <TextField
                         label="Email"
@@ -765,7 +766,7 @@ export default function CustomPaginationActions(data: any) {
                     </FormControl>
                   </Grid>
 
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
+                  <Grid item xs={12} md={6} lg={6} xl={6}>
                     <FormControl fullWidth>
                       <TextField
                         label="Senha"

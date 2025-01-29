@@ -433,7 +433,7 @@ export default function CustomPaginationActions(data: any) {
                 spacing={3}
                 columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
               >
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={12} lg={12} xl={12}>
                   <FormControl fullWidth>
                     <TextField
                       label="Nome"
@@ -459,7 +459,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={12} lg={12} xl={6}>
+                <Grid item xs={12} md={4} lg={4} xl={4}>
                   <FormControl fullWidth>
                     <TextField
                       label="Email"
@@ -487,7 +487,7 @@ export default function CustomPaginationActions(data: any) {
 
                 {user === "" ? (
                   <>
-                    <Grid item xs={12} md={12} lg={12} xl={6}>
+                    <Grid item xs={12} md={4} lg={4} xl={4}>
                       <FormControl fullWidth>
                         <TextField
                           label="Senha"
@@ -513,7 +513,7 @@ export default function CustomPaginationActions(data: any) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} md={12} lg={12} xl={6}>
+                    <Grid item xs={12} md={4} lg={4} xl={4}>
                       <Box>
                         <FormControl fullWidth>
                           <InputLabel>Função</InputLabel>
