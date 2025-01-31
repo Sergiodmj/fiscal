@@ -144,6 +144,24 @@ export default function CustomPaginationActions(data: any) {
 
   async function Salvar(form: FormData) {
     const data = Object.fromEntries(form);
+    const teste = JSON.stringify({
+      product_id: produtoId,
+      type_moviment: "ENTRADA",
+      qtd_stock: data.qtd_stock,
+      price_cost: pCusto,
+      note_number: data.note_number,
+      motive: data.motive,
+      provider_id: fornecedorId,
+      operation_id: data.operation_id,
+      forms_payments_id: pagamentoId,
+      number_check: data.number_check,
+      banck_transmitter_cheque: data.banck_transmitter_cheque,
+      parcel: data.parcel,
+      banck_id: bancoId,
+      name_debit: data.name_debit,
+      value_total_debit: total,
+    });
+    console.log(teste)
     const result = async () => {
       const response = await fetch(
         `https://erp.sitesdahora.com.br/api/manage-stock`,
@@ -187,7 +205,7 @@ export default function CustomPaginationActions(data: any) {
           transition: Flip,
         });
       } else {
-        toast.error(`${mensage.message}`, {
+        toast.error("Não foi possovel salvar estoque", {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: true,
