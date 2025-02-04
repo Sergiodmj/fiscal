@@ -300,6 +300,16 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                         Saída
                       </Link>
                     </li>
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/movimento/contas-a-pagar"
+                        className={`sidemenu-link ${
+                          pathname === "/page/movimento/contas-a-pagar" ? "active" : ""
+                        }`}
+                      >
+                        Contas a Pagar
+                      </Link>
+                    </li>
                   </ul>
                 </AccordionDetails>
               </Accordion>
