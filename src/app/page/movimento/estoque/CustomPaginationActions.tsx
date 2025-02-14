@@ -115,26 +115,26 @@ export default function CustomPaginationActions(data: any) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
-  const [data1, setData1] = React.useState(data.data.payments);
+  const [data1, setData1] = React.useState(data.data.stoks);
 
   const fetchData1 = async () => {
-    const response = await fetch(
-      "https://erp.sitesdahora.com.br/api/payments",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      }
-    );
+    const response = await fetch("https://erp.sitesdahora.com.br/api/stocks", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
     const data = await response.json();
-    setData1(data.payments);
+    setData1(data.data.stoks);
   };
 
   useEffect(() => {
     fetchData1();
   }, []);
+
+  console.log(data1);
+
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -153,7 +153,7 @@ export default function CustomPaginationActions(data: any) {
   const buscaFiltrada1 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
     return data1.filter((data1: any) =>
-      data1.name_payments.toLowerCase().includes(lowerBusca)
+      data1.product.name_product.toLowerCase().includes(lowerBusca)
     );
   }, [busca, data1]);
 

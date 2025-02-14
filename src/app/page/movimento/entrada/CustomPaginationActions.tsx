@@ -65,6 +65,7 @@ export default function CustomPaginationActions(data: any) {
     const data = await response.json();
     setFornecedor(data.providers);
   };
+
   const fetchData3 = async () => {
     const response = await fetch(
       "https://erp.sitesdahora.com.br/api/payments",
@@ -79,6 +80,7 @@ export default function CustomPaginationActions(data: any) {
     const data = await response.json();
     setPagamento(data.payments);
   };
+
   const fetchData4 = async () => {
     const response = await fetch("https://erp.sitesdahora.com.br/api/banks", {
       method: "GET",

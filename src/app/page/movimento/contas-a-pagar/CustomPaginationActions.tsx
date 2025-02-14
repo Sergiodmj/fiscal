@@ -124,88 +124,48 @@ export default function CustomPaginationActions(data: any) {
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [busca, setBusca] = useState("");
   const [visivel, setVisivel] = useState("tabela");
-  const [pagamento, setPagamento] = useState<any>();
+  const [pagamento, setPagamento] = useState<any>(data.data2.payments);
   const [pagamentoId, setPagamentoId] = useState("");
-  const [data1, setData1] = useState(data.data.payments);
-  const [data2, setData2] = useState(data.data2.payments);
+  const [data1, setData1] = useState(data.data.debts);
   const [numero, setNumero] = useState(2);
   const [fornecedor, setFornecedor] = useState([]);
   const [fornecedorId, setFornecedorId] = useState("");
   const [banco, setBanco] = useState([]);
   const [bancoId, setBancoId] = useState("");
+  console.log(pagamento);
+
 
   const fetchData1 = async () => {
-    const response = await fetch(
-      "https://erp.sitesdahora.com.br/api/payments",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      }
-    );
+    const response = await fetch("https://erp.sitesdahora.com.br/api/debts", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
     const data = await response.json();
-    setData1(data.payments);
+
+    setData1(data.debts);
   };
 
-  const fetchData2 = async () => {
-    const response = await fetch(
-      "https://erp.sitesdahora.com.br/api/payments-inativo",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      }
-    );
-    const data = await response.json();
-    setData2(data.payments);
-  };
-
-  // const fetchData3 = async () => {
-  //   const response = await fetch(
-  //     "https://erp.sitesdahora.com.br/api/providers",
-  //     {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${jwt}`,
-  //       },
-  //     }
-  //   );
-  //   const data = await response.json();
-  //   setFornecedor(data.providers);
-  // };
-
-  // const fetchData4 = async () => {
-  //   const response = await fetch("https://erp.sitesdahora.com.br/api/banks", {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${jwt}`,
-  //     },
-  //   });
-  //   const data = await response.json();
-  //   setBanco(data.banks);
-  // };
   useEffect(() => {
     fetchData1();
-    fetchData2();
+    // fetchData2();
     // fetchData3();
     // fetchData4();
+
   }, []);
 
-  const result = fornecedor.map((item: any) => ({
-    label: `${item.nome_client}`,
-    id: item.id,
-  }));
 
-  const result2 = banco.map((item: any) => ({
-    label: `${item.name_bank}`,
-    id: item.id,
-  }));
+  // const result = fornecedor.map((item: any) => ({
+  //   label: `${item.nome_client}`,
+  //   id: item.id,
+  // }));
+
+  // const result2 = banco.map((item: any) => ({
+  //   label: `${item.name_bank}`,
+  //   id: item.id,
+  // }));
 
   const result3 = pagamento.map((item: any) => ({
     label: `${item.name_payments}`,
@@ -229,22 +189,15 @@ export default function CustomPaginationActions(data: any) {
     setPage(0);
   };
 
-  const inativar = { status_payments: "INATIVO" };
-  const ativar = { status_payments: "ATIVO" };
+  const inativar = { debt_status: "INATIVO" };
+  const ativar = { debt_status: "ATIVO" };
 
-  const buscaFiltrada1 = useMemo(() => {
-    const lowerBusca = busca.toLowerCase();
-    return data1.filter((data1: any) =>
-      data1.name_payments.toLowerCase().includes(lowerBusca)
-    );
-  }, [busca, data1]);
-
-  const buscaFiltrada2 = useMemo(() => {
-    const lowerBusca = busca.toLowerCase();
-    return data2.filter((data2: any) =>
-      data2.name_payments.toLowerCase().includes(lowerBusca)
-    );
-  }, [busca, data2]);
+  // const buscaFiltrada1 = useMemo(() => {
+  //   const lowerBusca = busca.toLowerCase();
+  //   return data1.filter((data1: any) =>
+  //     data1.name_payments.toLowerCase().includes(lowerBusca)
+  //   );
+  // }, [busca, data1]);
 
   async function Salvar(form: FormData) {
     const data = Object.fromEntries(form);
@@ -359,7 +312,7 @@ export default function CustomPaginationActions(data: any) {
             Novo Registro
           </Button>
         </Grid>
-        <Card
+        {/* <Card
           sx={{
             boxShadow: "none",
             borderRadius: "7px",
@@ -665,7 +618,7 @@ export default function CustomPaginationActions(data: any) {
               </Box>
             </TabContext>
           </Box>
-        </Card>
+        </Card> */}
       </>
     );
   } else {
