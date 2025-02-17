@@ -134,7 +134,6 @@ export default function CustomPaginationActions(data: any) {
   const [bancoId, setBancoId] = useState("");
   console.log(pagamento);
 
-
   const fetchData1 = async () => {
     const response = await fetch("https://erp.sitesdahora.com.br/api/debts", {
       method: "GET",
@@ -148,14 +147,27 @@ export default function CustomPaginationActions(data: any) {
     setData1(data.debts);
   };
 
+  const fetchData3 = async () => {
+    const response = await fetch(
+      "https://erp.sitesdahora.com.br/api/payments",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    );
+    const data = await response.json();
+    setPagamento(data.payments);
+  };
+
   useEffect(() => {
     fetchData1();
     // fetchData2();
-    // fetchData3();
+    fetchData3();
     // fetchData4();
-
   }, []);
-
 
   // const result = fornecedor.map((item: any) => ({
   //   label: `${item.nome_client}`,
@@ -171,6 +183,8 @@ export default function CustomPaginationActions(data: any) {
     label: `${item.name_payments}`,
     id: item.id,
   }));
+
+  console.log(result3);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -899,7 +913,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                {/* <Grid item xs={12} md={12} lg={12} xl={12}>
+                <Grid item xs={12} md={12} lg={12} xl={12}>
                   <FormControl fullWidth>
                     <Autocomplete
                       disablePortal
@@ -916,7 +930,7 @@ export default function CustomPaginationActions(data: any) {
                       )}
                     />
                   </FormControl>
-                </Grid> */}
+                </Grid>
 
                 <Grid item xs={12} md={12} lg={12} xl={12}>
                   <FormControl fullWidth>

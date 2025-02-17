@@ -29,7 +29,7 @@ export default function CustomPaginationActions(data: any) {
   const [banco, setBanco] = useState([]);
   const [bancoId, setBancoId] = useState("");
   const [pagamento, setPagamento] = useState([]);
-  const [pagamentoId, setPagamentoId] = useState("");
+  const [pagamentoId, setPagamentoId] = useState([]);
   const [pCusto, setPCusto] = useState("");
   const [pCustoNumerico, setPCustoNumerico] = useState("");
   const [total, setTotal] = useState("");
