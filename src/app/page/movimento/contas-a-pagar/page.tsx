@@ -23,9 +23,18 @@ export default async function Entrada() {
   });
   const data = await res.json();
 
+  const res2 = await fetch("https://erp.sitesdahora.com.br/api/debts", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+  const data2 = await res2.json();
+
   return (
     <>
-      <CustomPaginationActions data={data}/>
+      <CustomPaginationActions data={data} data2={data2} />
     </>
   );
 }
