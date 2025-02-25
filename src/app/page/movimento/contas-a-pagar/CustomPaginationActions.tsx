@@ -428,7 +428,7 @@ export default function CustomPaginationActions(data: any) {
                           }}
                         >
                           <TableCell></TableCell>
-                          <TableCell>Telefone</TableCell>
+                          <TableCell>Parcela</TableCell>
                           <TableCell>CPF / CNPJ</TableCell>
                           <TableCell> </TableCell>
                         </TableRow>
