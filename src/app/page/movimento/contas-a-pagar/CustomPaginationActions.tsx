@@ -31,7 +31,6 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Flip, toast } from "react-toastify";
 
@@ -124,7 +123,6 @@ export default function CustomPaginationActions(data: any) {
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [page, setPage] = React.useState(0);
   const [data1, setData1] = React.useState(data.data.payments);
-  const [produtoId, setProdutoId] = useState("");
   const [fornecedor, setFornecedor] = useState([]);
   const [fornecedorId, setFornecedorId] = useState("");
   const [banco, setBanco] = useState([]);
@@ -137,13 +135,12 @@ export default function CustomPaginationActions(data: any) {
   const [vPagoNumerico, setVPagoNumerico] = useState("");
   const [total, setTotal] = useState("");
   const [totalNumerico, setTotalNumerico] = useState("");
-  const [op, setOp] = useState(0);
   const [numero, setNumero] = useState(2);
   const [numero2, setNumero2] = useState(2);
-  const [debitos, setDebitos] = useState("");
-  const [data2, setData2] = useState(data.data2.debts);
+  const [debitos, setDebitos] = useState(data.data2.debts);
+  const [alterar, setAlterar] = useState("");
   const [visivel, setVisivel] = React.useState("tabela");
-  console.log(data2);
+
 
   const fetchData1 = async () => {
     const response = await fetch(
@@ -200,13 +197,28 @@ export default function CustomPaginationActions(data: any) {
     const data = await response.json();
     setBanco(data.banks);
   };
+  const fetchData5 = async () => {
+    const response = await fetch("https://erp.sitesdahora.com.br/api/debts", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+    const data = await response.json();
+    setDebitos(data.debts);
+  };
 
   useEffect(() => {
     fetchData1();
     fetchData2();
     fetchData3();
     fetchData4();
+    fetchData5();
   }, []);
+  console.log(debitos);
+
+
 
   const result = produto.map((item: any) => ({
     label: `${item.name_product}`,
@@ -280,8 +292,8 @@ export default function CustomPaginationActions(data: any) {
 
   const buscaFiltrada1 = useMemo(() => {
     const lowerBusca = busca.toLowerCase();
-    return data1.filter((data1: any) =>
-      data1.name_payments.toLowerCase().includes(lowerBusca)
+    return pagamento.filter((data1: any) =>
+      data1.name_debit.toLowerCase().includes(lowerBusca)
     );
   }, [busca, data1]);
 
@@ -427,10 +439,12 @@ export default function CustomPaginationActions(data: any) {
                             },
                           }}
                         >
+                          <TableCell>Nome</TableCell>
+                          <TableCell>Fornecedor</TableCell>
+                          <TableCell>parcela</TableCell>
+                          <TableCell>forma de PG</TableCell>
+                          <TableCell>Total</TableCell>
                           <TableCell></TableCell>
-                          <TableCell>Parcela</TableCell>
-                          <TableCell>CPF / CNPJ</TableCell>
-                          <TableCell> </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -439,7 +453,7 @@ export default function CustomPaginationActions(data: any) {
                               page * rowsPerPage,
                               page * rowsPerPage + rowsPerPage
                             )
-                          : data1
+                          : debitos
                         ).map((row: any) => (
                           <TableRow
                             key={row.id}
@@ -450,7 +464,7 @@ export default function CustomPaginationActions(data: any) {
                             }}
                           >
                             <TableCell component="th" scope="row">
-                              {row.nome_client}
+                              {row.name_debit}
                             </TableCell>
                             <TableCell style={{ width: 160 }} align="right">
                               {row.fone_client}
