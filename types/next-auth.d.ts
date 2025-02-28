@@ -12,18 +12,24 @@ declare module "next-auth" {
         }
     }
     interface User {
-        enterprise_id: string | undefined,
         token: string | undefined,
-        permission: string | undefined | unknown,
+        username: string | undefined | unknown,
+        email_verified_at: string | undefined | unknown,
+        type_user: string | undefined | unknown,
+        status: string | undefined | unknown,
+        user_id: string | undefined | unknown,
 
     }
 }
 
 declare module "next-auth" {
     interface jwt {
-        enterprise_id: string | undefined,
         token: string | undefined,
-        permission: string | undefined | unknown,
+        username: string | undefined | unknown,
+        email_verified_at: string | undefined | unknown,
+        type_user: string | undefined | unknown,
+        status: string | undefined | unknown,
+        user_id: string | undefined | unknown,
 
     }
 }

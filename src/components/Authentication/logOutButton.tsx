@@ -4,7 +4,7 @@ import { signOut, useSession } from "next-auth/react";
 export default function LogoutButton() {
   const { data: session } = useSession();
   const jwt = session?.user.token;
-  const url = "https://erp.sitesdahora.com.br/api/logout";
+  const url = "https://systemcode.sitesdahora.com.br/api/logout";
   const options = {
     method: "POST",
     headers: {

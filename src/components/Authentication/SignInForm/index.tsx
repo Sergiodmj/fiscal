@@ -17,7 +17,7 @@ export default function SignInForm()  {
     e.preventDefault();
 
     const data = {
-      email: formData.get("email"),
+      username: formData.get("username"),
       password: formData.get("password"),
     };
 
@@ -28,14 +28,6 @@ export default function SignInForm()  {
       callbackUrl: "/page/home",
     });
   }
-
-  // return (
-  //   <form onSubmit={login}>
-  //     <input type="text" name="email" id="email"></input>
-  //     <input type="text" name="password" id="password"></input>
-  //     <button type="submit">Login</button>
-  //   </form>
-  // );
 
   return (
     <>
@@ -124,8 +116,8 @@ export default function SignInForm()  {
                       <TextField
                         // label="example&#64;trezo.com"
                         variant="filled"
-                        id="email"
-                        name="email"
+                        id="username"
+                        name="username"
                         sx={{
                           "& .MuiInputBase-root": {
                             border: "1px solid #D5D9E2",

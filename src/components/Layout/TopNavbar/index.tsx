@@ -8,12 +8,15 @@ import Tooltip from "@mui/material/Tooltip";
 import Profile from "./Profile";
 import FullscreenButton from "./FullscreenButton";
 import ControlPanel from "../ControlPanel";
+import { useSession } from "next-auth/react";
 
 interface TopNavbarProps {
   toggleActive: () => void;
 }
 
 const TopNavbar: React.FC<TopNavbarProps> = ({ toggleActive }) => {
+  const { data: session } = useSession();
+
   useEffect(() => {
     let elementId = document.getElementById("navbar");
     document.addEventListener("scroll", () => {
@@ -86,13 +89,15 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ toggleActive }) => {
               {/* <ChooseLanguage /> */}
 
               {/* FullscreenButton */}
+              {session?.user.name}
+
               <FullscreenButton />
 
               {/* Notifications */}
               {/* <Notifications /> */}
 
               {/* Profile */}
-              <Profile />
+              {/* <Profile /> */}
 
               {/* ControlPanel */}
               <ControlPanel />

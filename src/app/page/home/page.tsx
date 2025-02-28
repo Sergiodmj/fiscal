@@ -7,6 +7,7 @@ import Link from "next/link";
 
 export default async function Home() {
   const seesion = await getServerSession(authOptions);
+  console.log(seesion);
   if (!seesion) {
     redirect("/");
   }

@@ -71,7 +71,6 @@ const Profile: React.FC<ProfileProps> = () => {
             }}
             className="text-black"
           >
-            {session && <div>{session.user.name}</div>}
           </Typography>
           <KeyboardArrowDownIcon sx={{ fontSize: "15px" }} />
         </IconButton>
