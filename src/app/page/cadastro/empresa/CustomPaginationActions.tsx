@@ -209,7 +209,7 @@ export default function CustomPaginationActions(data: any) {
           });
         }
       };
-      result();
+      // result();
     } else {
       const result = async () => {
         const response = await fetch(
@@ -253,7 +253,7 @@ export default function CustomPaginationActions(data: any) {
           });
         }
       };
-      result();
+      // result();
     }
   }
 
