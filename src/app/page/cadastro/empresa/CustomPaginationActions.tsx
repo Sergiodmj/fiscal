@@ -115,7 +115,7 @@ export default function CustomPaginationActions(data: any) {
   const [profile, setProfile] = React.useState<any>("");
   const [data1, setData1] = React.useState(data.data.companey);
   const [rTributario, setRTributario] = React.useState<any>();
-  console.log(data);
+  // console.log(data);
 
   const fetchData = async () => {
     const response = await fetch(
@@ -166,19 +166,21 @@ export default function CustomPaginationActions(data: any) {
           {
             method: "POST",
             body: JSON.stringify({
-              name: data.name,
-              cpf_cnpj: data.cpf_cnpj,
-              name_fantasy: data.name_fantasy,
-              address: data.address,
-              number_addres: data.number_addres,
-              district_addres: data.district_addres,
-              city: data.city,
-              state: data.state,
+              nome: data.name,
+              cnpj: data.cpf_cnpj,
+              email: data.email,
+              nome_fantasia: data.name_fantasy,
+              logradouro: data.address,
+              numero: data.number_addres,
+              complemento: data.complemento,
+              bairro: data.district_addres,
+              municipio: data.city,
+              uf: data.state,
               cep: data.cep,
-              inscription_state: data.inscription_state,
-              phone: data.phone,
+              inscricao_estadual: data.inscription_state,
+              telefone: data.phone,
               regime_tributario: rTributario,
-              name_user: data.name_user,
+              name: data.name_user,
               username: data.username,
               password: data.password,
             }),
@@ -189,7 +191,7 @@ export default function CustomPaginationActions(data: any) {
           }
         );
         const mensage = await response.json();
-        console.log(mensage);
+        console.log(response);
         if (mensage.success === true) {
           // fetchData();
           toast.success(`${mensage.message}`, {
@@ -572,7 +574,7 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={7} lg={7} xl={7}>
+                <Grid item xs={12} md={5} lg={5} xl={5}>
                   <FormControl fullWidth>
                     <TextField
                       label="Endereço"
@@ -598,14 +600,39 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={2} lg={2} xl={2}>
+                <Grid item xs={12} md={1} lg={1} xl={1}>
                   <FormControl fullWidth>
                     <TextField
-                      label="Número"
+                      label="Nº"
                       variant="filled"
                       id="number_addres"
                       name="number_addres"
                       // defaultValue={profile.number_addres}
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={3} lg={3} xl={3}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Complemento"
+                      variant="filled"
+                      id="complemento"
+                      name="complemento"
+                      // defaultValue={profile.complemento}
                       sx={{
                         "& .MuiInputBase-root": {
                           border: "1px solid #D5D9E2",
@@ -761,6 +788,32 @@ export default function CustomPaginationActions(data: any) {
                       id="phone"
                       name="phone"
                       // defaultValue={profile.phone}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={3} lg={3} xl={3}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="E-mail"
+                      variant="filled"
+                      id="email"
+                      name="email"
+                      // defaultValue={profile.email}
                       required
                       sx={{
                         "& .MuiInputBase-root": {
