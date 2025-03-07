@@ -115,7 +115,7 @@ export default function CustomPaginationActions(data: any) {
   const [profile, setProfile] = React.useState<any>("");
   const [data1, setData1] = React.useState(data.data.companey);
   const [rTributario, setRTributario] = React.useState<any>();
-  // console.log(data);
+  console.log(data);
 
   const fetchData = async () => {
     const response = await fetch(
