@@ -117,139 +117,120 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
 
                 <AccordionDetails className="mat-details">
                   <ul className="sidebar-sub-menu">
-                    {session?.user.permission === "SUPER_ADMIN" ? (
-                      <li className="sidemenu-item">
-                        <Link
-                          href="/page/cadastro/empresa"
-                          className={`sidemenu-link ${
-                            pathname === "/page/cadastro/empresa"
-                              ? "active"
-                              : ""
-                          }`}
-                        >
-                          Empresa
-                          <span className="trezo-badge">mstr</span>
-                        </Link>
-                      </li>
-                    ) : (
-                      <>
-                        <li className="sidemenu-item">
-                          <Link
-                            href="/page/cadastro/produto"
-                            className={`sidemenu-link ${
-                              pathname === "/page/cadastro/produto"
-                                ? "active"
-                                : ""
-                            }`}
-                          >
-                            Produto
-                          </Link>
-                        </li>
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/cadastro/empresa"
+                        className={`sidemenu-link ${
+                          pathname === "/page/cadastro/empresa" ? "active" : ""
+                        }`}
+                      >
+                        Empresa
+                        <span className="trezo-badge">mstr</span>
+                      </Link>
+                    </li>
 
-                        <li className="sidemenu-item">
-                          <Link
-                            href="/page/cadastro/cliente-fornecedor"
-                            className={`sidemenu-link ${
-                              pathname === "/page/cadastro/cliente-fornecedor"
-                                ? "active"
-                                : ""
-                            }`}
-                          >
-                            Cliente/Fornecedor
-                          </Link>
-                        </li>
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/cadastro/produto"
+                        className={`sidemenu-link ${
+                          pathname === "/page/cadastro/produto" ? "active" : ""
+                        }`}
+                      >
+                        Produto
+                      </Link>
+                    </li>
 
-                        {session?.user.permission != "FUNCIONARIO" ? (
-                          <>
-                            <li className="sidemenu-item">
-                              <Link
-                                href="/page/cadastro/categoria"
-                                className={`sidemenu-link ${
-                                  pathname === "/page/cadastro/categoria"
-                                    ? "active"
-                                    : ""
-                                }`}
-                              >
-                                Categoria
-                                <span className="trezo-badge">adm</span>
-                              </Link>
-                            </li>
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/cadastro/cliente-fornecedor"
+                        className={`sidemenu-link ${
+                          pathname === "/page/cadastro/cliente-fornecedor"
+                            ? "active"
+                            : ""
+                        }`}
+                      >
+                        Cliente/Fornecedor
+                      </Link>
+                    </li>
+                    
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/cadastro/categoria"
+                        className={`sidemenu-link ${
+                          pathname === "/page/cadastro/categoria"
+                            ? "active"
+                            : ""
+                        }`}
+                      >
+                        Categoria
+                        <span className="trezo-badge">adm</span>
+                      </Link>
+                    </li>
 
-                            <li className="sidemenu-item">
-                              <Link
-                                href="/page/cadastro/uniMedida"
-                                className={`sidemenu-link ${
-                                  pathname === "/page/cadastro/uniMedida"
-                                    ? "active"
-                                    : ""
-                                }`}
-                              >
-                                Uni medida
-                                <span className="trezo-badge">adm</span>
-                              </Link>
-                            </li>
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/cadastro/uniMedida"
+                        className={`sidemenu-link ${
+                          pathname === "/page/cadastro/uniMedida"
+                            ? "active"
+                            : ""
+                        }`}
+                      >
+                        Uni medida
+                        <span className="trezo-badge">adm</span>
+                      </Link>
+                    </li>
 
-                            <li className="sidemenu-item">
-                              <Link
-                                href="/page/cadastro/pagamento"
-                                className={`sidemenu-link ${
-                                  pathname === "/page/cadastro/pagamento"
-                                    ? "active"
-                                    : ""
-                                }`}
-                              >
-                                Pagamento
-                                <span className="trezo-badge">adm</span>
-                              </Link>
-                            </li>
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/cadastro/pagamento"
+                        className={`sidemenu-link ${
+                          pathname === "/page/cadastro/pagamento"
+                            ? "active"
+                            : ""
+                        }`}
+                      >
+                        Pagamento
+                        <span className="trezo-badge">adm</span>
+                      </Link>
+                    </li>
 
-                            <li className="sidemenu-item">
-                              <Link
-                                href="/page/cadastro/banco"
-                                className={`sidemenu-link ${
-                                  pathname === "/page/cadastro/banco"
-                                    ? "active"
-                                    : ""
-                                }`}
-                              >
-                                Banco
-                                <span className="trezo-badge">adm</span>
-                              </Link>
-                            </li>
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/cadastro/banco"
+                        className={`sidemenu-link ${
+                          pathname === "/page/cadastro/banco" ? "active" : ""
+                        }`}
+                      >
+                        Banco
+                        <span className="trezo-badge">adm</span>
+                      </Link>
+                    </li>
 
-                            <li className="sidemenu-item">
-                              <Link
-                                href="/page/cadastro/ncm"
-                                className={`sidemenu-link ${
-                                  pathname === "/page/cadastro/ncm"
-                                    ? "active"
-                                    : ""
-                                }`}
-                              >
-                                Ncm
-                                <span className="trezo-badge">adm</span>
-                              </Link>
-                            </li>
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/cadastro/ncm"
+                        className={`sidemenu-link ${
+                          pathname === "/page/cadastro/ncm" ? "active" : ""
+                        }`}
+                      >
+                        Ncm
+                        <span className="trezo-badge">adm</span>
+                      </Link>
+                    </li>
 
-                            <li className="sidemenu-item">
-                              <Link
-                                href="/page/cadastro/usuario"
-                                className={`sidemenu-link ${
-                                  pathname === "/page/cadastro/usuario"
-                                    ? "active"
-                                    : ""
-                                }`}
-                              >
-                                Usuário
-                                <span className="trezo-badge">adm</span>
-                              </Link>
-                            </li>
-                          </>
-                        ) : (
-                          ""
-                        )}
-                      </>
-                    )}
+                    <li className="sidemenu-item">
+                      <Link
+                        href="/page/cadastro/usuario"
+                        className={`sidemenu-link ${
+                          pathname === "/page/cadastro/usuario" ? "active" : ""
+                        }`}
+                      >
+                        Usuário
+                        <span className="trezo-badge">adm</span>
+                      </Link>
+                    </li>
+                    
                   </ul>
                 </AccordionDetails>
               </Accordion>
@@ -304,7 +285,9 @@ const LeftSidebarMenu: React.FC<LeftSidebarProps> = ({ toggleActive }) => {
                       <Link
                         href="/page/movimento/contas-a-pagar"
                         className={`sidemenu-link ${
-                          pathname === "/page/movimento/contas-a-pagar" ? "active" : ""
+                          pathname === "/page/movimento/contas-a-pagar"
+                            ? "active"
+                            : ""
                         }`}
                       >
                         Contas a Pagar

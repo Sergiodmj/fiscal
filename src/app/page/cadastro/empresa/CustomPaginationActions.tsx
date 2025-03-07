@@ -1,24 +1,18 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
   Box,
-  TableRow,
-  Paper,
-  TableFooter,
-  TablePagination,
-  TableHead,
-  Tooltip,
   Button,
   Grid,
   FormControl,
   TextField,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
@@ -28,9 +22,6 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { useSession } from "next-auth/react";
-import { TabContext } from "@mui/lab";
-import { format } from "date-fns";
-import FormDialog from "./FormDialog";
 import { Flip, toast } from "react-toastify";
 
 interface TablePaginationActionsProps {
@@ -120,13 +111,15 @@ export default function CustomPaginationActions(data: any) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [busca, setBusca] = React.useState("");
-  const [visivel, setVisivel] = React.useState("tabela");
-  const [profile, setProfile] = React.useState<any>();
-  const [data1, setData1] = React.useState(data.data.profile);
+  const [visivel, setVisivel] = React.useState("formulario");
+  const [profile, setProfile] = React.useState<any>("");
+  const [data1, setData1] = React.useState(data.data.companey);
+  const [rTributario, setRTributario] = React.useState<any>();
+  console.log(data);
 
   const fetchData = async () => {
     const response = await fetch(
-      "https://erp.sitesdahora.com.br/api/enterprises",
+      "https://systemcode.sitesdahora.com.br/api/companys",
       {
         method: "GET",
         headers: {
@@ -136,7 +129,7 @@ export default function CustomPaginationActions(data: any) {
       }
     );
     const data = await response.json();
-    setData1(data.profile);
+    setData1(data.companey);
   };
 
   useEffect(() => {
@@ -157,22 +150,38 @@ export default function CustomPaginationActions(data: any) {
     setPage(0);
   };
 
-  const buscaFiltrada1 = useMemo(() => {
-    const lowerBusca = busca.toLowerCase();
-    return data1.filter((data1: any) =>
-      data1.name_enterprise.toLowerCase().includes(lowerBusca)
-    );
-  }, [busca, data1]);
+  // const buscaFiltrada1 = useMemo(() => {
+  //   const lowerBusca = busca.toLowerCase();
+  //   return data1.filter((data1: any) =>
+  //     data1.name_enterprise.toLowerCase().includes(lowerBusca)
+  //   );
+  // }, [busca, data1]);
 
   async function Salvar(form: FormData) {
     const data = Object.fromEntries(form);
     if (profile === "") {
       const result = async () => {
         const response = await fetch(
-          "https://erp.sitesdahora.com.br/api/enterprise-create",
+          "https://systemcode.sitesdahora.com.br/api/companys",
           {
             method: "POST",
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+              name: data.name,
+              cpf_cnpj: data.cpf_cnpj,
+              name_fantasy: data.name_fantasy,
+              address: data.address,
+              number_addres: data.number_addres,
+              district_addres: data.district_addres,
+              city: data.city,
+              state: data.state,
+              cep: data.cep,
+              inscription_state: data.inscription_state,
+              phone: data.phone,
+              regime_tributario: rTributario,
+              name_user: data.name_user,
+              username: data.username,
+              password: data.password,
+            }),
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${jwt}`,
@@ -182,7 +191,7 @@ export default function CustomPaginationActions(data: any) {
         const mensage = await response.json();
         console.log(mensage);
         if (mensage.success === true) {
-          fetchData();
+          // fetchData();
           toast.success(`${mensage.message}`, {
             position: "top-center",
             autoClose: 1000,
@@ -194,7 +203,7 @@ export default function CustomPaginationActions(data: any) {
             theme: "colored",
             transition: Flip,
           });
-          setVisivel("tabela");
+          // setVisivel("tabela");
         } else {
           toast.error(`${mensage.erros}`, {
             position: "top-center",
@@ -209,11 +218,11 @@ export default function CustomPaginationActions(data: any) {
           });
         }
       };
-      // result();
+      result();
     } else {
       const result = async () => {
         const response = await fetch(
-          `https://erp.sitesdahora.com.br/api/enterprise-edit-super/${profile.id}`,
+          `https://systemcode.sitesdahora.com.br/api/companys//${profile.id}`,
           {
             method: "PUT",
             body: JSON.stringify(data),
@@ -226,7 +235,7 @@ export default function CustomPaginationActions(data: any) {
         const mensage = await response.json();
         console.log(mensage);
         if (mensage.success === true) {
-          fetchData();
+          // fetchData();
           toast.success("Alterado com sucesso", {
             position: "top-center",
             autoClose: 1000,
@@ -253,160 +262,163 @@ export default function CustomPaginationActions(data: any) {
           });
         }
       };
-      // result();
+      result();
     }
   }
 
   if (visivel === "tabela") {
     return (
       <>
-        <Grid item xs={12} md={12} lg={12} xl={12}>
-          <Button
-            onClick={() => {
-              setProfile("");
-              setVisivel("formulario");
-            }}
-            variant="outlined"
-            color="success"
-            sx={{
-              padding: "10px 24px",
-            }}
-          >
-            Nova Empresa
-          </Button>
-        </Grid>
-        <Card
-          sx={{
-            boxShadow: "none",
-            borderRadius: "7px",
-            mb: "25px",
-            padding: { xs: "18px", sm: "20px", lg: "25px" },
-          }}
-          className="rmui-card"
-        >
-          <Typography
-            variant="h3"
-            sx={{
-              fontSize: { xs: "16px", md: "18px" },
-              fontWeight: 700,
-              mb: "25px",
-            }}
-            className="text-black"
-          >
-            Unidade de Medida
-          </Typography>
-
-          <Box sx={{ width: "100%", typography: "body1" }}>
-            <TabContext value={value}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <TableContainer component={Paper}>
-                  <Grid item xs={12} md={12} lg={12} xl={6}>
-                    <FormControl>
-                      <TextField
-                        label={
-                          <span className="material-symbols-outlined">
-                            search
-                          </span>
-                        }
-                        value={busca}
-                        onChange={(ev) => setBusca(ev.target.value)}
-                        variant="standard"
-                        id="barcode"
-                        type="search"
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Table
-                    sx={{ minWidth: 500 }}
-                    aria-label="custom pagination table"
-                  >
-                    <TableHead>
-                      <TableRow
-                        sx={{
-                          th: {
-                            fontSize: "15px",
-                            color: "red",
-                          },
-                        }}
-                      >
-                        <TableCell>Nome</TableCell>
-                        <TableCell>CPF / CNPM</TableCell>
-                        <TableCell>Cidde</TableCell>
-                        <TableCell>Estado</TableCell>
-                        <TableCell>Vencimento</TableCell>
-                        <TableCell> </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {(rowsPerPage > 0
-                        ? buscaFiltrada1.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                        : data1
-                      ).map((row: any) => (
-                        <TableRow
-                          key={row.id}
-                          sx={{
-                            "th, td": {
-                              fontSize: "15px",
-                            },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {row.name_enterprise}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.cpf_cnpj_enterprise}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.city_enterprise}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.state_enterprise}
-                          </TableCell>
-                          <TableCell>
-                            {format(new Date(row.validade), "dd/MM/yyyy")}
-                          </TableCell>
-                          <TableCell style={{ width: 160 }} align="right">
-                            <Tooltip title="EDITAR">
-                              <Button
-                                onClick={() => {
-                                  setProfile(row);
-                                  setVisivel("formulario");
-                                }}
-                              >
-                                <span className="material-symbols-outlined">
-                                  edit
-                                </span>
-                              </Button>
-                            </Tooltip>
-                            <FormDialog user={row} />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TablePagination
-                          rowsPerPageOptions={[5, 10, 25]}
-                          colSpan={6}
-                          count={buscaFiltrada1.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                          ActionsComponent={TablePaginationActions}
-                        />
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </TableContainer>
-              </Box>
-            </TabContext>
-          </Box>
-        </Card>
+        <h1>teste</h1>
       </>
+      // <>
+      //   <Grid item xs={12} md={12} lg={12} xl={12}>
+      //     <Button
+      //       onClick={() => {
+      //         setProfile("");
+      //         setVisivel("formulario");
+      //       }}
+      //       variant="outlined"
+      //       color="success"
+      //       sx={{
+      //         padding: "10px 24px",
+      //       }}
+      //     >
+      //       Nova Empresa
+      //     </Button>
+      //   </Grid>
+      //   <Card
+      //     sx={{
+      //       boxShadow: "none",
+      //       borderRadius: "7px",
+      //       mb: "25px",
+      //       padding: { xs: "18px", sm: "20px", lg: "25px" },
+      //     }}
+      //     className="rmui-card"
+      //   >
+      //     <Typography
+      //       variant="h3"
+      //       sx={{
+      //         fontSize: { xs: "16px", md: "18px" },
+      //         fontWeight: 700,
+      //         mb: "25px",
+      //       }}
+      //       className="text-black"
+      //     >
+      //       Unidade de Medida
+      //     </Typography>
+
+      //     <Box sx={{ width: "100%", typography: "body1" }}>
+      //       <TabContext value={value}>
+      //         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      //           <TableContainer component={Paper}>
+      //             <Grid item xs={12} md={12} lg={12} xl={6}>
+      //               <FormControl>
+      //                 <TextField
+      //                   label={
+      //                     <span className="material-symbols-outlined">
+      //                       search
+      //                     </span>
+      //                   }
+      //                   value={busca}
+      //                   onChange={(ev) => setBusca(ev.target.value)}
+      //                   variant="standard"
+      //                   id="barcode"
+      //                   type="search"
+      //                 />
+      //               </FormControl>
+      //             </Grid>
+      //             <Table
+      //               sx={{ minWidth: 500 }}
+      //               aria-label="custom pagination table"
+      //             >
+      //               <TableHead>
+      //                 <TableRow
+      //                   sx={{
+      //                     th: {
+      //                       fontSize: "15px",
+      //                       color: "red",
+      //                     },
+      //                   }}
+      //                 >
+      //                   <TableCell>Nome</TableCell>
+      //                   <TableCell>CPF / CNPM</TableCell>
+      //                   <TableCell>Cidde</TableCell>
+      //                   <TableCell>Estado</TableCell>
+      //                   <TableCell>Vencimento</TableCell>
+      //                   <TableCell> </TableCell>
+      //                 </TableRow>
+      //               </TableHead>
+      //               <TableBody>
+      //                 {(rowsPerPage > 0
+      //                   ? buscaFiltrada1.slice(
+      //                       page * rowsPerPage,
+      //                       page * rowsPerPage + rowsPerPage
+      //                     )
+      //                   : data1
+      //                 ).map((row: any) => (
+      //                   <TableRow
+      //                     key={row.id}
+      //                     sx={{
+      //                       "th, td": {
+      //                         fontSize: "15px",
+      //                       },
+      //                     }}
+      //                   >
+      //                     <TableCell component="th" scope="row">
+      //                       {row.name_enterprise}
+      //                     </TableCell>
+      //                     <TableCell component="th" scope="row">
+      //                       {row.cpf_cnpj_enterprise}
+      //                     </TableCell>
+      //                     <TableCell component="th" scope="row">
+      //                       {row.city_enterprise}
+      //                     </TableCell>
+      //                     <TableCell component="th" scope="row">
+      //                       {row.state_enterprise}
+      //                     </TableCell>
+      //                     <TableCell>
+      //                       {format(new Date(row.validade), "dd/MM/yyyy")}
+      //                     </TableCell>
+      //                     <TableCell style={{ width: 160 }} align="right">
+      //                       <Tooltip title="EDITAR">
+      //                         <Button
+      //                           onClick={() => {
+      //                             setProfile(row);
+      //                             setVisivel("formulario");
+      //                           }}
+      //                         >
+      //                           <span className="material-symbols-outlined">
+      //                             edit
+      //                           </span>
+      //                         </Button>
+      //                       </Tooltip>
+      //                       <FormDialog user={row} />
+      //                     </TableCell>
+      //                   </TableRow>
+      //                 ))}
+      //               </TableBody>
+      //               <TableFooter>
+      //                 <TableRow>
+      //                   <TablePagination
+      //                     rowsPerPageOptions={[5, 10, 25]}
+      //                     colSpan={6}
+      //                     count={buscaFiltrada1.length}
+      //                     rowsPerPage={rowsPerPage}
+      //                     page={page}
+      //                     onPageChange={handleChangePage}
+      //                     onRowsPerPageChange={handleChangeRowsPerPage}
+      //                     ActionsComponent={TablePaginationActions}
+      //                   />
+      //                 </TableRow>
+      //               </TableFooter>
+      //             </Table>
+      //           </TableContainer>
+      //         </Box>
+      //       </TabContext>
+      //     </Box>
+      //   </Card>
+      // </>
     );
   } else {
     return (
@@ -446,13 +458,52 @@ export default function CustomPaginationActions(data: any) {
               >
                 <Grid item xs={12} md={12} lg={12} xl={12}>
                   <FormControl fullWidth>
+                    <FormLabel id="demo-row-radio-buttons-group-label">
+                      Regime Tributário
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                      name="regime_tributário"
+                      // defaultValue={profile.regime_tributario}
+                    >
+                      <FormControlLabel
+                        value="1"
+                        onClick={() => {
+                          setRTributario(1);
+                        }}
+                        control={<Radio className="dark-radio" />}
+                        label="Simples Nacional"
+                      />
+                      <FormControlLabel
+                        value="2"
+                        onClick={() => {
+                          setRTributario(2);
+                        }}
+                        control={<Radio className="dark-radio" />}
+                        label="Simples Nacional - Excesso de Sublimite"
+                      />
+                      <FormControlLabel
+                        value="3"
+                        onClick={() => {
+                          setRTributario(3);
+                        }}
+                        control={<Radio className="dark-radio" />}
+                        label="Regime Normal"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={6} lg={6} xl={6}>
+                  <FormControl fullWidth>
                     <TextField
                       label="Nome da empresa"
                       variant="filled"
-                      id="name_enterprise"
-                      name="name_enterprise"
+                      id="name"
+                      name="name"
                       required
-                      defaultValue={profile.name_enterprise}
+                      // defaultValue={profile.name}
                       sx={{
                         "& .MuiInputBase-root": {
                           border: "1px solid #D5D9E2",
@@ -471,14 +522,39 @@ export default function CustomPaginationActions(data: any) {
                 </Grid>
 
                 <Grid item xs={12} md={6} lg={6} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Nome Fantasia"
+                      variant="filled"
+                      id="name_fantasy"
+                      name="name_fantasy"
+                      // defaultValue={profile.name_fantasy}
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={3} lg={3} xl={3}>
                   <FormControl fullWidth>
                     <TextField
                       label="CNPJ / CPF"
                       variant="filled"
-                      id="cpf_cnpj_enterprise"
-                      name="cpf_cnpj_enterprise"
+                      id="cpf_cnpj"
+                      name="cpf_cnpj"
                       required
-                      defaultValue={profile.cpf_cnpj_enterprise}
+                      // defaultValue={profile.cpf_cnpj}
                       sx={{
                         "& .MuiInputBase-root": {
                           border: "1px solid #D5D9E2",
@@ -496,39 +572,14 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6} lg={6} xl={6}>
-                  <FormControl fullWidth>
-                    <TextField
-                      label="RG / IE"
-                      variant="filled"
-                      id="rg_ie_enterprise"
-                      name="rg_ie_enterprise"
-                      defaultValue={profile.rg_ie_enterprise}
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          border: "1px solid #D5D9E2",
-                          backgroundColor: "#fff",
-                          borderRadius: "7px",
-                        },
-                        "& .MuiInputBase-root::before": {
-                          border: "none",
-                        },
-                        "& .MuiInputBase-root:hover::before": {
-                          border: "none",
-                        },
-                      }}
-                    />
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={6} lg={6} xl={6}>
+                <Grid item xs={12} md={7} lg={7} xl={7}>
                   <FormControl fullWidth>
                     <TextField
                       label="Endereço"
                       variant="filled"
-                      id="address_enterprise"
-                      name="address_enterprise"
-                      defaultValue={profile.address_enterprise}
+                      id="address"
+                      name="address"
+                      // defaultValue={profile.address}
                       required
                       sx={{
                         "& .MuiInputBase-root": {
@@ -547,14 +598,14 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={3} lg={3} xl={3}>
+                <Grid item xs={12} md={2} lg={2} xl={2}>
                   <FormControl fullWidth>
                     <TextField
                       label="Número"
                       variant="filled"
-                      id="number_enterprise"
-                      name="number_enterprise"
-                      defaultValue={profile.number_enterprise}
+                      id="number_addres"
+                      name="number_addres"
+                      // defaultValue={profile.number_addres}
                       sx={{
                         "& .MuiInputBase-root": {
                           border: "1px solid #D5D9E2",
@@ -575,11 +626,11 @@ export default function CustomPaginationActions(data: any) {
                 <Grid item xs={12} md={3} lg={3} xl={3}>
                   <FormControl fullWidth>
                     <TextField
-                      label="CEP"
+                      label="Bairro"
                       variant="filled"
-                      id="cep_enterprise"
-                      name="cep_enterprise"
-                      defaultValue={profile.cep_enterprise}
+                      id="district_addres"
+                      name="district_addres"
+                      // defaultValue={profile.district_addres}
                       required
                       sx={{
                         "& .MuiInputBase-root": {
@@ -603,9 +654,9 @@ export default function CustomPaginationActions(data: any) {
                     <TextField
                       label="Cidade"
                       variant="filled"
-                      id="city_enterprise"
-                      name="city_enterprise"
-                      defaultValue={profile.city_enterprise}
+                      id="city"
+                      name="city"
+                      // defaultValue={profile.city}
                       required
                       sx={{
                         "& .MuiInputBase-root": {
@@ -629,9 +680,9 @@ export default function CustomPaginationActions(data: any) {
                     <TextField
                       label="Estado"
                       variant="filled"
-                      id="state_enterprise"
-                      name="state_enterprise"
-                      defaultValue={profile.state_enterprise}
+                      id="state"
+                      name="state"
+                      // defaultValue={profile.state}
                       required
                       sx={{
                         "& .MuiInputBase-root": {
@@ -650,172 +701,196 @@ export default function CustomPaginationActions(data: any) {
                   </FormControl>
                 </Grid>
 
-                {profile === "" ? (
-                  <Grid item xs={12} md={3} lg={3} xl={3}>
-                    <FormControl fullWidth>
-                      <TextField
-                        label="Validade"
-                        placeholder="ano/mes/dia"
-                        variant="filled"
-                        id="validade"
-                        name="validade"
-                        required
-                        sx={{
-                          "& .MuiInputBase-root": {
-                            border: "1px solid #D5D9E2",
-                            backgroundColor: "#fff",
-                            borderRadius: "7px",
-                          },
-                          "& .MuiInputBase-root::before": {
-                            border: "none",
-                          },
-                          "& .MuiInputBase-root:hover::before": {
-                            border: "none",
-                          },
-                        }}
-                      />
-                    </FormControl>
-                  </Grid>
-                ) : (
-                  ""
-                )}
+                <Grid item xs={12} md={2} lg={2} xl={2}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="CEP"
+                      variant="filled"
+                      id="cep"
+                      name="cep"
+                      // defaultValue={profile.cep}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={4} lg={4} xl={4}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Inscrição Estadual"
+                      variant="filled"
+                      id="inscription_state"
+                      name="inscription_state"
+                      // defaultValue={profile.inscription_state}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={3} lg={3} xl={3}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Telefone"
+                      variant="filled"
+                      id="phone"
+                      name="phone"
+                      // defaultValue={profile.phone}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
               </Grid>
             </Card>
 
-            {profile === "" ? (
-              <Card
+            <Card
+              sx={{
+                boxShadow: "none",
+                borderRadius: "7px",
+                mb: "25px",
+                padding: { xs: "18px", sm: "20px", lg: "25px" },
+              }}
+              className="rmui-card"
+            >
+              <Box
                 sx={{
-                  boxShadow: "none",
-                  borderRadius: "7px",
                   mb: "25px",
-                  padding: { xs: "18px", sm: "20px", lg: "25px" },
                 }}
-                className="rmui-card"
               >
-                <Box
+                <Typography
+                  variant="h3"
                   sx={{
-                    mb: "25px",
+                    fontSize: { xs: "16px", md: "18px" },
+                    fontWeight: 700,
                   }}
+                  className="text-black"
                 >
-                  <Typography
-                    variant="h3"
-                    sx={{
-                      fontSize: { xs: "16px", md: "18px" },
-                      fontWeight: 700,
-                    }}
-                    className="text-black"
-                  >
-                    Dados do Login
-                  </Typography>
-                </Box>
+                  Dados do Login
+                </Typography>
+              </Box>
 
-                <Grid
-                  container
-                  spacing={3}
-                  columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
-                >
-                  <Grid item xs={12} md={12} lg={12} xl={12}>
-                    <FormControl fullWidth>
-                      <TextField
-                        label="Nome"
-                        variant="filled"
-                        id="name"
-                        name="name"
-                        defaultValue={profile.name}
-                        required
-                        sx={{
-                          "& .MuiInputBase-root": {
-                            border: "1px solid #D5D9E2",
-                            backgroundColor: "#fff",
-                            borderRadius: "7px",
-                          },
-                          "& .MuiInputBase-root::before": {
-                            border: "none",
-                          },
-                          "& .MuiInputBase-root:hover::before": {
-                            border: "none",
-                          },
-                        }}
-                      />
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6} lg={6} xl={6}>
-                    <FormControl fullWidth>
-                      <TextField
-                        label="Email"
-                        variant="filled"
-                        id="email"
-                        name="email"
-                        defaultValue={profile.email}
-                        required
-                        sx={{
-                          "& .MuiInputBase-root": {
-                            border: "1px solid #D5D9E2",
-                            backgroundColor: "#fff",
-                            borderRadius: "7px",
-                          },
-                          "& .MuiInputBase-root::before": {
-                            border: "none",
-                          },
-                          "& .MuiInputBase-root:hover::before": {
-                            border: "none",
-                          },
-                        }}
-                      />
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6} lg={6} xl={6}>
-                    <FormControl fullWidth>
-                      <TextField
-                        label="Senha"
-                        variant="filled"
-                        id="password"
-                        name="password"
-                        defaultValue={profile.password}
-                        required
-                        sx={{
-                          "& .MuiInputBase-root": {
-                            border: "1px solid #D5D9E2",
-                            backgroundColor: "#fff",
-                            borderRadius: "7px",
-                          },
-                          "& .MuiInputBase-root::before": {
-                            border: "none",
-                          },
-                          "& .MuiInputBase-root:hover::before": {
-                            border: "none",
-                          },
-                        }}
-                      />
-                      <TextField
-                        variant="filled"
-                        id="level"
-                        name="level"
-                        type="hidden"
-                        value="ADMINISTRADOR"
-                        sx={{
-                          "& .MuiInputBase-root": {
-                            border: "1px solid #D5D9E2",
-                            backgroundColor: "#fff",
-                            borderRadius: "7px",
-                          },
-                          "& .MuiInputBase-root::before": {
-                            border: "none",
-                          },
-                          "& .MuiInputBase-root:hover::before": {
-                            border: "none",
-                          },
-                        }}
-                      />
-                    </FormControl>
-                  </Grid>
+              <Grid
+                container
+                spacing={3}
+                columnSpacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+              >
+                <Grid item xs={12} md={12} lg={12} xl={12}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Nome"
+                      variant="filled"
+                      id="name_user"
+                      name="name_user"
+                      defaultValue={profile.name_user}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
                 </Grid>
-              </Card>
-            ) : (
-              ""
-            )}
+
+                <Grid item xs={12} md={6} lg={6} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Login"
+                      variant="filled"
+                      id="username"
+                      name="username"
+                      defaultValue={profile.username}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={6} lg={6} xl={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label="Senha"
+                      variant="filled"
+                      id="password"
+                      name="password"
+                      defaultValue={profile.password}
+                      required
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          border: "1px solid #D5D9E2",
+                          backgroundColor: "#fff",
+                          borderRadius: "7px",
+                        },
+                        "& .MuiInputBase-root::before": {
+                          border: "none",
+                        },
+                        "& .MuiInputBase-root:hover::before": {
+                          border: "none",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Card>
 
             <Card
               sx={{

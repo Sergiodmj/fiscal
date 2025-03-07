@@ -12,13 +12,10 @@ export default async function Empresa() {
   if (!seesion) {
     redirect("/");
   }
-  if (seesion?.user.permission != "SUPER_ADMIN") {
-    redirect("/page/unauthorized");
-  }
 
   const jwt = seesion?.user.token;
 
-  const res = await fetch("https://erp.sitesdahora.com.br/api/enterprises", {
+  const res = await fetch("https://systemcode.sitesdahora.com.br/api/companys", {
     cache: "no-cache",
     next: {
       tags: ["tabela-cliente"],
@@ -31,11 +28,10 @@ export default async function Empresa() {
   });
 
   const data = await res.json();
+  // console.log(data.companey);
 
   return (
     <>
-      
-
       <Card
         sx={{
           boxShadow: "none",
@@ -56,7 +52,7 @@ export default async function Empresa() {
         >
           Empresas
         </Typography>
-        
+
         <CustomPaginationActions data={data}/>
       </Card>
     </>
